@@ -815,6 +815,39 @@ body:not(.is-team) .x-del,body:not(.is-team) .sx-mdel{display:flex!important}
 .sx-share-b{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .sx-share-b .pe-btn{font-size:12px;padding:11px 8px}
 </style>
+<style id="pack21">
+/* ===== профиль, магазин и окна тоже меняются от тем и оформления ===== */
+html[data-th] :is(.sx-ov .pe-box,.tl-ov .tl-box){filter:hue-rotate(var(--th-h,0deg))}
+html[data-th] :is(.sx-ov .pe-box,.tl-ov .tl-box) :is(img,canvas,video){filter:hue-rotate(calc(-1 * var(--th-h,0deg)))}
+html[data-th] .sx-ov{background:rgba(2,6,15,.72)}
+html.dc-aurora .sx-ov{background:rgba(2,6,15,.55)}
+html.dc-aurora :is(#sxOv,#shOv) .pe-box{position:relative;overflow:hidden;isolation:isolate}
+html.dc-aurora :is(#sxOv,#shOv) .pe-box::before{content:'';position:absolute;inset:-40%;z-index:-1;pointer-events:none;background:radial-gradient(circle at 30% 25%,rgba(255,77,184,.28),transparent 42%),radial-gradient(circle at 72% 55%,rgba(56,189,248,.24),transparent 42%),radial-gradient(circle at 40% 85%,rgba(168,85,247,.24),transparent 42%);animation:sxBlob 16s ease-in-out infinite alternate}
+html.dc-goldname .sx-hero b{background:linear-gradient(90deg,#fde68a,#f59e0b,#fde68a);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:sxGold 3s linear infinite}
+html.dc-goldname .sx-hero .sx-ava{box-shadow:0 0 0 3px #facc15,0 0 22px rgba(250,204,21,.75)}
+html.dc-goldname .sx-hero{border-color:rgba(250,204,21,.55)}
+html[data-th].dc-goldname .sx-hero b{filter:hue-rotate(calc(-1 * var(--th-h,0deg)))}
+html.dc-rainbow :is(#sxOv,#shOv) .pe-box{animation:sxUp .48s var(--ease) both,sxRb 4s linear infinite}
+html.dc-rainbow .sx-hero .sx-ava{animation:sxRb 4s linear infinite}
+/* ===== ДЖЕКПОТ: вспышка, надпись, монеты, тряска ===== */
+.sx-jp-flash{position:fixed;inset:0;z-index:640;pointer-events:none;background:radial-gradient(circle at 50% 45%,rgba(255,236,150,.85),rgba(255,77,184,.35) 45%,transparent 75%);animation:sxJpFlash .9s ease-out both}
+@keyframes sxJpFlash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
+.sx-jp{position:fixed;inset:0;z-index:650;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px}
+.sx-jp b{display:block;font:900 clamp(40px,13vw,88px)/1 Unbounded,sans-serif;color:#fde68a;letter-spacing:.02em;text-shadow:0 0 18px #facc15,0 0 40px #ff4db8,4px 4px 0 #ff4db8,8px 8px 0 rgba(4,11,26,.9);animation:sxJpIn .7s cubic-bezier(.34,1.56,.64,1) both,sxJpPulse 1s .7s ease-in-out infinite}
+.sx-jp span{font:800 clamp(15px,4.6vw,20px) Unbounded,sans-serif;color:#fff;text-shadow:0 2px 12px #000;animation:sxUp .5s .35s both}
+.sx-jp em{font:900 clamp(20px,6.5vw,28px) Unbounded,sans-serif;font-style:normal;color:#2a1a00;padding:7px 18px;border-radius:99px;background:linear-gradient(90deg,#facc15,#fde68a,#ff9ce3);box-shadow:0 0 30px rgba(250,204,21,.85);animation:sxUp .5s .55s both}
+.sx-jp-ring{position:absolute;left:50%;top:50%;width:44vmin;height:44vmin;margin:-22vmin 0 0 -22vmin;border-radius:50%;border:6px solid rgba(250,204,21,.9);box-shadow:0 0 40px #facc15,inset 0 0 40px #ff4db8;animation:sxJpRing 1.2s ease-out both}
+.sx-jp-ring.r2{animation-delay:.35s;border-color:rgba(255,77,184,.9)}
+@keyframes sxJpRing{from{transform:scale(.2);opacity:1}to{transform:scale(3.2);opacity:0}}
+@keyframes sxJpIn{0%{transform:scale(.2) rotate(-25deg);opacity:0}100%{transform:scale(1) rotate(-4deg);opacity:1}}
+@keyframes sxJpPulse{0%,100%{transform:scale(1) rotate(-4deg)}50%{transform:scale(1.08) rotate(-4deg)}}
+.sx-jp.out{animation:sxFadeOut .5s ease both}
+main.sx-quake{animation:sxQuake .65s both}
+@keyframes sxQuake{10%,50%,90%{translate:-7px 2px}30%,70%{translate:7px -3px}100%{translate:0 0}}
+.sx-coin{position:fixed;top:-50px;z-index:645;pointer-events:none;font-size:26px;filter:drop-shadow(0 0 8px rgba(250,204,21,.85))}
+#sec-roulette>.glass-panel.sx-jp-panel{animation:sxJpPanel .45s ease-in-out 9 alternate!important}
+@keyframes sxJpPanel{from{box-shadow:0 0 20px -2px #facc15;border-color:#facc15}to{box-shadow:0 0 54px 8px #ff4db8;border-color:#ff4db8}}
+</style>
 </head>
 <body class="relative selection:bg-neon-pink selection:text-white">
 
@@ -1291,7 +1324,7 @@ body:not(.is-team) .x-del,body:not(.is-team) .sx-mdel{display:flex!important}
             },
             {
                 id: 'smolyaninov',
-                name: 'Артем Смольянинов',
+                name: 'Смольянинов Артем',
                 shortName: 'Артем С.',
                 role: 'Безопасность',
                 img: FACE_PHOTOS['smolyaninov'],
@@ -3517,5 +3550,27 @@ function sxShareSite(){const url=sxQrNorm(sxQrUrl());if(!url){openQR();return}
  if(navigator.share)navigator.share({title:'СУММА ЛИЧНОСТЕЙ • ДЦ Липецк 2026',text:'Сайт нашей команды на «Диалоге цивилизаций 2026»',url}).catch(()=>{});
  else (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>toast('🔗 Ссылка скопирована'),()=>toast(url))}
 try{reveal(document.querySelector('#sec-share .sx-share'),0)}catch(e){}
+</script>
+<script id="pack21js">
+/* ===== pack21: имя Артёма, эффекты джекпота ===== */
+/* старое сохранённое имя «Артем Смольянинов» → «Смольянинов Артем» */
+try{const s=JSON.parse(localStorage.getItem(PKEY)||'{}'),o=s.smolyaninov;if(o&&o.name==='Артем Смольянинов'){o.name='Смольянинов Артем';localStorage.setItem(PKEY,JSON.stringify(s));const m=TEAM_MEMBERS.find(x=>x.id==='smolyaninov');if(m){m.name=o.name;m.shortName=shortOf(o.name)}refreshAll()}}catch(e){}
+/* ---------- джекпот ---------- */
+const SX_COINS=['🪙','💰','Σ','⭐','💎','👑'];
+function sxCoin(){const c=document.createElement('span'),x=Math.random()*innerWidth,dur=1600+Math.random()*1200,rot=(Math.random()-.5)*720;
+ c.className='sx-coin';c.textContent=SX_COINS[Math.floor(Math.random()*SX_COINS.length)];c.style.left=x+'px';if(c.textContent==='Σ')c.style.cssText+=';color:#fde68a;font:900 28px Unbounded,sans-serif';document.body.appendChild(c);
+ c.animate([{transform:'translate3d(0,0,0) rotate(0deg)',opacity:1},{transform:`translate3d(${(Math.random()-.5)*120}px,${innerHeight+100}px,0) rotate(${rot}deg)`,opacity:.9}],{duration:dur,easing:'cubic-bezier(.35,.1,.6,1)'}).onfinish=()=>c.remove();setTimeout(()=>c.remove(),dur+300)}
+function sxJackpotFx(member,allIn){launchConfetti(160);if(sxStill())return;
+ const fl=document.createElement('div');fl.className='sx-jp-flash';document.body.appendChild(fl);setTimeout(()=>fl.remove(),950);
+ const t=document.createElement('div');t.className='sx-jp';t.innerHTML=`<div class="sx-jp-ring"></div><div class="sx-jp-ring r2"></div><b>ДЖЕКПОТ!</b>${member?`<span>${allIn?'💥 ВСЁ! ':''}3× ${esc(member.shortName)}</span>`:''}<em>+10 000 Σ</em>`;
+ document.body.appendChild(t);setTimeout(()=>t.classList.add('out'),2600);setTimeout(()=>t.remove(),3150);
+ const mn=document.querySelector('main');if(mn){mn.classList.remove('sx-quake');void mn.offsetWidth;mn.classList.add('sx-quake');setTimeout(()=>mn.classList.remove('sx-quake'),700)}
+ [450,1000,1700].forEach((d,i)=>setTimeout(()=>launchConfetti(130+i*30),d));
+ for(let i=0;i<42;i++)setTimeout(sxCoin,120+i*55);
+ for(let i=0;i<7;i++)setTimeout(()=>sxBurst(innerWidth*(.12+Math.random()*.76),innerHeight*(.18+Math.random()*.55),18,['#facc15','#ff4db8','#ffffff','#38bdf8']),250+i*230);
+ const p=document.querySelector('#sec-roulette>.glass-panel');if(p){p.classList.remove('sx-jp-panel');void p.offsetWidth;p.classList.add('sx-jp-panel');setTimeout(()=>p.classList.remove('sx-jp-panel'),4300)}
+ document.querySelectorAll('.winning-slot-glow').forEach((c,i)=>c.animate([{transform:'translateY(0) scale(1)'},{transform:'translateY(-14px) scale(1.08)'},{transform:'translateY(0) scale(1)'}],{duration:520,delay:i*120,iterations:3,easing:'cubic-bezier(.34,1.56,.64,1)'}));
+ try{navigator.vibrate&&navigator.vibrate([90,60,90,60,260])}catch(e){}}
+(function(){const _ap=applySlotOutcomes;applySlotOutcomes=function(o){_ap(o);const j=(o||[]).find(x=>x.type==='jackpot');if(j)setTimeout(()=>sxJackpotFx(j.member,!!j.allIn),o.length>1?380:60)}})();
 </script>
 </body>
