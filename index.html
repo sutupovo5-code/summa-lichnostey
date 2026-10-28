@@ -3637,6 +3637,7 @@ const OFF='⚠️ Нет связи с общей лентой — показа�
 try{
  const [{initializeApp},A,F]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
  const app=initializeApp(cfg),auth=A.getAuth(app),db=F.getFirestore(app),ref=id=>F.doc(db,'posts',id);
+ window.SXF={F,A,db,auth};dispatchEvent(new Event('sxfb'));
  const warn=(e,what)=>{console.warn('[sync]',what,e&&e.code,e&&e.message);toast(e&&e.code==='permission-denied'?'⚠️ База не приняла изменение (правила доступа)':'⚠️ Не удалось сохранить в общей ленте')};
  SXC.fn=async op=>{try{switch(op.t){
   case'create':await F.setDoc(ref(op.id),{post:op.post,createdAt:F.serverTimestamp(),ownerUid:SXC.uid,likesAdd:0,cm:[],pv:{},top:false,del:false});if(op.top)await SXC.fn({t:'top',id:op.id,on:true});break;
@@ -3655,5 +3656,120 @@ try{
   e=>{console.warn('[sync] read',e.code,e.message);SXC.live=false;sxSyncUI('err',e.code==='permission-denied'?'⚠️ Общая лента закрыта правилами доступа Firebase':OFF)});
  addEventListener('offline',()=>sxSyncUI('err',OFF));addEventListener('online',()=>{if(SXC.live)sxSyncUI('on','🌐 Общая лента: посты и комментарии видят все')});
 }catch(e){console.warn('[sync] load',e);sxSyncUI('err',OFF)}
+</script>
+<style id="pack23">
+/* ===== несколько фото в посте ===== */
+.sx-imgs{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.sx-imgs:empty{display:none}
+.sx-th{position:relative;width:64px;height:64px;border-radius:12px;overflow:hidden;border:1.5px solid rgba(255,77,184,.6);animation:sxUp .3s var(--ease) both;flex-shrink:0}
+.sx-th img{width:100%;height:100%;object-fit:cover;display:block}
+.sx-th button{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;background:rgba(4,11,26,.88);color:#fff;font-size:11px;font-weight:800;border:0;line-height:22px;padding:0}
+.sx-gal{display:grid;gap:4px}
+.sx-gal.n2{grid-template-columns:1fr 1fr}
+.sx-gal.n3{grid-template-columns:1fr 1fr}
+.sx-gal.n3 img:first-child{grid-column:1/-1}
+.sx-gal img{width:100%;height:100%;max-height:320px;min-height:140px;object-fit:cover;display:block;cursor:zoom-in}
+.sx-zoom{position:fixed;inset:0;z-index:520;background:rgba(2,6,15,.94);display:flex;align-items:center;justify-content:center;padding:12px;animation:sxFade .25s both;cursor:zoom-out}
+.sx-zoom img{max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.6);animation:sxUp .35s var(--ease) both}
+/* ===== рейтинг джекпотов ===== */
+.lb-card{margin-top:10px;padding:12px;border-radius:20px;background:linear-gradient(135deg,rgba(250,204,21,.12),rgba(255,77,184,.14));border:1.5px solid rgba(250,204,21,.45);display:grid;gap:6px}
+.lb-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.lb-head b{font:900 13px Unbounded,sans-serif;color:#fde68a}
+.lb-head button{padding:6px 10px;border-radius:99px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#fff;font-size:11px;font-weight:800}
+.lb-row{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:14px;background:rgba(4,11,26,.55);border:1px solid rgba(255,255,255,.08);animation:sxUp .4s var(--ease) both}
+.lb-row.me{border-color:rgba(255,77,184,.75);background:rgba(255,77,184,.14)}
+.lb-pl{width:26px;text-align:center;font-size:18px;flex-shrink:0}
+.lb-pl b{font:900 13px Unbounded,sans-serif;color:#cfe8ff}
+.lb-row img{width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:0 0 0 1.5px rgba(255,255,255,.25)}
+.lb-n{flex:1;min-width:0}
+.lb-n b{display:block;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-n small{display:block;font-size:11px;color:rgba(186,222,255,.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-j{font:900 14px Unbounded,sans-serif;color:#fde68a;flex-shrink:0}
+.lb-empty{font-size:12px;color:#cfe8ff;text-align:center;padding:8px}
+.lb-join{padding:9px;border-radius:12px;border:1px dashed rgba(255,156,227,.55);background:rgba(255,255,255,.04);color:#ffd6f1;font-size:12px;font-weight:800}
+/* ===== текст и шрифт под телефон ===== */
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+.x-text,#fullPostScrollBody p,.tv-txt,.lb-n b{overflow-wrap:anywhere}
+@media (max-width:640px){
+ .text-\[7px\]{font-size:calc(9px * var(--sx-fs,1))!important}
+ .text-\[8px\]{font-size:calc(10px * var(--sx-fs,1))!important}
+ .text-\[9px\]{font-size:calc(10.5px * var(--sx-fs,1))!important}
+ .text-\[10px\]{font-size:calc(11.5px * var(--sx-fs,1))!important}
+ .text-\[11px\]{font-size:calc(12.5px * var(--sx-fs,1))!important}
+ .text-xs{font-size:calc(13px * var(--sx-fs,1))!important;line-height:1.45!important}
+ .x-text{font-size:calc(15.5px * var(--sx-fs,1))!important;line-height:1.5!important}
+ .xpost.sx-dayn .x-text{font-size:calc(16.5px * var(--sx-fs,1))!important}
+ .x-head{font-size:calc(14px * var(--sx-fs,1))!important}
+ .x-head span{font-size:calc(13px * var(--sx-fs,1))!important}
+ .x-act{font-size:calc(12px * var(--sx-fs,1))!important}
+ #fullPostScrollBody h2{font-size:calc(19px * var(--sx-fs,1))!important;line-height:1.3!important}
+ #fullPostScrollBody p{font-size:calc(15.5px * var(--sx-fs,1))!important;line-height:1.55!important}
+ .tv-txt{font-size:calc(15px * var(--sx-fs,1))!important;line-height:1.5!important}
+ .sx-note,.tl-box p{font-size:13px}
+ .pe-box label{font-size:10.5px}
+ input:not(.sx-pin):not(.sx-code):not([type=range]):not([type=checkbox]),textarea,select{font-size:16px!important}
+ h2.font-display{letter-spacing:-.01em}
+}
+</style>
+<script id="pack23js">
+/* ===== pack23: только «открытие сайта» из встроенных новостей, 2–3 фото в посте, рейтинг джекпотов ===== */
+/* ---------- встроенные новости: оставляем одну — об открытии сайта ---------- */
+const SX_KEEP_SEED='post_1';
+const SX_OLD_SEEDS=new Set([...X_SEEDS.map(s=>s.id),...INITIAL_POSTS.map(p=>p.id)].filter(id=>id!==SX_KEEP_SEED));
+sxSeeds=function(){const p=INITIAL_POSTS.find(x=>x.id===SX_KEEP_SEED);if(!p)return[];const c=sxSeedClone(p);c.comments=[];c.likes=0;c.likedByMe=false;return[c]};
+state.posts=state.posts.filter(p=>!SX_OLD_SEEDS.has(p.id));{const s=state.posts.find(p=>p.id===SX_KEEP_SEED);if(s&&!SXC.live){s.comments=(s.comments||[]).filter(c=>!/^c\d+$/.test(c.id));s.likes=Math.min(s.likes,s.likedByMe?1:0)}}
+saveState();xAnim=false;renderNewsFeed();updateAllCountersUI();
+
+/* ---------- до 3 фото в посте ---------- */
+const SX_IMG_MAX=3;let sxImgs=[],sxPubImgs=null;
+(function(){const inp=$('postImageInput');if(inp){inp.multiple=true;const lab=inp.closest('label');if(lab)lab.insertAdjacentHTML('afterend','')}
+ const row=inp&&inp.closest('label')&&inp.closest('label').parentElement;if(row)row.insertAdjacentHTML('afterend','<div id="sxImgs" class="sx-imgs"></div>')})();
+function sxImgLabel(){const l=$('postImageLabel'),c=$('clearPostImageBtn');if(l)l.textContent=sxImgs.length?(sxImgs.length>=SX_IMG_MAX?`✅ ${sxImgs.length} фото — максимум`:`✅ ${sxImgs.length} фото · добавить ещё`):`📷 Прикрепить фото (до ${SX_IMG_MAX})`;if(c)c.classList.toggle('hidden',!sxImgs.length)}
+function sxImgRender(){const b=$('sxImgs');if(b)b.innerHTML=sxImgs.map((s,i)=>`<div class="sx-th"><img src="${s}" alt=""><button type="button" onclick="sxImgDel(${i})" aria-label="Убрать фото">✕</button></div>`).join('');pendingPostImageData=sxImgs[0]||null;sxImgLabel()}
+function sxImgDel(i){sxImgs.splice(i,1);sxImgRender()}
+function sxShrink(src,maxLen){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const M=1080,s=Math.min(1,M/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+  let q=.8,u=c.toDataURL('image/jpeg',q);while(u.length>maxLen&&q>.3){q-=.1;u=c.toDataURL('image/jpeg',q)}if(u.length>maxLen){const c2=document.createElement('canvas');c2.width=Math.round(c.width*.7);c2.height=Math.round(c.height*.7);c2.getContext('2d').drawImage(c,0,0,c2.width,c2.height);u=c2.toDataURL('image/jpeg',.6)}ok(u)};im.onerror=no;im.src=src})}
+previewPostAttachment=function(e){const files=[...(e.target.files||[])].filter(f=>/^image\//.test(f.type));e.target.value='';if(!files.length)return;
+ const free=SX_IMG_MAX-sxImgs.length;if(free<=0){toast(`Можно не больше ${SX_IMG_MAX} фото`);return}if(files.length>free)toast(`Добавлю только ${free} — максимум ${SX_IMG_MAX} фото`);
+ files.slice(0,free).forEach(f=>{const r=new FileReader();r.onload=()=>sxShrink(r.result,280000).then(u=>{if(sxImgs.length<SX_IMG_MAX){sxImgs.push(u);sxImgRender()}},()=>toast('Не удалось открыть фото'));r.readAsDataURL(f)})};
+clearPostAttachment=function(){sxImgs=[];pendingPostImageData=null;const i=$('postImageInput');if(i)i.value='';sxImgRender()};
+sxImgLabel();
+(function(){const _cd=sxCloudDo;sxCloudDo=function(op){if(op&&op.t==='create'&&sxPubImgs&&sxPubImgs.length>1){op.post.images=sxPubImgs.slice();op.post.customImage=sxPubImgs[0]}_cd(op)};
+ const _hp=handlePublishPost;handlePublishPost=function(e){const imgs=sxImgs.slice(),before=new Set(state.posts.map(p=>p.id));sxPubImgs=imgs;try{_hp(e)}finally{sxPubImgs=null}
+  const p=state.posts.find(x=>!before.has(x.id));if(p&&imgs.length>1){p.images=imgs;p.customImage=imgs[0];saveState();xAnim=false;renderNewsFeed()}};
+ const _mh=mediaHTML;mediaHTML=function(p){if(p.images&&p.images.length>1){const n=Math.min(p.images.length,3);return`<div class="x-media m${n}">${p.images.slice(0,3).map(s=>`<div><img src="${s}" loading="lazy" alt=""></div>`).join('')}</div>`}return _mh(p)};
+ const _rf=renderFullPostModalContent;renderFullPostModalContent=function(p){_rf(p);const sb=$('fullPostScrollBody');if(!sb)return;
+  if(p.images&&p.images.length>1){const b=sb.querySelector(':scope>.rounded-2xl');const n=Math.min(p.images.length,3);const g=`<div class="sx-gal n${n}">${p.images.slice(0,3).map(s=>`<img src="${s}" alt="" onclick="sxZoom(this.src)">`).join('')}</div>`;if(b){b.innerHTML=g}}
+  else{const im=sb.querySelector(':scope>.rounded-2xl img');if(im&&p.customImage){im.style.cursor='zoom-in';im.onclick=()=>sxZoom(im.src)}}}})();
+function sxZoom(src){const o=document.createElement('div');o.className='sx-zoom';o.innerHTML=`<img src="${src}" alt="">`;o.onclick=()=>o.remove();document.body.appendChild(o)}
+renderNewsFeed();
+
+/* ---------- рейтинг джекпотов (общий, через Firebase) ---------- */
+let sxLB=[],sxLBState='wait',sxSmallPh=null,sxSmallSrc=null,sxPushT=0;
+function sxSmallPhoto(){const p=state.registeredUser&&state.registeredUser.photo;if(!p)return Promise.resolve(null);if(p===sxSmallSrc)return Promise.resolve(sxSmallPh);
+ return new Promise(ok=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=96;c.getContext('2d').drawImage(im,0,0,96,96);sxSmallSrc=p;sxSmallPh=c.toDataURL('image/jpeg',.8);ok(sxSmallPh)};im.onerror=()=>ok(null);im.src=p})}
+function sxPushStats(){clearTimeout(sxPushT);sxPushT=setTimeout(async()=>{const u=state.registeredUser;if(!u||!window.SXF||!SXC.uid)return;const {F,db}=SXF;
+ try{await F.setDoc(F.doc(db,'players',SXC.uid),{name:String(u.name).slice(0,60),role:String(u.role||'').slice(0,40),photo:await sxSmallPhoto(),jackpots:Math.max(0,Math.floor(+state.jackpotsWon||0)),spins:Math.max(0,Math.floor(+state.totalSpins||0)),updatedAt:F.serverTimestamp()})}
+ catch(e){console.warn('[lb] push',e.code,e.message)}},1200)}
+function sxLBRow(p,i){const me=p.id===SXC.uid,med=['🥇','🥈','🥉'][i]||`<b>${i+1}</b>`;
+ return`<div class="lb-row ${me?'me':''}" style="animation-delay:${i*50}ms"><span class="lb-pl">${med}</span><img src="${p.photo||sxAvaURI(p.name)}" alt=""><div class="lb-n"><b>${esc(p.name)}${me?' · вы':''}</b><small>${p.role?esc(p.role)+' · ':''}${shFmt(p.spins||0)} ${sxPlural(p.spins||0,'крутка','крутки','круток')}</small></div><span class="lb-j">👑 ${shFmt(p.jackpots||0)}</span></div>`}
+function sxLBJoin(){return state.registeredUser?'':'<button class="lb-join" onclick="openSettings()">📱 Войдите в профиль — и попадёте в рейтинг</button>'}
+function sxLBBody(n){if(sxLBState==='err')return'<div class="lb-empty">⚠️ Рейтинг пока недоступен</div>';if(sxLBState==='wait')return'<div class="lb-empty">Загружаем рейтинг…</div>';
+ if(!sxLB.length)return'<div class="lb-empty">Пока никого нет — выбейте джекпот первым! 🎰</div>'+sxLBJoin();
+ const top=sxLB.slice(0,n),mi=sxLB.findIndex(p=>p.id===SXC.uid);let h=top.map(sxLBRow).join('');if(mi>=n)h+=`<div class="lb-empty" style="padding:2px">···</div>`+sxLBRow(sxLB[mi],mi);return h+sxLBJoin()}
+function sxLBRender(){const b=$('sxLBList');if(b)b.innerHTML=sxLBBody(5);const f=$('sxLBFull');if(f)f.innerHTML=sxLBBody(30)}
+function openLB(){if($('lbOv'))return;const ov=document.createElement('div');ov.className='sx-ov';ov.id='lbOv';
+ ov.innerHTML=`<div class="pe-box"><div class="sx-head"><h3>🏆 Рейтинг джекпотов</h3><button class="sx-x" onclick="sxCloseOv($('lbOv'))" aria-label="Закрыть">✕</button></div><p class="sx-note">Кто выбил больше всего джекпотов. При равенстве выше тот, кому хватило меньше круток.</p><div id="sxLBFull" style="display:grid;gap:6px"></div></div>`;
+ ov.addEventListener('click',e=>{if(e.target===ov)sxCloseOv(ov)});document.body.appendChild(ov);document.body.style.overflow='hidden';sxLBRender()}
+(function(){const anchor=document.querySelector('#sec-roulette .sh-open')||$('sxLock');if(anchor)anchor.insertAdjacentHTML('afterend',`<div class="lb-card"><div class="lb-head"><b>🏆 РЕЙТИНГ ДЖЕКПОТОВ</b><button onclick="openLB()">Весь рейтинг</button></div><div id="sxLBList" style="display:grid;gap:6px"></div></div>`);sxLBRender()})();
+function sxLBStart(){const {F,A,db,auth}=SXF;
+ F.onSnapshot(F.query(F.collection(db,'players'),F.orderBy('jackpots','desc'),F.limit(50)),snap=>{const L=[];snap.forEach(d=>{const v=d.data();if(v&&v.name)L.push({id:d.id,...v})});
+   L.sort((a,b)=>(b.jackpots||0)-(a.jackpots||0)||(a.spins||0)-(b.spins||0));sxLB=L;sxLBState='ok';sxLBRender()},e=>{console.warn('[lb] read',e.code,e.message);sxLBState='err';sxLBRender()});
+ A.onAuthStateChanged(auth,u=>{if(u){sxPushStats();sxLBRender()}})}
+if(window.SXF)sxLBStart();else addEventListener('sxfb',sxLBStart,{once:true});
+(function(){const _ap=applySlotOutcomes;applySlotOutcomes=function(o){_ap(o);sxPushStats()};
+ const _r2=sxRegStep2;sxRegStep2=function(){_r2();sxPushStats();sxLBRender()};
+ const _ps=sxPhSetAll;sxPhSetAll=function(ph){_ps(ph);sxPushStats()};
+ const _sp=sxSaveProfile;sxSaveProfile=function(){_sp();sxPushStats()}})();
 </script>
 </body>
