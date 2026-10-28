@@ -3573,4 +3573,87 @@ function sxJackpotFx(member,allIn){launchConfetti(160);if(sxStill())return;
  try{navigator.vibrate&&navigator.vibrate([90,60,90,60,260])}catch(e){}}
 (function(){const _ap=applySlotOutcomes;applySlotOutcomes=function(o){_ap(o);const j=(o||[]).find(x=>x.type==='jackpot');if(j)setTimeout(()=>sxJackpotFx(j.member,!!j.allIn),o.length>1?380:60)}})();
 </script>
+<style id="pack22">
+.sx-sync{display:flex;align-items:center;gap:6px;margin:6px 0 2px;padding:6px 10px;border-radius:12px;font-size:11px;font-weight:700;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#cfe8ff;transition:background .4s,border-color .4s,color .4s}
+.sx-sync i{width:8px;height:8px;border-radius:50%;background:#facc15;flex-shrink:0;box-shadow:0 0 8px currentColor}
+.sx-sync.on{border-color:rgba(52,211,153,.45);color:#a7f3d0}
+.sx-sync.on i{background:#34d399;animation:sxPing 2s ease-in-out infinite}
+.sx-sync.err{border-color:rgba(248,113,113,.5);color:#fecaca}
+.sx-sync.err i{background:#f87171}
+@keyframes sxPing{50%{box-shadow:0 0 0 5px rgba(52,211,153,0)}}
+</style>
+<script id="pack22js">
+/* ===== pack22: общая лента — посты, комментарии, лайки, опросы, «новость дня» и удаления через Firebase ===== */
+const SXC={uid:null,q:[],fn:null,docs:{},live:false};
+function sxCloudDo(op){if(SXC.fn&&SXC.uid)SXC.fn(op);else SXC.q.push(op)}
+/* личные отметки (лайк, голос, репост) хранятся на устройстве */
+const SX_MY_KEY='summa_my_v1';
+let sxMy=sxGet(SX_MY_KEY,null);
+if(!sxMy||!sxMy.l){sxMy={l:{},v:{},r:{}};state.posts.forEach(p=>{if(p.likedByMe)sxMy.l[p.id]=1;if(p.poll&&p.poll.voted)sxMy.v[p.id]=p.poll.choice;if(p.reposted)sxMy.r[p.id]=1});sxPut(SX_MY_KEY,sxMy)}
+const sxMySave=()=>sxPut(SX_MY_KEY,sxMy);
+/* встроенные посты сайта (есть у всех) */
+const sxSeedClone=o=>{const c=JSON.parse(JSON.stringify(o));['title','body'].forEach(k=>{if(c[k])c[k]=c[k].replace(/0,1%/g,'1%')});return c};
+function sxSeeds(){const top=[],bot=[];X_SEEDS.forEach(s=>(s.top?top:bot).push(sxSeedClone({likedByMe:false,comments:[],...s})));return[...top,...INITIAL_POSTS.map(sxSeedClone),...bot]}
+const sxTs=t=>t&&t.toMillis?t.toMillis():(typeof t==='number'?t:Date.now()+1e9);
+/* собрать ленту: новые посты из базы + встроенные, поверх — общие лайки/комментарии/голоса */
+function sxRebuild(){const D=SXC.docs,my=sxMy,ph=state.registeredUser?sxDigits(state.registeredUser.phone):'';
+ const full=Object.keys(D).filter(id=>D[id].post).sort((a,b)=>sxTs(D[b].createdAt)-sxTs(D[a].createdAt)).map(id=>({...JSON.parse(JSON.stringify(D[id].post)),id,comments:[],likedByMe:false}));
+ const seeds=sxSeeds().filter(p=>!D[p.id]||!D[p.id].post);
+ state.posts=[...full,...seeds].filter(p=>!(D[p.id]&&D[p.id].del)&&!sxDeleted.has(p.id)).map(p=>{const d=D[p.id]||{};
+  p.likes=Math.max(0,(+p.likes||0)+(+d.likesAdd||0));p.likedByMe=my.l[p.id]!=null?!!my.l[p.id]:!!p.likedByMe;p.reposted=!!my.r[p.id];
+  const seen=new Set();p.comments=[...(p.comments||[]),...(d.cm||[])].filter(c=>c&&!seen.has(c.id)&&seen.add(c.id));
+  if(p.poll&&Array.isArray(p.poll.options)){p.poll={options:p.poll.options.map((o,i)=>({t:o.t,v:(+o.v||0)+(+((d.pv||{})[i])||0)})),voted:my.v[p.id]!=null,choice:my.v[p.id]}}
+  p.sxTop=!!d.top;if(d.ownerUid)p.sxOwner=d.ownerUid===SXC.uid?(ph||'me:'+d.ownerUid):'u:'+d.ownerUid;return p});
+ saveState();xAnim=false;renderNewsFeed();updateAllCountersUI();
+ const id=state.activePostModalId;if(id){const p=state.posts.find(x=>x.id===id);if(p)renderFullPostModalContent(p);else closeFullPostModal()}}
+function sxSyncUI(kind,text){const el=$('sxSync');if(!el)return;el.className='sx-sync'+(kind?' '+kind:'');el.innerHTML=`<i></i><span>${text}</span>`}
+(function(){const t=$('xTabs');if(t)t.insertAdjacentHTML('afterend','<div id="sxSync" class="sx-sync"><i></i><span>Подключаем общую ленту…</span></div>')})();
+/* --- перехват действий --- */
+(function(){
+ const _tl=togglePostLike;togglePostLike=function(id,e){const b=state.posts.find(x=>x.id===id),was=!!(b&&b.likedByMe);_tl(id,e);const p=state.posts.find(x=>x.id===id);if(!p||!!p.likedByMe===was)return;
+  sxMy.l[id]=p.likedByMe?1:0;sxMySave();sxCloudDo({t:'like',id,d:p.likedByMe?1:-1})};
+ const _vp=votePoll;votePoll=function(id,i,e){const b=state.posts.find(x=>x.id===id),was=!!(b&&b.poll&&b.poll.voted);_vp(id,i,e);const p=state.posts.find(x=>x.id===id);
+  if(!p||!p.poll||!p.poll.voted||was)return;sxMy.v[id]=p.poll.choice;sxMySave();sxCloudDo({t:'vote',id,i:p.poll.choice})};
+ const _rp=toggleRepost;toggleRepost=function(id,e){_rp(id,e);const p=state.posts.find(x=>x.id===id);if(p){sxMy.r[id]=p.reposted?1:0;sxMySave()}};
+ const _ac=handleAddComment;handleAddComment=function(e){const id=state.activePostModalId,p0=state.posts.find(x=>x.id===id),n=p0?(p0.comments||[]).length:0;_ac(e);
+  const p=state.posts.find(x=>x.id===id);if(p&&(p.comments||[]).length>n){const c=p.comments[p.comments.length-1];sxCloudDo({t:'comment',id,c:{id:c.id,author:c.author,text:c.text,time:c.time}})}};
+ const _hp=handlePublishPost;handlePublishPost=function(e){const before=new Set(state.posts.map(p=>p.id));_hp(e);const p=state.posts.find(x=>!before.has(x.id));if(!p)return;
+  const post={authorId:p.authorId,authorCustomName:p.authorCustomName||null,sxRole:p.sxRole||null,title:p.title||'',body:p.body||'',timestamp:p.timestamp||'',likes:+p.likes||0,customImage:p.customImage||null,memberPosterId:p.memberPosterId||null,sxPhoto:p.sxPhoto||(p.authorId==='sx_guest'&&state.registeredUser&&state.registeredUser.photo)||null,poll:p.poll?{options:p.poll.options.map(o=>({t:o.t,v:0}))}:null};
+  sxMy.l[p.id]=p.likedByMe?1:0;sxMySave();sxCloudDo({t:'create',id:p.id,post,top:!!p.sxTop})};
+ const _sd=sxSetDay;sxSetDay=function(id,on){if(!isTeam()){openTeamLogin();return}_sd(id,on);sxCloudDo({t:'top',id,on:!!on})};
+ const _dp=deletePost;deletePost=function(id){sxCloudDo({t:'del',id});_dp(id)};
+ const _ps=sxPhSetAll;sxPhSetAll=function(photo){_ps(photo);sxCloudDo({t:'own'})};
+ const _sp=sxSaveProfile;sxSaveProfile=function(){const b=JSON.stringify(state.registeredUser);_sp();if(JSON.stringify(state.registeredUser)!==b)sxCloudDo({t:'own'})};
+ /* фото к посту сжимаем, чтобы оно поместилось в общую базу */
+ previewPostAttachment=function(e){const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const M=1080,s=Math.min(1,M/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+   let q=.82,u=c.toDataURL('image/jpeg',q);while(u.length>650000&&q>.35){q-=.1;u=c.toDataURL('image/jpeg',q)}pendingPostImageData=u;$('clearPostImageBtn').classList.remove('hidden');$('postImageLabel').textContent='✅ Фото выбрано'};im.onerror=()=>toast('Не удалось открыть фото');im.src=r.result};r.readAsDataURL(f)};
+})();
+</script>
+<script type="module" id="pack22mod">
+/* Firebase: общая база для ленты */
+const B='https://www.gstatic.com/firebasejs/10.12.2/';
+const cfg={apiKey:"AIzaSyC9VtdX9pZ1cHmplRNd3dXhYd2ae5vDSGo",authDomain:"summa-lich.firebaseapp.com",projectId:"summa-lich",storageBucket:"summa-lich.firebasestorage.app",messagingSenderId:"27250053672",appId:"1:27250053672:web:ce3997fd8d9a59774f9b1d"};
+const OFF='⚠️ Нет связи с общей лентой — показана сохранённая копия';
+try{
+ const [{initializeApp},A,F]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
+ const app=initializeApp(cfg),auth=A.getAuth(app),db=F.getFirestore(app),ref=id=>F.doc(db,'posts',id);
+ const warn=(e,what)=>{console.warn('[sync]',what,e&&e.code,e&&e.message);toast(e&&e.code==='permission-denied'?'⚠️ База не приняла изменение (правила доступа)':'⚠️ Не удалось сохранить в общей ленте')};
+ SXC.fn=async op=>{try{switch(op.t){
+  case'create':await F.setDoc(ref(op.id),{post:op.post,createdAt:F.serverTimestamp(),ownerUid:SXC.uid,likesAdd:0,cm:[],pv:{},top:false,del:false});if(op.top)await SXC.fn({t:'top',id:op.id,on:true});break;
+  case'like':await F.setDoc(ref(op.id),{likesAdd:F.increment(op.d)},{merge:true});break;
+  case'vote':await F.setDoc(ref(op.id),{pv:{[op.i]:F.increment(1)}},{merge:true});break;
+  case'comment':await F.setDoc(ref(op.id),{cm:F.arrayUnion(op.c)},{merge:true});break;
+  case'del':await F.setDoc(ref(op.id),{del:true},{merge:true});break;
+  case'top':{const b=F.writeBatch(db);if(op.on)Object.keys(SXC.docs).forEach(id=>{if(id!==op.id&&SXC.docs[id].top)b.set(ref(id),{top:false},{merge:true})});b.set(ref(op.id),{top:op.on},{merge:true});await b.commit();break}
+  case'own':{const u=state.registeredUser;if(!u)break;const ids=Object.keys(SXC.docs).filter(id=>SXC.docs[id].post&&SXC.docs[id].ownerUid===SXC.uid&&SXC.docs[id].post.authorId==='sx_guest');
+   for(const id of ids)await F.updateDoc(ref(id),{'post.authorCustomName':u.name,'post.sxRole':u.role,'post.sxPhoto':u.photo||null});break}
+ }}catch(e){warn(e,op.t)}};
+ A.onAuthStateChanged(auth,u=>{SXC.uid=u?u.uid:null;if(u){const q=SXC.q.splice(0);q.forEach(op=>SXC.fn(op));if(SXC.live)sxRebuild()}});
+ A.signInAnonymously(auth).catch(e=>{console.warn('[sync] auth',e.code,e.message);sxSyncUI('err','⚠️ Гостевой вход в базу выключен — включите Anonymous в Firebase')});
+ F.onSnapshot(F.collection(db,'posts'),snap=>{const D={};snap.forEach(d=>{D[d.id]=d.data()});SXC.docs=D;
+   if(!SXC.live){SXC.live=true;sxSyncUI('on','🌐 Общая лента: посты и комментарии видят все')}sxRebuild()},
+  e=>{console.warn('[sync] read',e.code,e.message);SXC.live=false;sxSyncUI('err',e.code==='permission-denied'?'⚠️ Общая лента закрыта правилами доступа Firebase':OFF)});
+ addEventListener('offline',()=>sxSyncUI('err',OFF));addEventListener('online',()=>{if(SXC.live)sxSyncUI('on','🌐 Общая лента: посты и комментарии видят все')});
+}catch(e){console.warn('[sync] load',e);sxSyncUI('err',OFF)}
+</script>
 </body>
