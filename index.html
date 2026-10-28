@@ -3762,9 +3762,10 @@ function openLB(){if($('lbOv'))return;const ov=document.createElement('div');ov.
  ov.innerHTML=`<div class="pe-box"><div class="sx-head"><h3>🏆 Рейтинг джекпотов</h3><button class="sx-x" onclick="sxCloseOv($('lbOv'))" aria-label="Закрыть">✕</button></div><p class="sx-note">Кто выбил больше всего джекпотов. При равенстве выше тот, кому хватило меньше круток.</p><div id="sxLBFull" style="display:grid;gap:6px"></div></div>`;
  ov.addEventListener('click',e=>{if(e.target===ov)sxCloseOv(ov)});document.body.appendChild(ov);document.body.style.overflow='hidden';sxLBRender()}
 (function(){const anchor=document.querySelector('#sec-roulette .sh-open')||$('sxLock');if(anchor)anchor.insertAdjacentHTML('afterend',`<div class="lb-card"><div class="lb-head"><b>🏆 РЕЙТИНГ ДЖЕКПОТОВ</b><button onclick="openLB()">Весь рейтинг</button></div><div id="sxLBList" style="display:grid;gap:6px"></div></div>`);sxLBRender()})();
-function sxLBStart(){const {F,A,db,auth}=SXF;
- F.onSnapshot(F.query(F.collection(db,'players'),F.orderBy('jackpots','desc'),F.limit(50)),snap=>{const L=[];snap.forEach(d=>{const v=d.data();if(v&&v.name)L.push({id:d.id,...v})});
-   L.sort((a,b)=>(b.jackpots||0)-(a.jackpots||0)||(a.spins||0)-(b.spins||0));sxLB=L;sxLBState='ok';sxLBRender()},e=>{console.warn('[lb] read',e.code,e.message);sxLBState='err';sxLBRender()});
+function sxLBListen(){const {F,db}=SXF;
+ const un=F.onSnapshot(F.query(F.collection(db,'players'),F.orderBy('jackpots','desc'),F.limit(50)),snap=>{const L=[];snap.forEach(d=>{const v=d.data();if(v&&v.name)L.push({id:d.id,...v})});
+   L.sort((a,b)=>(b.jackpots||0)-(a.jackpots||0)||(a.spins||0)-(b.spins||0));sxLB=L;sxLBState='ok';sxLBRender()},e=>{console.warn('[lb] read',e.code,e.message);sxLBState='err';sxLBRender();try{un()}catch(x){}setTimeout(sxLBListen,20000)})}
+function sxLBStart(){const {A,auth}=SXF;sxLBListen();
  A.onAuthStateChanged(auth,u=>{if(u){sxPushStats();sxLBRender()}})}
 if(window.SXF)sxLBStart();else addEventListener('sxfb',sxLBStart,{once:true});
 (function(){const _ap=applySlotOutcomes;applySlotOutcomes=function(o){_ap(o);sxPushStats()};
