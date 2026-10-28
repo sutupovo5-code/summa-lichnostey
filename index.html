@@ -3773,4 +3773,19 @@ if(window.SXF)sxLBStart();else addEventListener('sxfb',sxLBStart,{once:true});
  const _ps=sxPhSetAll;sxPhSetAll=function(ph){_ps(ph);sxPushStats()};
  const _sp=sxSaveProfile;sxSaveProfile=function(){_sp();sxPushStats()}})();
 </script>
+<script id="pack24js">
+/* ===== pack24: удалять пост может только его автор; удаление пропадает у всех ===== */
+function sxMine(p){if(!p||!SXC.uid)return false;const d=SXC.docs[p.id],o=(d&&d.ownerUid)||p.ownerUid;return !!o&&o===SXC.uid}
+askDeletePost=function(id,e){if(e){e.stopPropagation();e.preventDefault()}const p=state.posts.find(x=>x.id===id);if(!p)return;
+ if(!sxMine(p)){toast('🗑 Удалять можно только свои посты');return}
+ sxConfirm({title:'🗑 Удалить свой пост?',text:`«${esc(String(p.title||p.body||'').slice(0,60))}» исчезнет у всех вместе с лайками и комментариями. Отменить будет нельзя.`,ok:'Удалить',danger:true},()=>deletePost(id))};
+(function(){const _hp=handlePublishPost;handlePublishPost=function(e){const before=new Set(state.posts.map(p=>p.id));_hp(e);const p=state.posts.find(x=>!before.has(x.id));if(p&&SXC.uid){p.ownerUid=SXC.uid;saveState();xAnim=false;renderNewsFeed()}};
+ const _rn=renderNewsFeed;renderNewsFeed=function(){_rn();document.querySelectorAll('#newsFeedContainer .xpost[data-id]').forEach(a=>{const p=state.posts.find(x=>x.id===a.dataset.id);if(!sxMine(p))a.querySelectorAll('.x-del').forEach(b=>b.remove())})};
+ const _rf=renderFullPostModalContent;renderFullPostModalContent=function(p){_rf(p);const mine=sxMine(p);
+  document.querySelectorAll('#fullPostModal .sx-mdel').forEach(b=>b.style.setProperty('display',mine?'flex':'none','important'));
+  if(!mine)document.querySelectorAll('#fullPostScrollBody .sx-pa.del').forEach(b=>b.remove())}})();
+/* когда узнали свой гостевой вход — перерисовать, чтобы появились кнопки у своих постов */
+(function(){const go=()=>{const {A,auth}=SXF;A.onAuthStateChanged(auth,u=>{if(u){xAnim=false;renderNewsFeed()}})};if(window.SXF)go();else addEventListener('sxfb',go,{once:true})})();
+renderNewsFeed();
+</script>
 </body>
