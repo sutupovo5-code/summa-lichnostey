@@ -3788,4 +3788,36 @@ askDeletePost=function(id,e){if(e){e.stopPropagation();e.preventDefault()}const 
 (function(){const go=()=>{const {A,auth}=SXF;A.onAuthStateChanged(auth,u=>{if(u){xAnim=false;renderNewsFeed()}})};if(window.SXF)go();else addEventListener('sxfb',go,{once:true})})();
 renderNewsFeed();
 </script>
+<style id="pack25">
+.sx-au{display:flex;align-items:center;gap:10px;margin-top:8px;padding:8px 10px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);animation:sxUp .3s var(--ease) both}
+.sx-au img{width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:0 0 0 2px #ff4db8,0 0 14px -4px #ff4db8;transition:transform .35s var(--spring)}
+.sx-au img.pop{transform:scale(1.12)}
+.sx-au b{display:block;font-size:13px;font-weight:800;color:#fff}
+.sx-au small{display:block;font-size:11px;color:rgba(186,222,255,.65)}
+</style>
+<script id="pack25js">
+/* ===== pack25: аватарка автора в окне поста, запоминание автора, пост «от себя» — со своим фото ===== */
+const SX_LAST_AUTHOR='summa_last_author';
+function sxAuthorInfo(v){const u=state.registeredUser;
+ if(v==='registered_user'&&u)return{src:u.photo||sxAvaURI(u.name),name:u.name,sub:'от вашего имени'};
+ const m=TEAM_MEMBERS.find(x=>x.id===v);return m?{src:avatarSrc(m),name:m.name,sub:m.badgeIcon+' '+m.role}:null}
+function sxAuthorPreview(pop){const s=$('postAuthorSelect');if(!s)return;let box=$('sxAu');
+ if(!box){s.insertAdjacentHTML('afterend','<div class="sx-au" id="sxAu"><img id="sxAuImg" alt=""><div><b id="sxAuName"></b><small id="sxAuSub"></small></div></div>');box=$('sxAu')}
+ const i=sxAuthorInfo(s.value);box.style.display=i?'':'none';if(!i)return;const im=$('sxAuImg');im.src=i.src;$('sxAuName').textContent=i.name;$('sxAuSub').textContent=i.sub+' · так пост увидят все';
+ if(pop&&!sxStill()){im.classList.remove('pop');void im.offsetWidth;im.classList.add('pop');setTimeout(()=>im.classList.remove('pop'),350)}}
+function sxComposeAva(){const xc=document.querySelector('.x-compose .x-av img');if(!xc||!isTeam())return;const i=sxAuthorInfo(sxGet(SX_LAST_AUTHOR,''));if(i)xc.src=i.src}
+(function(){const s=$('postAuthorSelect');if(s)s.addEventListener('change',()=>{sxAuthorPreview(true);if(!s.disabled)sxPut(SX_LAST_AUTHOR,s.value)});
+ const _oc=openComposerModal;openComposerModal=function(){_oc();const s=$('postAuthorSelect');if(s&&!s.disabled){const last=sxGet(SX_LAST_AUTHOR,'');if(last&&[...s.options].some(o=>o.value===last))s.value=last}sxAuthorPreview(false)};
+ const _pd=populateMemberDropdowns;populateMemberDropdowns=function(){const s=$('postAuthorSelect'),v=s&&s.value;_pd();if(s&&v&&[...s.options].some(o=>o.value===v))s.value=v;sxAuthorPreview(false)};
+ const _ua=updateAuthUI;updateAuthUI=function(){_ua();sxComposeAva()};
+ /* пост участника «от себя» (📱 своё имя) — со своим фото, а не с фото Реутской */
+ let self=null;const _cd=sxCloudDo;sxCloudDo=function(op){if(op&&op.t==='create'&&self){Object.assign(op.post,{authorId:'sx_guest',authorCustomName:self.name,sxRole:self.role,sxPhoto:self.photo,memberPosterId:null})}_cd(op)};
+ const _hp=handlePublishPost;handlePublishPost=function(e){const s=$('postAuthorSelect'),u=state.registeredUser;
+  if(s&&!s.disabled)sxPut(SX_LAST_AUTHOR,s.value);
+  self=(s&&s.value==='registered_user'&&u&&isTeam())?{name:u.name,role:u.role||'',photo:u.photo||null,digits:sxDigits(u.phone)}:null;
+  const before=new Set(state.posts.map(p=>p.id)),me=self;try{_hp(e)}finally{self=null}
+  const p=state.posts.find(x=>!before.has(x.id));if(p&&me){Object.assign(p,{authorId:'sx_guest',authorCustomName:me.name,sxRole:me.role,sxPhoto:me.photo,memberPosterId:null,sxOwner:me.digits});saveState();xAnim=false;renderNewsFeed()}
+  sxComposeAva()}})();
+sxComposeAva();
+</script>
 </body>
