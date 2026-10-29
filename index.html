@@ -3820,4 +3820,13 @@ function sxComposeAva(){const xc=document.querySelector('.x-compose .x-av img');
   sxComposeAva()}})();
 sxComposeAva();
 </script>
+<style id="pack26">
+/* ===== pack26: в «О нас» без загрузки фото; у новостей одна кнопка «Пост» ===== */
+#sec-team [onclick*="batchPhotoInput"],#sec-team [onclick*="triggerMemberPhotoUpload"]{display:none!important}
+#sec-news>div:first-child>button[onclick*="openComposerModal"]{display:none!important}
+</style>
+<script id="pack26js">
+/* сами действия загрузки фото участников тоже отключены */
+triggerMemberPhotoUpload=function(id,e){if(e)e.stopPropagation()};
+</script>
 </body>
