@@ -5296,4 +5296,46 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&acIsAcct()
    if(cloudT>localT+1000){acApply(d);location.reload()}else{acLast=JSON.stringify(acCollect());if(cloudT<localT)acUpload(true)}}catch(e){console.warn('[acct] load',e.code)}})};
  if(window.SXF)go();else addEventListener('sxfb',go,{once:true})})();
 </script>
+<style id="pack34">
+/* ===== pack34: донат-магазин (только оформление, денег не берёт) ===== */
+.dn-wrap{display:grid;gap:10px}
+.dn-card{position:relative;display:flex;align-items:center;gap:12px;padding:14px 12px;border-radius:20px;overflow:hidden;border:1.5px solid rgba(255,255,255,.18);background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.02))}
+.dn-card::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.18) 50%,transparent 65%);transform:translateX(-120%);animation:ccShine 4s ease-in-out infinite}
+.dn-card.t1{border-color:rgba(142,197,255,.55)}
+.dn-card.t2{border-color:rgba(195,155,255,.65);background:linear-gradient(135deg,rgba(195,155,255,.2),rgba(255,143,208,.1))}
+.dn-card.t3{border-color:rgba(255,209,102,.8);background:linear-gradient(135deg,rgba(255,209,102,.25),rgba(255,143,208,.18));box-shadow:0 0 26px -8px rgba(255,209,102,.8)}
+.dn-ic{width:56px;height:56px;border-radius:16px;flex-shrink:0;display:grid;place-items:center;font-size:30px;background:rgba(4,11,26,.55);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.18)}
+.dn-mid{flex:1;min-width:0}
+.dn-mid b{display:block;font:900 15px/1.15 Unbounded,sans-serif;color:#fff;overflow-wrap:anywhere}
+.dn-mid b span{color:#ffd166}
+.dn-mid small{display:block;font-size:11.5px;color:rgba(226,237,250,.78);margin-top:3px}
+.dn-tag{position:absolute;top:8px;right:10px;font:900 9.5px/1 Unbounded,sans-serif;letter-spacing:.06em;padding:4px 8px;border-radius:99px;color:#2a1a00;background:linear-gradient(90deg,#ffd166,#ff9ce3)}
+.dn-buy{flex-shrink:0;padding:11px 14px;border-radius:14px;border:0;font:900 13px/1 Unbounded,sans-serif;color:#2a1a00;background:linear-gradient(90deg,#ffd166,#f59e0b);box-shadow:0 6px 16px -6px rgba(245,158,11,.8);transition:transform .2s var(--ease)}
+.dn-buy:active{transform:scale(.94)}
+.dn-note{font-size:11px;color:rgba(226,237,250,.6);text-align:center}
+.dn-ov{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(6,10,28,.92);animation:sxFade .2s both}
+.dn-box{width:min(100%,360px);border-radius:26px;padding:22px 18px 18px;text-align:center;display:grid;gap:12px;background:linear-gradient(180deg,#3a1d5e,#1a0f3a);border:2px solid #ff8fd0;box-shadow:0 0 40px -6px rgba(255,143,208,.8);animation:dnShake .55s both}
+.dn-box .em{font-size:64px;line-height:1;animation:sxJpIn .5s cubic-bezier(.34,1.56,.64,1) both}
+.dn-box h3{font:900 21px/1.2 Unbounded,sans-serif;color:#fff}
+.dn-box p{font-size:13.5px;line-height:1.45;color:#f3e8ff}
+@keyframes dnShake{0%{transform:scale(.6);opacity:0}40%{transform:scale(1.04);opacity:1}55%{transform:translateX(-10px) rotate(-2deg)}70%{transform:translateX(10px) rotate(2deg)}85%{transform:translateX(-5px)}100%{transform:none}}
+</style>
+<script id="pack34js">
+/* ===== pack34: донат-магазин — просто оформление и шутка ===== */
+const DN_PACKS=[{ic:'💰',sig:'10 000',rub:'100',tag:'',t:'t1',sub:'Стартовый мешочек'},{ic:'💎',sig:'1 000 000',rub:'1 000',tag:'ХИТ',t:'t2',sub:'Сундук сокровищ'},{ic:'👑',sig:'1 000 000 000 000 000 000',rub:'10 000',tag:'ВЫГОДНО',t:'t3',sub:'Квинтиллион. Хватит на всё и навсегда'}];
+const DN_MSG=[['🙅‍♀️','Хватит воровать деньги у мамы!','Σ можно заработать бесплатно — крутите рулетку 🎰'],['👀','Мама уже идёт…','Положи телефон и сделай вид, что учишь уроки 📚'],['📸','Мы всё видим','Карта мамы останется маминой. Иди крути 1x бесплатно 😄'],['🧾','Чек отправлен маме','Шутка 😅 Денег мы не берём — всё бесплатно']];
+let dnN=0;
+function dnBuy(){const m=DN_MSG[Math.min(dnN,DN_MSG.length-1)];dnN++;try{navigator.vibrate&&navigator.vibrate([40,30,40])}catch(e){}
+ const ov=document.createElement('div');ov.className='dn-ov';ov.innerHTML=`<div class="dn-box"><div class="em">${m[0]}</div><h3>${m[1]}</h3><p>${m[2]}</p>
+ <button class="pe-btn main" onclick="this.closest('.dn-ov').remove();closeShop();setTimeout(()=>{const s=$('sec-roulette');if(s)s.scrollIntoView({behavior:'smooth',block:'start'})},300)">🎰 Пойду крутить</button><button class="pe-btn" onclick="this.closest('.dn-ov').remove()">Ладно 😔</button></div>`;
+ ov.addEventListener('click',e=>{if(e.target===ov)ov.remove()});document.body.appendChild(ov)}
+function dnBody(){return`<div class="sp-cat">💎 ДОНАТ</div><div class="dn-wrap">${DN_PACKS.map(p=>`<div class="dn-card ${p.t}">${p.tag?`<span class="dn-tag">${p.tag}</span>`:''}<div class="dn-ic">${p.ic}</div><div class="dn-mid"><b><span>${p.sig}</span> Σ</b><small>${p.sub}</small></div><button class="dn-buy" onclick="dnBuy()">${p.rub} ₽</button></div>`).join('')}
+ <div class="dn-note">Оплата картой мамы · мгновенное зачисление · без возврата 😉</div></div>`}
+SP_TABS.splice(1,0,['don','💎 Донат']);
+(function(){const _sh=shHTML;shHTML=function(){let h=_sh();
+ if(spShopTab==='don')return h.replace('<div class="sh-eggs">',dnBody()+'<div class="sh-eggs">');
+ if(spShopTab==='all'){const b=`<div class="cc-hbanner" style="border-color:rgba(255,209,102,.7);background:linear-gradient(120deg,rgba(255,209,102,.22),rgba(195,155,255,.28))" onclick="spShopTabSet('don')"><span>💎</span><div><b style="color:#ffd166">Донат: до квинтиллиона Σ</b><small>10 000 Σ за 100 ₽ · 1 000 000 Σ за 1 000 ₽ · 1 квинтиллион Σ за 10 000 ₽</small></div><span style="font-size:18px">›</span></div>`;
+  const i=h.indexOf('<div class="cc-hbanner"');if(i>-1)h=h.slice(0,i)+b+h.slice(i);else{const j=h.indexOf('<div class="sp-cat">');if(j>-1)h=h.slice(0,j)+b+h.slice(j)}}
+ return h}})();
+</script>
 </body>
