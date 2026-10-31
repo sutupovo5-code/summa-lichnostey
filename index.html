@@ -5338,4 +5338,91 @@ SP_TABS.splice(1,0,['don','💎 Донат']);
   const i=h.indexOf('<div class="cc-hbanner"');if(i>-1)h=h.slice(0,i)+b+h.slice(i);else{const j=h.indexOf('<div class="sp-cat">');if(j>-1)h=h.slice(0,j)+b+h.slice(j)}}
  return h}})();
 </script>
+<style id="pack35">
+/* ===== pack35: «Вывод Σ» (шутка) и скримеры ===== */
+.wd-box{display:grid;gap:10px;padding:14px;border-radius:20px;background:linear-gradient(135deg,rgba(52,211,153,.14),rgba(56,189,248,.14));border:1.5px solid rgba(52,211,153,.5)}
+.wd-bal{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#d1fae5}
+.wd-bal b{font:900 17px Unbounded,sans-serif;color:#fff}
+.wd-way{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.wd-way button{display:grid;justify-items:center;gap:4px;padding:12px 6px;border-radius:16px;border:1.5px solid rgba(255,255,255,.18);background:rgba(4,11,26,.5);color:#fff;font:800 12px/1.2 Unbounded,sans-serif}
+.wd-way button i{font-style:normal;font-size:26px}
+.wd-way button small{font:700 10.5px Inter,sans-serif;color:rgba(226,237,250,.75)}
+.wd-way button.on{border-color:#34d399;background:rgba(52,211,153,.18);box-shadow:0 0 16px -6px #34d399}
+.wd-amt{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.wd-amt button{padding:9px 4px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;font:800 11px Unbounded,sans-serif}
+.wd-amt button.on{background:linear-gradient(90deg,#34d399,#38bdf8);border-color:transparent;color:#03241a}
+.wd-get{text-align:center;font-size:12.5px;color:#e0f2fe}
+.wd-get b{display:block;font:900 22px/1.2 Unbounded,sans-serif;color:#6ee7b7;margin-top:2px}
+.wd-go{padding:13px;border-radius:16px;border:0;font:900 14px Unbounded,sans-serif;color:#03241a;background:linear-gradient(90deg,#34d399,#38bdf8);box-shadow:0 8px 20px -8px rgba(52,211,153,.8)}
+.wd-small{font-size:10.5px;color:rgba(226,237,250,.55);text-align:center}
+.wd-proc{position:fixed;inset:0;z-index:610;display:grid;place-items:center;align-content:center;gap:14px;padding:20px;background:#03060f;color:#9ae6b4;font:700 14px/1.5 ui-monospace,Consolas,monospace;text-align:center}
+.wd-proc .bar{width:min(80vw,280px);height:8px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+.wd-proc .bar i{display:block;height:100%;width:0;background:#34d399;transition:width 2.2s linear}
+.wd-proc .eye{font-size:54px;opacity:0;transition:opacity 1s}
+.wd-proc .msg{min-height:3em;color:#fecaca;font:900 18px/1.3 Unbounded,sans-serif;letter-spacing:.04em}
+/* скример */
+.sc-ov{position:fixed;inset:0;z-index:700;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,#2a0000,#000 70%);pointer-events:auto;animation:scIn .08s both}
+.sc-ov svg{width:min(92vw,520px);height:auto;animation:scJump .35s cubic-bezier(.2,1.6,.4,1) both,scShake .12s linear .35s 6;filter:drop-shadow(0 0 30px rgba(255,0,0,.55))}
+.sc-ov .t{position:absolute;left:0;right:0;bottom:12%;text-align:center;font:900 clamp(20px,7vw,34px)/1.2 Unbounded,sans-serif;color:#ff2b2b;text-shadow:0 0 18px #ff0000,2px 2px 0 #000;letter-spacing:.06em}
+@keyframes scIn{from{opacity:0}to{opacity:1}}
+@keyframes scJump{0%{transform:scale(.2)}100%{transform:scale(1.12)}}
+@keyframes scShake{0%,100%{translate:0 0}25%{translate:-8px 4px}50%{translate:7px -5px}75%{translate:-5px -3px}}
+.sc-ov.out{animation:scOut .35s ease both}
+@keyframes scOut{to{opacity:0}}
+</style>
+<script id="pack35js">
+/* ===== pack35: «вывод» Σ в рубли и ⭐ Telegram Stars — это шутка: Σ не списываются и никуда не выводятся =====
+   Нет полей для карты/телефона — никакие личные данные не вводятся и не собираются. */
+let wdWay='rub',wdAmt=0;
+const WD_RATE={rub:{n:'Рубли на карту',ic:'💳',per:10000,u:'₽',note:'10 000 Σ = 1 ₽'},star:{n:'Telegram Stars',ic:'⭐',per:5000,u:'⭐',note:'5 000 Σ = 1 ⭐'}};
+function wdBody(){const bal=Math.floor(+state.synergyPoints||0),opts=[.25,.5,.75,1],r=WD_RATE[wdWay];if(!wdAmt||wdAmt>bal)wdAmt=bal;
+ const get=Math.floor(wdAmt/r.per);
+ return`<div class="sp-cat">💸 ВЫВОД Σ</div><div class="wd-box"><div class="wd-bal"><span>Доступно к выводу</span><b>${shFmt(bal)} Σ</b></div>
+ <div class="wd-way">${Object.entries(WD_RATE).map(([k,v])=>`<button class="${wdWay===k?'on':''}" onclick="wdWay='${k}';shRender()"><i>${v.ic}</i>${v.n}<small>${v.note}</small></button>`).join('')}</div>
+ <div class="wd-amt">${opts.map(o=>{const a=Math.floor(bal*o);return`<button class="${a===wdAmt?'on':''}" onclick="wdAmt=${a};shRender()">${o===1?'Всё':Math.round(o*100)+'%'}</button>`}).join('')}</div>
+ <div class="wd-get">Вы получите<b>${shFmt(get)} ${r.u}</b></div>
+ <button class="wd-go" onclick="wdGo()">💸 Вывести ${shFmt(wdAmt)} Σ</button><div class="wd-small">Мгновенно · без комиссии · 100% надёжно</div></div>`}
+SP_TABS.splice(1,0,['out','💸 Вывод']);
+(function(){const _sh=shHTML;shHTML=function(){let h=_sh();
+ if(spShopTab==='out')return h.replace('<div class="sh-eggs">',wdBody()+'<div class="sh-eggs">');
+ if(spShopTab==='all'){const b=`<div class="cc-hbanner" style="border-color:rgba(52,211,153,.7);background:linear-gradient(120deg,rgba(52,211,153,.22),rgba(56,189,248,.24))" onclick="spShopTabSet('out')"><span>💸</span><div><b style="color:#6ee7b7">Вывод Σ в реальные деньги</b><small>На карту в рублях или в ⭐ Telegram Stars — мгновенно</small></div><span style="font-size:18px">›</span></div>`;
+  const i=h.indexOf('<div class="cc-hbanner"');if(i>-1)h=h.slice(0,i)+b+h.slice(i)}
+ return h}})();
+function wdGo(){if(!wdAmt){toast('Сначала накрутите Σ 🎰');return}const r=WD_RATE[wdWay],get=Math.floor(wdAmt/r.per);
+ const ov=document.createElement('div');ov.className='wd-proc';ov.innerHTML=`<div id="wdLine">Подключаемся к банку…</div><div class="bar"><i id="wdBar"></i></div><div class="eye" id="wdEye">👁</div><div class="msg" id="wdMsg"></div>`;
+ document.body.appendChild(ov);document.body.style.overflow='hidden';requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=$('wdBar');if(b)b.style.width='100%'}));
+ const L=['Подключаемся к банку…','Проверяем аккаунт…',`Отправляем ${shFmt(get)} ${r.u}…`,'Определяем ваше местоположение…'];L.forEach((t,i)=>setTimeout(()=>{const e=$('wdLine');if(e)e.textContent=t},i*600));
+ setTimeout(()=>{const e=$('wdEye');if(e)e.style.opacity=1;scType($('wdMsg'),'ЗА ТОБОЙ СЛЕДЯТ')},2500);
+ setTimeout(()=>{scScream('ЗА ТОБОЙ СЛЕДЯТ',()=>{ov.remove();document.body.style.overflow='';
+  sxConfirm({title:'😈 Попался!',text:'Это шутка: Σ — игровая валюта, вывести её нельзя. Ваш баланс на месте. Скримеры можно выключить в профиле.',ok:'Понятно 😅'},()=>{})})},4300)}
+function scType(el,t){if(!el)return;el.textContent='';let i=0;const f=()=>{if(i<t.length){el.textContent+=t[i++];setTimeout(f,70)}};f()}
+/* --- скример: рисованное лицо, тряска, звук (без мигания) --- */
+const SC_KEY='summa_scream';
+const scOn=()=>sxGet(SC_KEY,'on')!=='off';
+let scCtx=null,scBusy=false;
+const SC_FACE='<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="scg" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#e9e4dc"/><stop offset=".7" stop-color="#a39a8e"/><stop offset="1" stop-color="#3b3530"/></radialGradient></defs>'+
+ '<path d="M100 8 C150 8 182 52 182 110 C182 170 150 232 100 232 C50 232 18 170 18 110 C18 52 50 8 100 8Z" fill="url(#scg)"/>'+
+ '<ellipse cx="66" cy="100" rx="24" ry="30" fill="#050505"/><ellipse cx="134" cy="100" rx="24" ry="30" fill="#050505"/><circle cx="68" cy="104" r="4" fill="#ff1a1a"/><circle cx="132" cy="104" r="4" fill="#ff1a1a"/>'+
+ '<path d="M66 156 Q100 140 134 156 Q132 214 100 222 Q68 214 66 156Z" fill="#0a0000"/><path d="M74 160 l6 10 6-10 6 10 6-10 6 10 6-10 6 10 6-10" fill="none" stroke="#ddd" stroke-width="3"/>'+
+ '<path d="M40 60 l14 22 -6 14 M160 58 l-12 26 8 12 M100 24 l4 20 -8 14" fill="none" stroke="#2b2520" stroke-width="2"/></svg>';
+function scSound(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const a=scCtx||(scCtx=new C());if(a.state==='suspended')a.resume();const t=a.currentTime,d=1.1;
+ const buf=a.createBuffer(1,Math.floor(a.sampleRate*d),a.sampleRate),ch=buf.getChannelData(0);for(let i=0;i<ch.length;i++)ch[i]=(Math.random()*2-1)*Math.pow(1-i/ch.length,1.5);
+ const n=a.createBufferSource();n.buffer=buf;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=1300;f.Q.value=.7;
+ const o=a.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(440,t);o.frequency.exponentialRampToValueAtTime(80,t+d);
+ const g=a.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.32,t+.04);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+ n.connect(f);f.connect(g);o.connect(g);g.connect(a.destination);n.start(t);o.start(t);n.stop(t+d);o.stop(t+d)}catch(e){}}
+function scScream(text,done){if(scBusy){done&&done();return}scBusy=true;const ov=document.createElement('div');ov.className='sc-ov';ov.innerHTML=SC_FACE+`<div class="t">${esc(text||'')}</div>`;
+ document.body.appendChild(ov);scSound();try{navigator.vibrate&&navigator.vibrate([200,60,300])}catch(e){}
+ setTimeout(()=>{ov.classList.add('out');setTimeout(()=>{ov.remove();scBusy=false;done&&done()},350)},1500)}
+/* звук разрешается только после первого касания */
+addEventListener('pointerdown',()=>{try{const C=window.AudioContext||window.webkitAudioContext;if(C&&!scCtx){scCtx=new C()}if(scCtx&&scCtx.state==='suspended')scCtx.resume()}catch(e){}},{once:true,passive:true});
+/* --- случайные скримеры: редко (раз в 8–20 минут), не когда человек печатает или что-то открыто --- */
+const SC_TEXTS=['ЗА ТОБОЙ СЛЕДЯТ','Я ВИЖУ ТЕБЯ','ОБЕРНИСЬ','НЕ ВЫКЛЮЧАЙ ТЕЛЕФОН','ТЫ НЕ ОДИН'];
+function scBusyNow(){const a=document.activeElement;return document.hidden||sxStill()||(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))||!!document.querySelector('.sx-ov,.tl-ov,.cc-ov,.ms-ov,.wd-proc,.sc-ov,#fullPostModal.flex,#composerModal.flex,#storyOverlay.open')}
+function scLoop(){setTimeout(()=>{if(scOn()&&!scBusyNow()){scScream(SC_TEXTS[Math.floor(Math.random()*SC_TEXTS.length)],()=>toast('😈 Испугался? Скримеры можно выключить: Профиль → «Скримеры»'))}scLoop()},(8+Math.random()*12)*60000)}
+setTimeout(scLoop,60000);
+/* --- переключатель в профиле --- */
+(function(){const _os=openSettings;openSettings=function(){_os();const box=document.querySelector('#sxOv .pe-box');if(!box)return;const secs=[...box.querySelectorAll(':scope>.pe-sec')],last=secs[secs.length-1];
+ if(last)last.insertAdjacentHTML('beforebegin',`<div class="pe-sec"><b>😈 СКРИМЕРЫ</b><label class="sx-row"><span>Пугать в случайные моменты<small>Редко: раз в 8–20 минут. Без мигания.</small></span><span class="sx-sw"><input type="checkbox" ${scOn()?'checked':''} onchange="sxPut('${SC_KEY}',this.checked?'on':'off');toast(this.checked?'😈 Скримеры включены':'Скримеры выключены')"><i></i></span></label><button class="pe-btn" onclick="closeSettings();setTimeout(()=>scScream('ПРОВЕРКА СВЯЗИ'),400)">👻 Проверить скример</button></div>`)}})();
+</script>
 </body>
