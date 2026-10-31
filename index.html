@@ -3993,6 +3993,23 @@ body:not(.is-team) .x-compose button[onclick*="openComposerModal"]{display:inlin
 /* прокрутка на Android: страницу листает окно, а не body (раньше body перехватывал свайп и не отдавал его) */
 html{overflow-x:hidden;overscroll-behavior-y:none}
 body{overflow-x:visible;overflow-y:visible;overscroll-behavior-y:auto}
+/* --- «О нас»: постер целиком, как в истории; девиз под фото --- */
+#tvCard.sp-tv{aspect-ratio:auto!important;display:grid;gap:14px;padding:10px 10px 18px;background:linear-gradient(180deg,rgba(28,42,84,.75),rgba(6,14,34,.95))!important}
+.tv-pwrap{position:relative;aspect-ratio:4/5;border-radius:26px;overflow:hidden;background:#0b1b40;isolation:isolate;box-shadow:0 18px 40px -14px rgba(0,0,0,.7),0 0 0 1.5px rgba(242,182,211,.45)}
+.tv-pwrap .tv-photo{position:absolute!important;inset:0!important;height:100%!important;aspect-ratio:auto!important}
+.tv-pwrap .tv-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to top,rgba(3,8,24,.88) 0%,rgba(3,8,24,.45) 20%,transparent 42%),linear-gradient(to bottom,rgba(3,8,24,.45),transparent 18%)!important}
+#tvCard.sp-tv .tv-big{display:none!important}
+.tv-pwrap .tv-top{top:12px;left:12px;right:12px}
+.tv-pwrap .tv-arrow{top:calc(50% - 21px)!important}
+.tv-cap{position:absolute;z-index:3;left:16px;right:16px;bottom:14px;display:grid;gap:6px;pointer-events:none}
+.tv-cap small{font:700 11px/1.2 Unbounded,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#fff;background:linear-gradient(90deg,#e07aa8,#a28bd6);padding:5px 11px;border-radius:99px;width:max-content;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tv-cap h3{margin:0;font:900 clamp(26px,8.6vw,36px)/1.05 Unbounded,sans-serif;letter-spacing:-.02em;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 4px 20px rgba(0,0,0,.55)}
+#tvCard.sp-tv .tv-name{position:static!important;display:grid;justify-items:center;gap:8px;text-align:center;padding:0 10px}
+#tvCard.sp-tv .tv-name::before{content:'ДЕВИЗ';font:800 10.5px/1 Unbounded,sans-serif;letter-spacing:.2em;color:#f2b6d3}
+#tvCard.sp-tv #tvSlogan{display:block;-webkit-line-clamp:unset;overflow:visible;font:800 16px/1.4 Unbounded,sans-serif;color:#fff;margin:0}
+#tvCard.sp-tv #tvSlogan:not(:empty)::before{content:'«'}
+#tvCard.sp-tv #tvSlogan:not(:empty)::after{content:'»'}
+#tvCard.sp-tv .tv-actions{justify-content:center;margin-top:2px}
 </style>
 <script id="pack27js">
 /* ===== pack27: видео в постах, пост без фото — без фото, плавная лента, магазин 2.0, чужие профили,
@@ -4347,5 +4364,16 @@ sxPushStats=function(){clearTimeout(sxPushT);sxPushT=setTimeout(async()=>{const 
 (function(){if(!('IntersectionObserver' in window))return;const io=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('sp-off',!e.isIntersecting)),{rootMargin:'80px'});
  ['sec-hero','sec-roulette','sec-team'].forEach(id=>{const el=$(id);if(el)io.observe(el)})})();
 xAnim=false;renderNewsFeed();updateAllCountersUI();
+
+/* =====================================================================
+   9. «О НАС»: постер целиком в рамке 4:5, как в истории
+   ===================================================================== */
+function spTvLayout(){const c=$('tvCard');if(!c||c.classList.contains('sp-tv'))return!!c;
+ const ph=$('tvPhoto'),sh=c.querySelector('.tv-shade'),top=c.querySelector('.tv-top'),sur=$('tvSur'),first=$('tvFirst');if(!ph)return false;
+ const w=document.createElement('div');w.className='tv-pwrap';c.insertBefore(w,c.firstChild);
+ [ph,sh,top,...c.querySelectorAll(':scope>.tv-arrow')].forEach(el=>{if(el)w.appendChild(el)});
+ const cap=document.createElement('div');cap.className='tv-cap';if(sur)cap.appendChild(sur);if(first)cap.appendChild(first);w.appendChild(cap);
+ c.classList.add('sp-tv');return true}
+if(!spTvLayout()){addEventListener('load',spTvLayout);const mo=new MutationObserver(()=>{if(spTvLayout())mo.disconnect()});mo.observe(document.body,{childList:true,subtree:true})}
 </script>
 </body>
