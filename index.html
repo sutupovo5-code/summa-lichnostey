@@ -5181,4 +5181,15 @@ function msClose(){msApply();const o=$('msOv');if(o)sxCloseOv(o)}
 /* --- 3. витрина карточек: аккуратнее --- */
 try{ccSecRender()}catch(e){}
 </script>
+<style id="pack32">
+/* ===== pack32: ровные углы карточек =====
+   cqw внутри самой .cc считается от экрана, а не от карточки — из-за этого рамка и фото не совпадали.
+   Скругление теперь в процентах от самой карточки (3:4 → 9% по ширине = 6.75% по высоте), рамка — ровные 3px. */
+.cc,.cc-grid .cc,.cc.fill,.cc-show>.cc{padding:3px!important;border-radius:9% / 6.75%!important;overflow:hidden}
+.cc-in,.cc-grid .cc-in,.cc.fill .cc-in{border-radius:7.4% / 5.55%!important;overflow:hidden}
+.cc-in::before{border-radius:inherit}
+.cc-view .cc{padding:4px!important}
+.cc-flip .cc{border-radius:9% / 6.75%!important}
+.cc-back{border-radius:9% / 6.75%!important}
+</style>
 </body>
