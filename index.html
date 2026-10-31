@@ -4374,4 +4374,330 @@ function spTvLayout(){const c=$('tvCard');if(!c||c.classList.contains('sp-tv'))r
  c.classList.add('sp-tv');return true}
 if(!spTvLayout()){addEventListener('load',spTvLayout);const mo=new MutationObserver(()=>{if(spTvLayout())mo.disconnect()});mo.observe(document.body,{childList:true,subtree:true})}
 </script>
+<style id="pack28">
+/* ===== pack28: Android — страница не шире экрана; кнопки в посте; карточки команды; Хэллоуин ===== */
+/* --- 1. Android: ничего не вылезает за край (clip не мешает свайпу, в отличие от hidden) --- */
+body,main,header,nav{overflow-x:clip;max-width:100%}
+main>section{max-width:100%;overflow-x:clip}
+#confettiCanvas{width:100%!important;height:100%!important}
+#sxAurora,#spSnow,#spStars,#ccWeb{max-width:100vw;overflow:hidden}
+.x-toast{max-width:calc(100vw - 32px);white-space:normal;text-align:center}
+img,video,canvas{max-width:100%}
+/* шапка на узком экране */
+@media (max-width:420px){
+ header>div{gap:6px!important;padding-left:10px!important;padding-right:10px!important}
+ header .truncate p{display:none}
+ header .truncate .flex>span:nth-child(2){display:none}
+ header .truncate{white-space:normal;overflow:visible;min-width:0}
+ header .truncate .flex>span:first-child{font-size:11px!important;white-space:normal;line-height:1.05;overflow:visible;text-overflow:clip;display:block;max-width:none}
+ header .shrink-0.gap-1\.5{gap:5px!important}
+ #headerAuthBtn{padding:6px 10px!important;max-width:118px}
+ #headerAuthBtnText{max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block}
+}
+@media (max-width:350px){header .truncate .flex>span:first-child{font-size:10px!important}}
+/* --- 2. открытый пост: поле комментария и кнопки --- */
+#fullPostModal form{min-width:0}
+#commentInputText{min-width:0;width:100%}
+#fullPostModal form button[type=submit]{flex-shrink:0;padding-left:14px!important;padding-right:14px!important}
+.sx-pact{display:flex!important;gap:8px;flex-wrap:nowrap}
+#fullPostScrollBody>.border-y{gap:8px}
+#fullPostScrollBody>.border-y>*{white-space:nowrap;min-width:0}
+#fullPostScrollBody>.border-y>span{font-size:12px!important;overflow:hidden;text-overflow:ellipsis}
+.sx-pact .sx-pa{flex:1 1 0;min-width:0;padding:10px 6px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:14px}
+/* --- 3. КАРТОЧКИ КОМАНДЫ --- */
+.cc-sec{border-radius:24px;padding:14px;display:grid;gap:12px;background:linear-gradient(160deg,rgba(40,30,84,.85),rgba(6,14,34,.95));border:1.5px solid rgba(195,155,255,.45);box-shadow:0 18px 40px -18px rgba(0,0,0,.7)}
+.cc-h{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.cc-h b{display:block;font:900 15px/1.2 Unbounded,sans-serif;color:#fff}
+.cc-h small{display:block;font-size:11.5px;color:rgba(214,234,255,.72);margin-top:3px;line-height:1.35}
+.cc-prog{font:900 13px/1 Unbounded,sans-serif;color:#ffd166;white-space:nowrap;padding:7px 10px;border-radius:99px;background:rgba(255,209,102,.12);border:1px solid rgba(255,209,102,.4)}
+.cc-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.cc-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#8ec5ff,#c39bff,#ff8fd0,#ffd166);transition:width .8s var(--ease)}
+.cc-packs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cc-pk{border-radius:16px;padding:10px 6px 8px;display:grid;justify-items:center;align-content:start;gap:6px;text-align:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);min-width:0}
+.cc-pk b{font:800 10.5px/1.2 Unbounded,sans-serif;color:#fff}
+.cc-pk small{font-size:10px;color:rgba(214,234,255,.7);line-height:1.25}
+.cc-pk .pe-btn{width:100%;padding:8px 2px;font-size:10.5px;margin-top:auto}
+.cc-foil{position:relative;width:56px;height:76px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;box-shadow:0 8px 18px -6px rgba(0,0,0,.7),inset 0 0 0 1.5px rgba(255,255,255,.35)}
+.cc-foil::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.45) 48%,transparent 62%);transform:translateX(-120%);animation:ccShine 3.2s ease-in-out infinite}
+.cc-foil.team{background:linear-gradient(150deg,#e07aa8,#3b5bd6)}
+.cc-foil.member{background:linear-gradient(150deg,#5ab8e8,#8a5ad6)}
+.cc-foil.legend{background:linear-gradient(150deg,#ffd166,#ff8fd0 55%,#8a5ad6)}
+@keyframes ccShine{0%{transform:translateX(-120%)}55%,100%{transform:translateX(120%)}}
+.cc-show{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:12px 2px 8px;scroll-snap-type:x proximity}
+.cc-show::-webkit-scrollbar{display:none}
+.cc-show>*{scroll-snap-align:start}
+.cc-tease{position:relative}
+.cc-tease::after{content:'🔒 можно выбить';position:absolute;left:50%;top:-9px;transform:translateX(-50%);white-space:nowrap;font:800 9.5px/1 Unbounded,sans-serif;color:#2a1a00;background:#ffd166;padding:4px 7px;border-radius:99px;box-shadow:0 4px 12px rgba(0,0,0,.5);z-index:6}
+/* карточка */
+.cc{--rc:#8ec5ff;--rg:#8ec5ff;position:relative;width:var(--cw,110px);aspect-ratio:3/4;border-radius:calc(var(--cw,110px) * .09);padding:3px;flex-shrink:0;container-type:inline-size;background:var(--rc);box-shadow:0 10px 22px -10px rgba(0,0,0,.75),0 0 16px -6px var(--rg);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cc-grid .cc,.cc.fill{width:100%;border-radius:12px}
+.cc-r-r{--rc:linear-gradient(150deg,#b9dcff,#5e95d6);--rg:#8ec5ff}
+.cc-r-e{--rc:linear-gradient(150deg,#ddc7ff,#8b5fd6);--rg:#c39bff}
+.cc-r-m{--rc:conic-gradient(from var(--ang,0deg),#ff8fd0,#c39bff,#8ec5ff,#ff8fd0);--rg:#ff8fd0;animation:ccSpin 4s linear infinite}
+.cc-r-l{--rc:conic-gradient(from var(--ang,0deg),#ffe7a3,#ffb347,#fff3c4,#d99a2b,#ffe7a3);--rg:#ffd166;animation:ccSpin 3s linear infinite}
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes ccSpin{to{--ang:360deg}}
+.cc-in{position:relative;width:100%;height:100%;border-radius:calc(var(--cw,110px) * .075);overflow:hidden;background:#0b1b40;isolation:isolate}
+.cc-grid .cc-in,.cc.fill .cc-in{border-radius:10px}
+.cc-bg{position:absolute;inset:0;z-index:0}
+.cc-ph{position:absolute;inset:0;z-index:1;overflow:hidden}
+.cc-ph img{width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block}
+.cc-sh{position:absolute;inset:0;z-index:2;background:linear-gradient(to top,rgba(3,8,24,.94) 0%,rgba(3,8,24,.4) 30%,transparent 52%)}
+.cc-top{position:absolute;top:5cqw;left:5cqw;right:5cqw;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:4px}
+.cc-rar{font:900 6.4cqw/1 Unbounded,sans-serif;letter-spacing:.04em;padding:2.6cqw 4cqw;border-radius:99px;background:rgba(3,8,24,.78);color:var(--rg);border:1px solid var(--rg);text-transform:uppercase;white-space:nowrap}
+.cc-ic{font-size:10cqw;line-height:1;filter:drop-shadow(0 1px 3px rgba(0,0,0,.6))}
+.cc-name{position:absolute;left:6cqw;right:6cqw;bottom:6cqw;z-index:5}
+.cc-name small{display:block;font:800 6.4cqw/1.15 Unbounded,sans-serif;color:var(--rg);text-transform:uppercase;letter-spacing:.06em}
+.cc-name b{display:block;margin-top:1.5cqw;font:900 9.6cqw/1.05 Unbounded,sans-serif;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.7);overflow-wrap:anywhere}
+.cc-cnt{position:absolute;right:5cqw;bottom:24cqw;z-index:6;font:900 7cqw/1 Unbounded,sans-serif;color:#fff;background:rgba(3,8,24,.8);border:1px solid rgba(255,255,255,.3);padding:2.5cqw 4cqw;border-radius:99px}
+.cc-new{position:absolute;left:50%;top:-8px;transform:translateX(-50%);z-index:7;font:900 10px/1 Unbounded,sans-serif;padding:4px 8px;border-radius:99px;background:#34d399;color:#03241a;box-shadow:0 4px 12px rgba(0,0,0,.5);white-space:nowrap}
+.cc-new.dup{background:#cbd5e1;color:#1e293b}
+.cc-holo{position:absolute;inset:0;z-index:4;pointer-events:none;mix-blend-mode:overlay;opacity:0;background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.7) 40%,rgba(255,180,240,.6) 50%,rgba(140,220,255,.6) 60%,transparent 80%);background-size:250% 250%;animation:ccHolo 3.5s ease-in-out infinite}
+.cc-r-m .cc-holo{opacity:.55}.cc-r-l .cc-holo{opacity:.85}
+@keyframes ccHolo{0%{background-position:100% 100%}50%{background-position:0 0}100%{background-position:100% 100%}}
+.cc-deco{position:absolute;z-index:3;pointer-events:none;line-height:1}
+.cc-deco svg{width:100%;height:auto;display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+/* скины */
+.cc-s-neon .cc-ph img{filter:contrast(1.15) saturate(1.45)}
+.cc-s-neon .cc-ph::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,77,184,.5),transparent 45%,rgba(56,189,248,.5));mix-blend-mode:screen}
+.cc-s-neon .cc-ph::before{content:'';position:absolute;inset:0;z-index:2;background:repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 1px,transparent 1px 3px)}
+.cc-s-hallo .cc-bg{background:linear-gradient(170deg,#ff8a1f,#6b2bb8 60%,#1d0a2e)}
+.cc-s-hallo .cc-ph img{filter:sepia(.45) hue-rotate(-18deg) saturate(1.45) contrast(1.05)}
+.cc-s-hallo .cc-ph::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(107,43,184,.35),transparent 40%,rgba(255,138,31,.25))}
+.cc-s-space .cc-bg{background:radial-gradient(1.2px 1.2px at 20% 30%,#fff 60%,transparent),radial-gradient(1px 1px at 70% 20%,#fff 60%,transparent),radial-gradient(1.4px 1.4px at 85% 60%,#cfe8ff 60%,transparent),radial-gradient(1px 1px at 35% 75%,#fff 60%,transparent),radial-gradient(1px 1px at 55% 45%,#fff 60%,transparent),radial-gradient(circle at 70% 25%,#3a2a8a,#0b0630 65%)}
+.cc-s-space .cc-ph,.cc-s-frost .cc-ph{inset:auto;left:16cqw;right:16cqw;top:16cqw;aspect-ratio:1;border-radius:50%}
+.cc-s-space .cc-ph{box-shadow:0 0 0 2.2cqw #8fd3ff,0 0 12cqw #8fd3ff}
+.cc-s-space .cc-ph img{object-position:50% 28%;transform:scale(1.2)}
+.cc-s-frost .cc-ph img{object-position:50% 38%;transform:scale(1.25)}
+.cc-s-gold .cc-ph img{filter:sepia(.75) saturate(1.6) hue-rotate(-12deg) brightness(1.06) contrast(1.05)}
+.cc-s-gold .cc-ph::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,226,140,.35),transparent 50%,rgba(255,200,90,.3))}
+.cc-s-frost .cc-bg{background:radial-gradient(circle at 50% 30%,#e8f6ff,#8cc7f0 45%,#2a5b9a)}
+.cc-s-frost .cc-ph{top:18cqw;box-shadow:0 0 0 2.2cqw #fff,0 0 10cqw rgba(255,255,255,.8)}
+.cc-s-frost .cc-sh{background:linear-gradient(to top,rgba(10,30,70,.92) 0%,rgba(10,30,70,.35) 26%,transparent 46%)}
+.cc-snow{position:absolute;inset:0;z-index:3;pointer-events:none;background-image:radial-gradient(2px 2px at 12% 18%,#fff 50%,transparent),radial-gradient(1.6px 1.6px at 80% 12%,#fff 50%,transparent),radial-gradient(2px 2px at 90% 48%,#fff 50%,transparent),radial-gradient(1.4px 1.4px at 8% 58%,#fff 50%,transparent),radial-gradient(1.8px 1.8px at 62% 8%,#fff 50%,transparent);animation:ccSnow 6s linear infinite}
+@keyframes ccSnow{from{background-position:0 0}to{background-position:0 60cqw}}
+/* открытие пака */
+.cc-ov{position:fixed;inset:0;z-index:560;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:16px;background:radial-gradient(circle at 50% 40%,rgba(52,32,110,.94),rgba(2,6,15,.98) 72%);animation:sxFade .3s both;overflow-y:auto}
+.cc-ov.sx-closing{animation:sxFadeOut .25s both}
+.cc-ov h3{font:900 16px/1.25 Unbounded,sans-serif;color:#fff;text-align:center}
+.cc-ov p{font-size:12.5px;color:#cfe8ff;text-align:center}
+.cc-bigpack{position:relative;width:min(56vw,200px);aspect-ratio:3/4.1;border-radius:18px;display:grid;place-items:center;font-size:min(18vw,64px);cursor:pointer;overflow:hidden;box-shadow:0 20px 50px -10px rgba(0,0,0,.8),0 0 40px -6px rgba(255,143,208,.6),inset 0 0 0 2px rgba(255,255,255,.4);animation:ccFloat 2.4s ease-in-out infinite}
+.cc-bigpack::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.5) 48%,transparent 62%);transform:translateX(-120%);animation:ccShine 2.4s ease-in-out infinite}
+.cc-bigpack span{position:absolute;left:0;right:0;bottom:12%;text-align:center;font:900 13px/1.2 Unbounded,sans-serif;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.5);padding:0 8px}
+.cc-bigpack.shake{animation:ccShake .5s both}
+.cc-bigpack.tear{animation:ccTear .45s ease-in both}
+@keyframes ccFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+@keyframes ccShake{0%,100%{transform:none}20%{transform:translateX(-8px) rotate(-4deg)}40%{transform:translateX(8px) rotate(4deg)}60%{transform:translateX(-6px) rotate(-3deg)}80%{transform:translateX(6px) rotate(3deg)}}
+@keyframes ccTear{to{transform:scale(1.35);opacity:0;filter:brightness(2.5)}}
+.cc-reveal{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;max-width:100%}
+.cc-flip{--cw:min(28vw,128px);width:var(--cw);aspect-ratio:3/4;perspective:900px;animation:ccDeal .5s var(--ease) both;position:relative}
+.cc-flip>.cc-fi{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,1.3,.5,1)}
+.cc-flip.open>.cc-fi{transform:rotateY(180deg)}
+.cc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.cc-face.front{transform:rotateY(180deg)}
+.cc-face .cc{width:100%}
+.cc-back{width:100%;height:100%;border-radius:12px;display:grid;place-items:center;font:900 calc(var(--cw) * .32)/1 Unbounded,sans-serif;color:#ffd6f1;background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 6px,transparent 6px 12px),linear-gradient(150deg,#2a1a5e,#0b1b40);box-shadow:inset 0 0 0 3px rgba(255,214,241,.5),0 10px 22px -10px rgba(0,0,0,.8)}
+@keyframes ccDeal{from{transform:translateY(60px) scale(.6) rotate(-10deg);opacity:0}to{transform:none;opacity:1}}
+.cc-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:min(100%,360px)}
+.cc-legend-t{font:900 clamp(26px,9vw,44px)/1 Unbounded,sans-serif;color:#ffd166;text-shadow:0 0 18px #ffb347,0 0 36px #ff8fd0;animation:sxJpIn .6s cubic-bezier(.34,1.56,.64,1) both}
+/* выбор участника */
+.cc-pick{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;width:min(100%,420px)}
+.cc-pick button{display:grid;justify-items:center;gap:4px;background:none;border:0;color:#fff;font-size:10.5px;font-weight:700;min-width:0}
+.cc-pick img{width:100%;aspect-ratio:1;border-radius:50%;object-fit:cover;object-position:center 22%;box-shadow:0 0 0 2px #c39bff}
+/* альбом */
+.cc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cc-mem{display:grid;gap:8px;padding:10px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)}
+.cc-mem>div:first-child{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:13px}
+.cc-mem>div:first-child small{font:800 11px Unbounded,sans-serif;color:#ffd166}
+.cc.lock{background:rgba(255,255,255,.12);box-shadow:none;cursor:default}
+.cc.lock .cc-ph img{filter:brightness(0) opacity(.45)}
+.cc.lock .cc-holo,.cc.lock .cc-snow,.cc.lock .cc-deco{display:none}
+.cc.lock .cc-in::after{content:'?';position:absolute;inset:0;z-index:6;display:grid;place-items:center;font:900 24cqw/1 Unbounded,sans-serif;color:rgba(255,255,255,.35)}
+.cc-seg{display:flex;gap:6px;flex-wrap:wrap}
+.cc-seg button{padding:7px 11px;border-radius:99px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);color:#e0f2ff;font-size:11.5px;font-weight:800}
+.cc-seg button.on{background:linear-gradient(90deg,#e07aa8,#8a5ad6);border-color:transparent;color:#fff}
+.cc-view{position:fixed;inset:0;z-index:570;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;background:rgba(2,6,15,.93);animation:sxFade .25s both}
+.cc-view .cc{--cw:min(72vw,300px);transition:transform .15s ease-out;will-change:transform}
+.cc-view p{font-size:13px;color:#cfe8ff;text-align:center;max-width:320px}
+/* --- 4. ХЭЛЛОУИН: косметика --- */
+.x-av.sp-f-pumpkin,.sp-pfa.sp-f-pumpkin{background:conic-gradient(#ff8a1f,#6b2bb8,#ffb347,#3b0d5c,#ff8a1f);position:relative}
+.sp-f-pumpkin::after,.sp-pfa.sp-f-pumpkin::after{content:'🎃';position:absolute;bottom:-6px;right:-5px;font-size:15px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.sp-c-hallo{background:linear-gradient(90deg,#ffb347,#ff7a1a,#c86bff);-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important}
+.sp-k-hallo,.sp-kpv.sp-k-hallo{background:linear-gradient(135deg,rgba(255,138,31,.16),rgba(107,43,184,.13))}
+.cc-hbanner{display:flex;align-items:center;gap:10px;padding:12px;border-radius:18px;margin:4px 0 2px;background:linear-gradient(120deg,rgba(255,138,31,.22),rgba(107,43,184,.3));border:1.5px solid rgba(255,138,31,.55);cursor:pointer}
+.cc-hbanner b{display:block;font:900 13px/1.2 Unbounded,sans-serif;color:#ffb347}
+.cc-hbanner small{display:block;font-size:11px;color:#f3e8ff;margin-top:2px}
+.cc-hbanner>span{font-size:28px}
+#ccWeb{position:fixed;inset:0;z-index:35;pointer-events:none;display:none}
+html.dc-web #ccWeb{display:block}
+#ccWeb svg{position:absolute;width:min(30vw,130px);height:auto;opacity:.5}
+#ccWeb .l{left:0;top:56px}#ccWeb .r{right:0;top:56px;transform:scaleX(-1)}
+.cc-bat{position:fixed;left:0;z-index:36;pointer-events:none;font-size:26px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+#ccGhost{position:fixed;left:12px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:38;font-size:28px;display:none;cursor:pointer;animation:ccBoo 3.5s ease-in-out infinite;filter:drop-shadow(0 4px 10px rgba(200,180,255,.6))}
+html.dc-ghost #ccGhost{display:block}
+@keyframes ccBoo{0%,100%{transform:translateY(0) rotate(-6deg);opacity:.85}50%{transform:translateY(-14px) rotate(6deg);opacity:1}}
+html.sx-still .cc-r-m,html.sx-still .cc-r-l,html.sx-still .cc-holo,html.sx-still .cc-snow,html.sx-still #ccGhost{animation:none}
+</style>
+<script id="pack28js">
+/* ===== pack28: Android, кнопки в открытом посте, карточки команды (паки, редкости, альбом), Хэллоуин ===== */
+/* --- рейтинг: прячем тестовую строку --- */
+const CC_LB_HIDE=new Set(['Mp2coOSAqZO6ywXwOOVnwQZ4LUg1']);
+(function(){const _r=sxLBRender;sxLBRender=function(){if(Array.isArray(sxLB))sxLB=sxLB.filter(p=>!CC_LB_HIDE.has(p.id));_r()};sxLBRender()})();
+/* --- открытый пост: кнопки в одну строку, без лишней корзины в шапке --- */
+(function(){const _rf=renderFullPostModalContent;renderFullPostModalContent=function(p){_rf(p);
+ document.querySelectorAll('#fullPostModal .sx-mdel').forEach(b=>b.style.setProperty('display','none','important'));
+ const st=document.querySelector('#fullPostScrollBody .sx-pa.star');if(st)st.textContent=p.sxTop?'✖ Снять с главной':'⭐ Новость дня';
+ const dl=document.querySelector('#fullPostScrollBody .sx-pa.del');if(dl)dl.textContent='🗑 Удалить'}})();
+
+/* =====================================================================
+   КАРТОЧКИ КОМАНДЫ: 10 участников × 6 скинов, 4 редкости, паки, альбом
+   ===================================================================== */
+const CC_KEY='summa_cards_v1';
+let cc=sxGet(CC_KEY,null);if(!cc||typeof cc.own!=='object')cc={own:{},log:[]};if(!Array.isArray(cc.log))cc.log=[];
+const ccSave=()=>sxPut(CC_KEY,cc);
+const CC_R={l:{n:'Легендарная',w:2,dup:4000},m:{n:'Мифическая',w:9,dup:1200},e:{n:'Эпическая',w:27,dup:400},r:{n:'Редкая',w:62,dup:150}};
+const CC_RORDER=['r','e','m','l'];
+const CC_SKINS=[{id:'classic',n:'Классика',r:'r'},{id:'neon',n:'Неон',r:'r'},{id:'hallo',n:'Хэллоуин',r:'e'},{id:'space',n:'Космос',r:'e'},{id:'gold',n:'Золото',r:'m'},{id:'frost',n:'Дед Мороз',r:'l'}];
+const CC_GIRLS=new Set(['reutskaya','goncharova','morozova','znamenshikova']);
+const CC_PACKS=[{id:'team',ic:'🃏',n:'Пак команды',d:'3 карты любых участников',price:2000},{id:'member',ic:'👤',n:'Пак участника',d:'3 карты одного — выберите кого',price:3500},{id:'legend',ic:'👑',n:'Легенд. пак',d:'3 карты, одна мифическая или легендарная',price:12000}];
+const CC_TOTAL=TEAM_MEMBERS.length*CC_SKINS.length;
+const ccKey=(m,s)=>m+':'+s;
+const ccCount=k=>Math.max(0,Math.floor(+cc.own[k]||0));
+const ccHave=()=>Object.keys(cc.own).filter(k=>ccCount(k)>0).length;
+const ccSkin=id=>CC_SKINS.find(s=>s.id===id)||CC_SKINS[0];
+const ccMem=id=>TEAM_MEMBERS.find(m=>m.id===id)||TEAM_MEMBERS[0];
+const ccPhoto=m=>FACE_PHOTOS[m.id]||m.img;
+const ccFirst=m=>{const p=String(m.name).trim().split(/\s+/);return p.length>1?p.slice(1).join(' '):p[0]};
+function ccTitle(m,s){const f=ccFirst(m);if(s==='frost')return(CC_GIRLS.has(m.id)?'Снегурочка ':'Дед Мороз ')+f;if(s==='hallo')return f+' 🎃';return f}
+const CC_SVG={
+ hat:'<svg viewBox="0 0 100 62"><path d="M12 48 C18 22 40 5 66 5 C81 5 91 13 93 26 C85 21 76 21 70 26 C65 33 63 41 63 48 Z" fill="#d7263d"/><path d="M42 11 C51 7 60 7 66 9 C58 16 52 29 50 48 L40 48 Z" fill="#a91b2e" opacity=".55"/><circle cx="93" cy="28" r="7.5" fill="#fff"/><rect x="6" y="43" width="66" height="16" rx="8" fill="#fff"/><path d="M10 51 h58" stroke="#e1ebf3" stroke-width="2" stroke-dasharray="3 4"/></svg>',
+ beard:'<svg viewBox="0 0 100 92"><path d="M5 12 C3 42 18 76 50 90 C82 76 97 42 95 12 C86 24 74 28 64 23 C59 31 41 31 36 23 C26 28 14 24 5 12 Z" fill="#fff"/><path d="M22 36 C30 60 40 74 50 80 C60 74 70 60 78 36" fill="none" stroke="#e3ebf2" stroke-width="2"/><path d="M17 19 C27 6 44 8 50 16 C56 8 73 6 83 19 C73 27 58 25 50 21 C42 25 27 27 17 19 Z" fill="#fff" stroke="#dbe5ee" stroke-width="1.5"/><ellipse cx="50" cy="28" rx="7" ry="3.5" fill="#c97b84" opacity=".55"/></svg>',
+ kok:'<svg viewBox="0 0 100 52"><path d="M6 50 C8 22 28 4 50 4 C72 4 92 22 94 50 Z" fill="#7cc4ff"/><path d="M14 50 C16 28 32 13 50 13 C68 13 84 28 86 50" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="2 5" stroke-linecap="round"/><path d="M50 14 l4 9 10 1 -8 6 3 10 -9 -6 -9 6 3 -10 -8 -6 10 -1z" fill="#fff"/><circle cx="22" cy="40" r="3" fill="#fff"/><circle cx="78" cy="40" r="3" fill="#fff"/></svg>',
+ web:'<svg viewBox="0 0 100 100"><g fill="none" stroke="#fff" stroke-width="1.2" opacity=".85"><path d="M0 0 L100 100 M0 0 L100 40 M0 0 L40 100 M0 0 L100 0 M0 0 L0 100"/><path d="M0 22 Q10 18 18 14 Q22 8 22 0"/><path d="M0 44 Q20 38 34 30 Q42 18 44 0"/><path d="M0 66 Q30 58 50 46 Q62 28 66 0"/><path d="M0 88 Q40 78 66 62 Q82 38 88 0"/></g></svg>',
+ witch:'<svg viewBox="0 0 100 70"><path d="M8 58 Q50 46 92 58 Q50 70 8 58Z" fill="#2b123d"/><path d="M30 54 L52 4 Q58 0 60 8 L70 54 Z" fill="#3b1854"/><rect x="31" y="46" width="39" height="7" fill="#ff8a1f"/></svg>'};
+function ccCard(mid,sid,o){o=o||{};const m=ccMem(mid),s=ccSkin(sid),r=s.r,lock=!!o.lock;const k=ccKey(m.id,s.id),n=ccCount(k);
+ let deco='';
+ if(s.id==='frost'){deco+=CC_GIRLS.has(m.id)?`<div class="cc-deco" style="left:18cqw;width:64cqw;top:3cqw">${CC_SVG.kok}</div>`:`<div class="cc-deco" style="left:6cqw;width:84cqw;top:-14cqw;transform:rotate(-8deg)">${CC_SVG.hat}</div><div class="cc-deco" style="left:28cqw;width:44cqw;top:62cqw">${CC_SVG.beard}</div>`;deco+='<div class="cc-snow"></div>'}
+ if(s.id==='hallo')deco+=`<div class="cc-deco" style="left:-6cqw;top:-6cqw;width:44cqw;opacity:.7">${CC_SVG.web}</div><div class="cc-deco" style="right:6cqw;top:24cqw;font-size:14cqw">🦇</div><div class="cc-deco" style="right:5cqw;bottom:30cqw;font-size:16cqw">🎃</div>`;
+ if(s.id==='space')deco+=`<div class="cc-deco" style="right:4cqw;top:62cqw;font-size:15cqw">🪐</div><div class="cc-deco" style="left:6cqw;top:66cqw;font-size:9cqw">✨</div>`;
+ if(s.id==='gold')deco+=`<div class="cc-deco" style="right:5cqw;top:22cqw;font-size:12cqw">👑</div>`;
+ return`<div class="cc cc-r-${r} cc-s-${s.id}${lock?' lock':''}${o.fill?' fill':''}${o.tease?' cc-tease':''}" ${o.attrs||''}><div class="cc-in"><div class="cc-bg"></div><div class="cc-ph"><img src="${ccPhoto(m)}" alt="" loading="lazy" draggable="false"></div>${deco}<div class="cc-sh"></div><div class="cc-holo"></div>
+  <div class="cc-top"><span class="cc-rar">${CC_R[r].n}</span><span class="cc-ic">${m.badgeIcon}</span></div>
+  <div class="cc-name"><small>${s.n}</small><b>${esc(ccTitle(m,s.id))}</b></div>${!lock&&n>1&&o.count?`<span class="cc-cnt">×${n}</span>`:''}</div></div>`}
+/* --- выпадение --- */
+function ccRollRar(){const x=Math.random()*100;let a=0;for(const k of ['l','m','e','r']){a+=CC_R[k].w;if(x<a)return k}return 'r'}
+function ccRoll(mid,guar){let r=ccRollRar();if(guar&&(r==='r'||r==='e'))r=Math.random()<.25?'l':'m';const L=CC_SKINS.filter(s=>s.r===r),s=L[Math.floor(Math.random()*L.length)];
+ return{m:mid||TEAM_MEMBERS[Math.floor(Math.random()*TEAM_MEMBERS.length)].id,s:s.id,r}}
+function ccPackRoll(pid,mid){const out=[ccRoll(pid==='member'?mid:null),ccRoll(pid==='member'?mid:null),ccRoll(pid==='member'?mid:null,pid==='legend')];
+ return out.sort((a,b)=>CC_RORDER.indexOf(a.r)-CC_RORDER.indexOf(b.r))}
+/* --- раздел после крутки --- */
+function ccSecHTML(){const have=ccHave(),pct=Math.round(have/CC_TOTAL*100),pts=state.synergyPoints;
+ const log=cc.log.filter(k=>ccCount(k)>0).slice(0,8);
+ const show=log.length?log.map(k=>{const[m,s]=k.split(':');return ccCard(m,s,{attrs:`style="--cw:92px" onclick="ccView('${m}','${s}')"`})}).join('')
+  :ccCard('otyutskiy','frost',{tease:true,attrs:`style="--cw:104px" onclick="ccOpenAlbum()"`})+ccCard('morozova','gold',{tease:true,attrs:`style="--cw:104px" onclick="ccOpenAlbum()"`})+ccCard('tolstikov','space',{tease:true,attrs:`style="--cw:104px" onclick="ccOpenAlbum()"`});
+ return`<div class="cc-sec"><div class="cc-h"><div><b>🃏 КАРТОЧКИ КОМАНДЫ</b><small>Открывайте паки за Σ и собирайте все ${CC_TOTAL} карт: 10 участников, 6 скинов, 4 редкости — от редкой до легендарной.</small></div><span class="cc-prog">${have}/${CC_TOTAL}</span></div>
+ <div class="cc-bar"><i style="width:${pct}%"></i></div>
+ <div class="cc-packs">${CC_PACKS.map(p=>`<div class="cc-pk"><div class="cc-foil ${p.id}">${p.ic}</div><b>${p.n}</b><small>${p.d}</small><button class="pe-btn ${pts>=p.price?'sh-buy':'sh-lack'}" onclick="ccBuy('${p.id}',this)">${shFmt(p.price)} Σ</button></div>`).join('')}</div>
+ <div class="cc-show">${show}</div>
+ <button class="pe-btn main" onclick="ccOpenAlbum()">📒 Альбом карточек · ${have}/${CC_TOTAL}</button></div>`}
+function ccSecRender(){const s=$('sec-cards');if(s)s.innerHTML=ccSecHTML()}
+(function(){const r=$('sec-roulette');if(!r)return;const s=document.createElement('section');s.id='sec-cards';s.className='space-y-2.5 scroll-mt-14';r.insertAdjacentElement('afterend',s);ccSecRender();try{reveal(s.firstElementChild,0)}catch(e){}})();
+(function(){const _u=updateAllCountersUI;updateAllCountersUI=function(){_u();if(!$('ccOv'))ccSecRender()}})();
+/* --- покупка и открытие пака --- */
+function ccBuy(pid,btn){const p=CC_PACKS.find(x=>x.id===pid);if(!p)return;const need=p.price-state.synergyPoints;
+ if(need>0){toast(`Не хватает ${shFmt(need)} Σ — покрутите рулетку 🎰`);sxShake(btn);return}
+ if(pid==='member'){ccPickMember();return}
+ const go=()=>ccOpenPack(pid,null);
+ if(p.price>=10000)sxConfirm({title:`Открыть «${p.n}»?`,text:`Спишется <b style="color:#ffd166">${shFmt(p.price)} Σ</b>. Одна карта точно мифическая или легендарная.`,ok:'Открыть'},go);else go()}
+function ccPickMember(){const ov=document.createElement('div');ov.className='cc-ov';ov.id='ccPick';
+ ov.innerHTML=`<h3>👤 Чей пак открыть?</h3><p>Все 3 карты будут этого участника — разные скины и редкости.</p><div class="cc-pick">${TEAM_MEMBERS.map(m=>`<button onclick="ccPickGo('${m.id}')"><img src="${ccPhoto(m)}" alt=""><span>${esc(ccFirst(m))}</span></button>`).join('')}</div><button class="pe-btn" style="width:min(100%,320px)" onclick="sxCloseOv($('ccPick'))">Отмена</button>`;
+ ov.addEventListener('click',e=>{if(e.target===ov)sxCloseOv(ov)});document.body.appendChild(ov)}
+function ccPickGo(mid){const o=$('ccPick');if(o)o.remove();ccOpenPack('member',mid)}
+function ccOpenPack(pid,mid){const p=CC_PACKS.find(x=>x.id===pid);if(!p||state.synergyPoints<p.price)return;
+ state.synergyPoints-=p.price;saveState();updateAllCountersUI();
+ const res=ccPackRoll(pid,mid);res.forEach(c=>{const k=ccKey(c.m,c.s);c.isNew=ccCount(k)===0;cc.own[k]=ccCount(k)+1;cc.log=[k,...cc.log.filter(x=>x!==k)].slice(0,24)});cc.opened=(+cc.opened||0)+1;ccSave();
+ const old=$('ccOv');if(old)old.remove();const ov=document.createElement('div');ov.className='cc-ov';ov.id='ccOv';
+ const mname=mid?' · '+esc(ccFirst(ccMem(mid))):'';
+ ov.innerHTML=`<h3>${p.ic} ${p.n}${mname}</h3><div class="cc-bigpack" id="ccPackBig" style="background:${pid==='legend'?'linear-gradient(150deg,#ffd166,#ff8fd0 55%,#8a5ad6)':pid==='member'?'linear-gradient(150deg,#5ab8e8,#8a5ad6)':'linear-gradient(150deg,#e07aa8,#3b5bd6)'}">${p.ic}<span>${p.n}${mname}</span></div><p id="ccHint">Нажмите на пак, чтобы открыть</p>`;
+ document.body.appendChild(ov);document.body.style.overflow='hidden';
+ const pk=$('ccPackBig');let started=false;pk.addEventListener('click',()=>{if(started)return;started=true;$('ccHint').textContent='';
+  try{navigator.vibrate&&navigator.vibrate([20,40,20])}catch(e){}
+  pk.classList.add('shake');setTimeout(()=>{pk.classList.remove('shake');pk.classList.add('tear');sxBurst(innerWidth/2,innerHeight/2-40,18,['#ffd6f1','#c39bff','#8ec5ff','#ffd166'])},sxStill()?0:520);
+  setTimeout(()=>ccReveal(res),sxStill()?0:950)})}
+function ccReveal(res){const ov=$('ccOv');if(!ov)return;const best=res.reduce((a,c)=>CC_RORDER.indexOf(c.r)>CC_RORDER.indexOf(a)?c.r:a,'r');
+ ov.innerHTML=`<h3 id="ccRevT">Нажимайте на карты</h3><div class="cc-reveal">${res.map((c,i)=>`<div class="cc-flip" style="animation-delay:${i*120}ms" data-i="${i}"><div class="cc-fi"><div class="cc-face"><div class="cc-back">Σ</div></div><div class="cc-face front">${ccCard(c.m,c.s,{fill:true})}</div></div></div>`).join('')}</div>
+ <div class="cc-acts" id="ccActs" style="visibility:hidden"><button class="pe-btn" onclick="ccCloseOpen();ccOpenAlbum()">📒 В альбом</button><button class="pe-btn main" onclick="ccCloseOpen()">Готово</button></div>`;
+ let opened=0;const flip=el=>{if(el.classList.contains('open'))return;el.classList.add('open');const c=res[+el.dataset.i];opened++;
+  setTimeout(()=>{const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+   el.insertAdjacentHTML('beforeend',`<span class="cc-new ${c.isNew?'':'dup'}">${c.isNew?'НОВАЯ':'ПОВТОР'}</span>`);
+   if(c.r==='l'){ccLegendFx(c)}else if(c.r==='m'){sxBurst(cx,cy,22,['#ff8fd0','#c39bff','#ffffff']);launchConfetti(70)}else if(c.r==='e')sxBurst(cx,cy,14,['#c39bff','#ffffff']);else sxBurst(cx,cy,8,['#8ec5ff','#ffffff']);
+   if(opened===res.length){$('ccRevT').textContent=best==='l'?'👑 Легендарная карта!':best==='m'?'💖 Мифическая карта!':'Карты в альбоме';$('ccActs').style.visibility='visible';ccSecRender()}},sxStill()?0:380)};
+ ov.querySelectorAll('.cc-flip').forEach((el,i)=>{el.addEventListener('click',()=>flip(el));setTimeout(()=>flip(el),900+i*650)})}
+function ccLegendFx(c){const ov=$('ccOv');if(ov&&!sxStill())ov.insertAdjacentHTML('afterbegin',`<div class="cc-legend-t">ЛЕГЕНДАРНАЯ!</div>`);
+ try{navigator.vibrate&&navigator.vibrate([60,40,60,40,180])}catch(e){}launchConfetti(160);
+ for(let i=0;i<5;i++)setTimeout(()=>sxBurst(innerWidth*(.15+Math.random()*.7),innerHeight*(.2+Math.random()*.5),18,['#ffd166','#ff8fd0','#ffffff']),i*200);
+ if(!sxStill())for(let i=0;i<24;i++)setTimeout(()=>{try{sxCoin()}catch(e){}},i*60)}
+function ccCloseOpen(){const o=$('ccOv');if(o){sxCloseOv(o)}ccSecRender()}
+/* --- альбом --- */
+let ccAlbF='all';
+function ccAlbHTML(){const have=ccHave();let dupSum=0,dupN=0;Object.keys(cc.own).forEach(k=>{const n=ccCount(k);if(n>1){const s=ccSkin(k.split(':')[1]);dupSum+=(n-1)*CC_R[s.r].dup;dupN+=n-1}});
+ const mems=TEAM_MEMBERS.map(m=>{const cells=CC_SKINS.filter(s=>{const own=ccCount(ccKey(m.id,s.id))>0;return ccAlbF==='all'||(ccAlbF==='have'?own:ccAlbF==='miss'?!own:s.r===ccAlbF)});if(!cells.length)return'';
+  const got=CC_SKINS.filter(s=>ccCount(ccKey(m.id,s.id))>0).length;
+  return`<div class="cc-mem"><div><span>${m.badgeIcon} ${esc(m.name)}</span><small>${got}/${CC_SKINS.length}</small></div><div class="cc-grid">${cells.map(s=>{const own=ccCount(ccKey(m.id,s.id))>0;return ccCard(m.id,s.id,{lock:!own,count:true,attrs:own?`onclick="ccView('${m.id}','${s.id}')"`:''})}).join('')}</div></div>`}).join('');
+ const F=[['all','Все'],['have','Есть'],['miss','Нет'],['l','👑 Легенд.'],['m','💖 Миф.'],['e','💜 Эпич.'],['r','💙 Редкие']];
+ return`<div class="sx-head"><h3>📒 Альбом карточек</h3><button class="sx-x" onclick="sxCloseOv($('ccAlb'))" aria-label="Закрыть">✕</button></div>
+ <div class="cc-h"><div><small>Собрано ${have} из ${CC_TOTAL}. Шансы в паке: легендарная ${CC_R.l.w}% · мифическая ${CC_R.m.w}% · эпическая ${CC_R.e.w}% · редкая ${CC_R.r.w}%.</small></div><span class="cc-prog">${have}/${CC_TOTAL}</span></div>
+ <div class="cc-bar"><i style="width:${Math.round(have/CC_TOTAL*100)}%"></i></div>
+ ${dupN?`<button class="pe-btn" onclick="ccSellDups()">♻️ Разобрать повторки (${dupN}) · +${shFmt(dupSum)} Σ</button>`:''}
+ <div class="cc-seg">${F.map(([k,t])=>`<button class="${ccAlbF===k?'on':''}" onclick="ccAlbF='${k}';ccAlbRender()">${t}</button>`).join('')}</div>${mems||'<p class="sx-note" style="text-align:center">Здесь пока пусто</p>'}`}
+function ccOpenAlbum(){const old=$('ccAlb');if(old)old.remove();const ov=document.createElement('div');ov.className='sx-ov';ov.id='ccAlb';ov.innerHTML=`<div class="pe-box" id="ccAlbBox">${ccAlbHTML()}</div>`;
+ ov.addEventListener('click',e=>{if(e.target===ov)sxCloseOv(ov)});document.body.appendChild(ov);document.body.style.overflow='hidden'}
+function ccAlbRender(){const b=$('ccAlbBox'),ov=$('ccAlb');if(!b)return;const y=ov.scrollTop;b.innerHTML=ccAlbHTML();ov.scrollTop=y}
+function ccSellDups(){let sum=0,n=0;Object.keys(cc.own).forEach(k=>{const c=ccCount(k);if(c>1){sum+=(c-1)*CC_R[ccSkin(k.split(':')[1]).r].dup;n+=c-1}});if(!n)return;
+ sxConfirm({title:'♻️ Разобрать повторки?',text:`${n} ${sxPlural(n,'повторная карта','повторные карты','повторных карт')} превратятся в <b style="color:#ffd166">+${shFmt(sum)} Σ</b>. По одной карте каждого вида останется в альбоме.`,ok:'Разобрать'},()=>{
+  Object.keys(cc.own).forEach(k=>{if(ccCount(k)>1)cc.own[k]=1});ccSave();state.synergyPoints+=sum;saveState();updateAllCountersUI();ccAlbRender();launchConfetti(50);toast(`♻️ +${shFmt(sum)} Σ`)})}
+/* --- просмотр карты с наклоном --- */
+function ccView(mid,sid){const k=ccKey(mid,sid);if(ccCount(k)<=0)return;const m=ccMem(mid),s=ccSkin(sid),n=ccCount(k);
+ const ov=document.createElement('div');ov.className='cc-view';ov.innerHTML=`${ccCard(mid,sid)}<p><b style="color:#fff">${esc(ccTitle(m,sid))}</b> · ${CC_R[s.r].n} · скин «${s.n}»<br>В альбоме: ${n} ${sxPlural(n,'карта','карты','карт')}${n>1?` · повторку можно разобрать за ${shFmt(CC_R[s.r].dup)} Σ`:''}</p><button class="pe-btn" style="width:min(100%,300px)">Закрыть</button>`;
+ const card=ov.querySelector('.cc');const tilt=e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=`perspective(800px) rotateY(${x*18}deg) rotateX(${-y*18}deg) scale(1.02)`};
+ if(!sxStill()){ov.addEventListener('pointermove',tilt);ov.addEventListener('pointerleave',()=>card.style.transform='')}
+ ov.addEventListener('click',e=>{if(!e.target.closest('.cc'))ov.remove()});document.body.appendChild(ov)}
+
+/* =====================================================================
+   ХЭЛЛОУИН: тема, эффекты, рамка, значки, цвет имени, карточка постов
+   ===================================================================== */
+SH_THEMES.push({id:'halloween',name:'Хэллоуин',desc:'Тыквенный оранжевый и ночь',price:5000,h:68,sw:['#ff8a1f','#2a0f3d'],bg:'radial-gradient(circle at 50% 0%,#3d1557 0%,#1d0a2e 50%,#0b0414 100%)'});
+SH_DECO.push({id:'bats',ic:'🦇',name:'Летучие мыши',desc:'Иногда пролетают через экран',price:2000},{id:'pumpkin',ic:'🎃',name:'Тыквенные искры',desc:'Касание рассыпает тыквы и конфеты',price:1500},{id:'web',ic:'🕸',name:'Паутина',desc:'Паутинки в верхних углах',price:1200},{id:'ghost',ic:'👻',name:'Призрак-компаньон',desc:'Добрый призрак парит у края экрана',price:3000});
+SP_FRAMES.push({id:'pumpkin',name:'Тыквенная рамка',desc:'Оранжево-фиолетовая, с тыквой',price:3000});
+SP_BADGES.push({id:'pumpkin',ic:'🎃',name:'Тыква',price:1000},{id:'ghost',ic:'👻',name:'Призрак',price:1500},{id:'bat',ic:'🦇',name:'Летучая мышь',price:1500});
+SP_COLORS.push({id:'hallo',name:'Тыквенное имя',c:'linear-gradient(90deg,#ffb347,#ff7a1a,#c86bff)',price:4000});
+SP_CARDS.push({id:'hallo',name:'Хэллоуинская карточка',desc:'Тыквенный фон ваших постов',price:6000});
+const CC_HALLO={f:['pumpkin'],b:['pumpkin','ghost','bat'],c:['hallo'],k:['hallo']};
+SP_TABS.splice(1,0,['h','🎃 Хэллоуин']);
+function ccHalloBody(){const th=SH_THEMES.find(t=>t.id==='halloween'),own=shOwn('t:halloween'),on=own&&sh.theme==='halloween';
+ let h=`<div class="sp-cat">🎃 ХЭЛЛОУИН-КОЛЛЕКЦИЯ</div><div class="sp-shl">`;
+ h+=spRow(`<span class="sp-pv" style="background:linear-gradient(135deg,${th.sw[0]},${th.sw[1]});font:900 13px Unbounded,sans-serif;color:#fff">Aa</span>`,'Тема «'+th.name+'»',th.desc,on?`<button class="pe-btn sh-sm sh-done" disabled>✓ Активна</button>`:own?`<button class="pe-btn sh-sm" onclick="shTheme('halloween')">Применить</button>`:spBtn('t:halloween',th.price),on);
+ SH_DECO.filter(d=>['bats','pumpkin','web','ghost'].includes(d.id)).forEach(d=>{const o=shOwn('d:'+d.id),n=o&&sh.deco[d.id]!==false;h+=spRow(`<span class="sp-pv">${d.ic}</span>`,d.name,d.desc,o?`<span class="sx-sw"><input type="checkbox" ${n?'checked':''} onchange="shDeco('${d.id}',this.checked)" aria-label="${esc(d.name)}"><i></i></span>`:spBtn('d:'+d.id,d.price),n)});
+ Object.keys(CC_HALLO).forEach(pre=>CC_HALLO[pre].forEach(id=>{const it=spFind(pre,id);if(!it)return;const key=pre+':'+id,o=shOwn(key),n=o&&sh.eq[SP_EQ[pre]]===id;
+  const pv=pre==='f'?`<span class="sp-pv av sp-pfa sp-f-${id}"><i></i></span>`:pre==='b'?`<span class="sp-pv">${it.ic}</span>`:pre==='c'?`<span class="sp-pv nm"><span class="sp-c-${id}">Аа</span></span>`:`<span class="sp-pv sp-kpv sp-k-${id}" style="border-radius:10px">📝</span>`;
+  h+=spRow(pv,it.name,it.desc||(pre==='b'?'Значок рядом с именем — видят все':'Видят все в ленте и профиле'),o?spEquipBtn(pre,id):spBtn(key,it.price),n)}));
+ return h+'</div>'}
+(function(){const _sh=shHTML;shHTML=function(){let h=_sh();
+ if(spShopTab==='h')return h.replace('<div class="sh-eggs">',ccHalloBody()+'<div class="sh-eggs">');
+ if(spShopTab==='all'){const b=`<div class="cc-hbanner" onclick="spShopTabSet('h')"><span>🎃</span><div><b>Хэллоуин-коллекция</b><small>Тема, летучие мыши, паутина, призрак, тыквенная рамка и значки</small></div><span style="font-size:18px">›</span></div>`;const i=h.indexOf('<div class="sp-cat">');if(i>-1)h=h.slice(0,i)+b+h.slice(i)}
+ return h}})();
+/* эффекты Хэллоуина */
+(function(){const w=document.createElement('div');w.id='ccWeb';w.innerHTML=`<span class="l">${CC_SVG.web}</span><span class="r">${CC_SVG.web}</span>`;w.querySelectorAll('span').forEach(s=>{const sv=s.firstElementChild;sv.classList.add(s.className);w.appendChild(sv);s.remove()});document.body.appendChild(w);
+ const g=document.createElement('div');g.id='ccGhost';g.textContent='👻';g.title='Бу!';g.addEventListener('click',()=>{toast(['👻 Бу!','👻 Испугались?','👻 С Хэллоуином!','👻 Я тут живу'][Math.floor(Math.random()*4)]);const r=g.getBoundingClientRect();sxBurst(r.left+r.width/2,r.top,12,['🍬','🎃','✨'])});document.body.appendChild(g)})();
+function ccBat(){if(!document.documentElement.classList.contains('dc-bats')||document.hidden||sxStill())return;const b=document.createElement('span');b.className='cc-bat';b.textContent='🦇';const y=80+Math.random()*(innerHeight*.5),dir=Math.random()<.5?1:-1,W=innerWidth;
+ b.style.top=y+'px';document.body.appendChild(b);const k=[];for(let i=0;i<=10;i++){const t=i/10;k.push({transform:`translate(${dir>0?-40+t*(W+80):W+40-t*(W+80)}px,${Math.sin(t*Math.PI*3)*28}px) scaleX(${dir})`})}
+ b.animate(k,{duration:3800+Math.random()*1500,easing:'linear'}).onfinish=()=>b.remove();setTimeout(()=>b.remove(),6000)}
+(function loop(){setTimeout(()=>{ccBat();if(Math.random()<.35)setTimeout(ccBat,400);loop()},9000+Math.random()*12000)})();
+addEventListener('pointerdown',e=>{if(!document.documentElement.classList.contains('dc-pumpkin')||e.target.closest('input,textarea,select'))return;sxBurst(e.clientX,e.clientY,8,['🎃','🍬','👻','🦇'])},{passive:true});
+shApply();
+</script>
+<script id="pack28b">
+/* шапка на узком экране: короткая подпись кнопки входа */
+(function(){const _ua=updateAuthUI;updateAuthUI=function(){_ua();const t=$('headerAuthBtnText');if(t&&!state.registeredUser&&innerWidth<=420)t.textContent='Войти'};updateAuthUI()})();
+</script>
 </body>
