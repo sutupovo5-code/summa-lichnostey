@@ -3988,6 +3988,8 @@ html.sx-still #spSnow i{display:none}
 .sp-pv.sp-f-crown::after{top:-9px;font-size:13px}
 /* написать пост может любой: участники бесплатно, остальные — за Σ */
 body:not(.is-team) .x-compose{display:flex!important}
+body:not(.is-team) .x-compose .fake[onclick*="openComposerModal"]{display:block!important}
+body:not(.is-team) .x-compose button[onclick*="openComposerModal"]{display:inline-block!important}
 </style>
 <script id="pack27js">
 /* ===== pack27: видео в постах, пост без фото — без фото, плавная лента, магазин 2.0, чужие профили,
