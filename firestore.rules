@@ -47,6 +47,13 @@ service cloud.firestore {
         && request.resource.data.img.matches('^data:image/(jpeg|png|webp);base64,.*');
       allow delete: if false;
     }
+    // Аккаунт по номеру и паролю: профиль, Σ, покупки, карточки. Читать и менять может только сам владелец.
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['profile', 'st', 'shop', 'cards', 'eggs', 'v', 'updatedAt']);
+      allow delete: if false;
+    }
     // Рейтинг джекпотов и профили: каждый пишет только свою строку.
     // look — купленный в магазине вид профиля (рамка, значок, цвет имени, карточка).
     match /players/{uid} {

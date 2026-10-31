@@ -3656,7 +3656,7 @@ try{
    for(const id of ids)await F.updateDoc(ref(id),{'post.authorCustomName':u.name,'post.sxRole':u.role,'post.sxPhoto':u.photo||null});break}
  }}catch(e){warn(e,op.t)}};
  A.onAuthStateChanged(auth,u=>{SXC.uid=u?u.uid:null;if(u){const q=SXC.q.splice(0);q.forEach(op=>SXC.fn(op));if(SXC.live)sxRebuild()}});
- A.signInAnonymously(auth).catch(e=>{console.warn('[sync] auth',e.code,e.message);sxSyncUI('err','⚠️ Гостевой вход в базу выключен — включите Anonymous в Firebase')});
+ (auth.authStateReady?auth.authStateReady():Promise.resolve()).then(()=>auth.currentUser||A.signInAnonymously(auth)).catch(e=>{console.warn('[sync] auth',e.code,e.message);sxSyncUI('err','⚠️ Гостевой вход в базу выключен — включите Anonymous в Firebase')});
  F.onSnapshot(F.collection(db,'posts'),snap=>{const D={};snap.forEach(d=>{D[d.id]=d.data()});SXC.docs=D;
    if(!SXC.live){SXC.live=true;sxSyncUI('on','🌐 Общая лента: посты и комментарии видят все')}sxRebuild()},
   e=>{console.warn('[sync] read',e.code,e.message);SXC.live=false;sxSyncUI('err',e.code==='permission-denied'?'⚠️ Общая лента закрыта правилами доступа Firebase':OFF)});
@@ -5192,4 +5192,108 @@ try{ccSecRender()}catch(e){}
 .cc-flip .cc{border-radius:9% / 6.75%!important}
 .cc-back{border-radius:9% / 6.75%!important}
 </style>
+<style id="pack33">
+/* ===== pack33: аккаунт по номеру телефона и паролю ===== */
+.pe-box input[type=password]{width:100%;padding:10px 12px;border-radius:14px;background:rgba(4,11,26,.8);border:1.5px solid rgba(255,255,255,.2);color:#fff;font-size:16px;outline:none}
+.pe-box input[type=password]:focus{border-color:#ff4db8}
+.pe-box input[readonly]{opacity:.65}
+.ac-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:14px;background:rgba(4,11,26,.6);border:1px solid rgba(255,255,255,.14)}
+.ac-tabs button{padding:10px 6px;border-radius:10px;border:0;background:none;color:#cfe8ff;font:800 12px Unbounded,sans-serif}
+.ac-tabs button.on{background:linear-gradient(90deg,#e07aa8,#8a5ad6);color:#fff}
+.ac-ok{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:12px;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.45);font-size:12px;color:#d1fae5}
+.ac-warn{padding:9px 11px;border-radius:12px;background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.4);font-size:12px;line-height:1.4;color:#fef3c7}
+.ac-eye{position:relative}
+.ac-eye button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:#cfe8ff;font-size:16px;padding:6px}
+</style>
+<script id="pack33js">
+/* ===== pack33: аккаунт по номеру телефона и паролю (Firebase Email/Password, логин = номер) =====
+   В аккаунте хранятся: профиль, баланс Σ, крутки, джекпоты, покупки магазина, карточки, пасхалки.
+   Документ users/{uid} читать и менять может только сам владелец. */
+const AC_SYNC_KEY='summa_ac_sync',AC_DOMAIN='summa-lich.app';
+let acTab='reg',acLast='',acBusy=false;
+const acDigits=p=>{let d=String(p||'').replace(/\D/g,'');if(d.length===11&&d[0]==='8')d='7'+d.slice(1);if(d.length===10)d='7'+d;return d};
+const acEmail=p=>acDigits(p)+'@'+AC_DOMAIN;
+const acIsAcct=()=>!!(state.registeredUser&&state.registeredUser.acct&&window.SXF&&SXF.auth.currentUser&&!SXF.auth.currentUser.isAnonymous);
+function acErr(e){const c=e&&e.code||'';return c==='auth/email-already-in-use'||c==='auth/credential-already-in-use'?'Этот номер уже зарегистрирован — откройте «Вход»':
+ c==='auth/invalid-credential'||c==='auth/wrong-password'||c==='auth/user-not-found'||c==='auth/invalid-login-credentials'?'Неверный номер или пароль':
+ c==='auth/too-many-requests'?'Слишком много попыток — подождите пару минут':c==='auth/weak-password'?'Пароль слишком простой — минимум 6 символов':
+ c==='auth/operation-not-allowed'||c==='auth/admin-restricted-operation'?'Вход по паролю ещё не включён в Firebase (Authentication → Email/Password)':
+ c==='auth/network-request-failed'?'Нет интернета — попробуйте ещё раз':c==='permission-denied'?'База не пустила — обновите правила Firebase (блок users)':'Не получилось: '+(c||'ошибка')}
+/* --- что хранится в аккаунте --- */
+function acCollect(){const u=state.registeredUser||{};return{profile:{name:String(u.name||'').slice(0,60),phone:String(u.phone||''),role:String(u.role||'').slice(0,40),photo:u.photo||null},
+ st:{sp:Math.max(0,Math.floor(+state.synergyPoints||0)),ts:Math.max(0,Math.floor(+state.totalSpins||0)),jw:Math.max(0,Math.floor(+state.jackpotsWon||0))},
+ shop:JSON.parse(JSON.stringify(sh||{})),cards:JSON.parse(JSON.stringify(c2||{})),eggs:egList(),v:1}}
+async function acUpload(force){if(!acIsAcct())return false;const data=acCollect(),s=JSON.stringify(data);if(!force&&s===acLast)return true;
+ const {F,db,auth}=SXF;try{await F.setDoc(F.doc(db,'users',auth.currentUser.uid),{...data,updatedAt:Date.now()});acLast=s;sxPut(AC_SYNC_KEY,Date.now());return true}catch(e){console.warn('[acct] save',e.code,e.message);return false}}
+function acApply(d){if(!d)return;const p=d.profile||{};state.registeredUser={name:p.name||'Игрок',phone:p.phone||'',role:p.role||'',acct:true};if(p.photo)state.registeredUser.photo=p.photo;
+ if(d.st){state.synergyPoints=+d.st.sp||0;state.totalSpins=+d.st.ts||0;state.jackpotsWon=+d.st.jw||0}saveState();
+ if(d.shop&&typeof d.shop==='object')sxPut(SH_KEY,d.shop);if(d.cards&&typeof d.cards==='object')sxPut(C2_KEY,d.cards);if(Array.isArray(d.eggs))sxPut(EG_KEY,d.eggs);
+ sxPut(AC_SYNC_KEY,+d.updatedAt||Date.now())}
+/* --- регистрация (гостевой вход превращается в аккаунт: посты остаются вашими) --- */
+async function acRegister(){if(acBusy)return;const v=id=>($(id)&&$(id).value||'').trim(),err=$('acErr');err.textContent='';
+ const old=state.registeredUser,name=old?old.name:v('ac_name'),phone=old?old.phone:v('ac_phone'),role=old?old.role:($('ac_role')?$('ac_role').value:''),p1=$('ac_p1').value,p2=$('ac_p2').value,d=acDigits(phone);
+ if(!old&&name.length<2){err.textContent='Введите имя и фамилию';sxShake($('ac_name'));return}
+ if(d.length!==11||d[0]!=='7'){err.textContent='Введите номер полностью: +7 (XXX) XXX-XX-XX';sxShake($('ac_phone')||err);return}
+ if(p1.length<6){err.textContent='Пароль — минимум 6 символов';sxShake($('ac_p1'));return}
+ if(p1!==p2){err.textContent='Пароли не совпадают';sxShake($('ac_p2'));return}
+ if(!window.SXF){err.textContent='Нет связи с базой — попробуйте позже';return}
+ acBusy=true;const btn=$('acGo');if(btn){btn.disabled=true;btn.textContent='Создаём аккаунт…'}
+ const {A,auth}=SXF;try{const cred=A.EmailAuthProvider.credential(acEmail(phone),p1),cur=auth.currentUser;
+  if(cur&&cur.isAnonymous)await A.linkWithCredential(cur,cred);else await A.createUserWithEmailAndPassword(auth,acEmail(phone),p1)}
+ catch(e){acBusy=false;err.textContent=acErr(e);if(btn){btn.disabled=false;btn.textContent='🔐 Создать аккаунт'}return}
+ const fresh=!old;state.registeredUser={...(old||{}),name,phone,role,acct:true};if(fresh)state.synergyPoints+=500;
+ saveState();populateMemberDropdowns();updateAuthUI();updateAllCountersUI();await acUpload(true);try{sxPushStats()}catch(e){}acBusy=false;
+ launchConfetti(70);toast(fresh?'✅ Аккаунт создан • +500 Σ':'🔐 Аккаунт защищён паролем');openSettings()}
+/* --- вход в существующий аккаунт --- */
+async function acLogin(){if(acBusy)return;const err=$('acErr');err.textContent='';const phone=$('ac_lphone').value.trim(),pass=$('ac_lpass').value,d=acDigits(phone);
+ if(d.length!==11||d[0]!=='7'){err.textContent='Введите номер полностью: +7 (XXX) XXX-XX-XX';sxShake($('ac_lphone'));return}
+ if(!pass){err.textContent='Введите пароль';sxShake($('ac_lpass'));return}
+ if(!window.SXF){err.textContent='Нет связи с базой — попробуйте позже';return}
+ acBusy=true;const btn=$('acGo');if(btn){btn.disabled=true;btn.textContent='Входим…'}const {A,F,auth,db}=SXF;
+ try{await A.signInWithEmailAndPassword(auth,acEmail(phone),pass);const snap=await F.getDoc(F.doc(db,'users',auth.currentUser.uid));
+  if(snap.exists())acApply(snap.data());else{state.registeredUser={name:(state.registeredUser&&state.registeredUser.name)||'Игрок',phone,role:'',acct:true};saveState();await acUpload(true)}
+  toast('✅ Вы вошли в свой аккаунт');setTimeout(()=>location.reload(),600)}
+ catch(e){acBusy=false;err.textContent=acErr(e);if(btn){btn.disabled=false;btn.textContent='Войти'}}}
+/* --- выход: данные остаются в аккаунте, телефон становится гостем --- */
+async function acLogout(){if(!window.SXF)return;await acUpload(true);try{await SXF.A.signOut(SXF.auth)}catch(e){}
+ state.registeredUser=null;state.synergyPoints=500;state.totalSpins=0;state.jackpotsWon=0;saveState();
+ [SH_KEY,C2_KEY,EG_KEY,AC_SYNC_KEY,'summa_cards_v1'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});location.reload()}
+(function(){const _lo=sxLogout;sxLogout=function(){if(!(state.registeredUser&&state.registeredUser.acct)){_lo();return}
+ sxConfirm({title:'Выйти из аккаунта?',text:'Всё сохранено в аккаунте: Σ, карточки, покупки и профиль. Войти обратно можно с любого телефона по номеру и паролю.',ok:'Выйти',danger:true},acLogout)}})();
+/* --- страница профиля: регистрация / вход / защита паролем --- */
+function acPassFields(){return`<div><label>ПАРОЛЬ (минимум 6 символов)</label><div class="ac-eye"><input type="password" id="ac_p1" autocomplete="new-password" maxlength="64"><button type="button" onclick="acEye('ac_p1',this)" aria-label="Показать пароль">👁</button></div></div>
+ <div><label>ПОВТОРИТЕ ПАРОЛЬ</label><input type="password" id="ac_p2" autocomplete="new-password" maxlength="64"></div>`}
+function acEye(id,b){const i=$(id);if(!i)return;i.type=i.type==='password'?'text':'password';b.textContent=i.type==='password'?'👁':'🙈'}
+(function(){const _os=openSettings;openSettings=function(){_os();const box=document.querySelector('#sxOv .pe-box');if(!box)return;
+ const sec=[...box.querySelectorAll(':scope>.pe-sec')].find(s=>/ЛИЧНЫЕ/.test(s.querySelector(':scope>b')?.textContent||''));if(!sec)return;const u=state.registeredUser;
+ if(!u){const roles=[...document.querySelectorAll('#regRoleSelect option')].map(o=>`<option value="${esc(o.value)}">${esc(o.textContent.trim())}</option>`).join('');
+  sec.innerHTML=`<b>📱 АККАУНТ</b><div class="ac-tabs"><button class="${acTab==='reg'?'on':''}" onclick="acTab='reg';openSettings()">Регистрация</button><button class="${acTab==='login'?'on':''}" onclick="acTab='login';openSettings()">Вход</button></div>`+
+  (acTab==='reg'?`<p class="sx-note">Создайте аккаунт — и заходите в него с любого телефона по номеру и паролю. Σ, карточки и покупки сохранятся. Бонус +500 Σ.</p>
+   <div><label>ИМЯ И ФАМИЛИЯ</label><input type="text" id="ac_name" maxlength="50" placeholder="Иван Петров" autocomplete="name"></div>
+   <div><label>НОМЕР ТЕЛЕФОНА — ЭТО ВАШ ЛОГИН</label><input type="tel" id="ac_phone" oninput="formatRussianPhoneInput(this)" placeholder="+7 (999) 000-00-00" autocomplete="tel"></div>
+   <div><label>РОЛЬ</label><select id="ac_role">${roles}</select></div>${acPassFields()}
+   <div class="ac-warn">🔑 Запомните пароль: восстановить его по SMS нельзя.</div><div class="sx-err" id="acErr"></div>
+   <button class="pe-btn main" id="acGo" onclick="acRegister()">🔐 Создать аккаунт</button>`
+  :`<p class="sx-note">Уже есть аккаунт? Войдите — и всё ваше подтянется на этот телефон.</p>
+   <div><label>НОМЕР ТЕЛЕФОНА</label><input type="tel" id="ac_lphone" oninput="formatRussianPhoneInput(this)" placeholder="+7 (999) 000-00-00" autocomplete="username"></div>
+   <div><label>ПАРОЛЬ</label><div class="ac-eye"><input type="password" id="ac_lpass" autocomplete="current-password" maxlength="64"><button type="button" onclick="acEye('ac_lpass',this)" aria-label="Показать пароль">👁</button></div></div>
+   <div class="sx-err" id="acErr"></div><button class="pe-btn main" id="acGo" onclick="acLogin()">Войти</button>
+   <div class="ac-warn">⚠️ Данные этого телефона (гостевые Σ и карточки) заменятся данными аккаунта.</div>`);
+  sec.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();acTab==='reg'?acRegister():acLogin()}});return}
+ const ph=$('sx_phone');
+ if(u.acct){if(ph){ph.readOnly=true;ph.title='Номер — это логин аккаунта, его нельзя поменять'}
+  sec.querySelector(':scope>b').insertAdjacentHTML('afterend',`<div class="ac-ok">🔐 <span>Аккаунт <b style="color:#fff">${esc(u.phone)}</b> — заходите с любого телефона по номеру и паролю. Всё сохраняется автоматически.</span></div>`)}
+ else sec.insertAdjacentHTML('beforeend',`<div class="pe-sec" style="margin-top:4px;background:rgba(250,204,21,.06);border-color:rgba(250,204,21,.35)"><b>🔐 ЗАЩИТИТЕ ПРОФИЛЬ ПАРОЛЕМ</b><p class="sx-note">Сейчас профиль живёт только на этом телефоне. Придумайте пароль — и входите в него с любого устройства по номеру ${esc(u.phone)}.</p>${acPassFields()}<div class="sx-err" id="acErr"></div><button class="pe-btn main" id="acGo" onclick="acRegister()">🔐 Сохранить аккаунт</button></div>`);
+ const hero=box.querySelector('.sx-tags');if(hero&&u.acct)hero.insertAdjacentHTML('afterbegin','<span class="sx-badge ok">🔐 Аккаунт</span>')}})();
+/* старая регистрация с кодом 2026 больше не нужна: кнопки «Войти»/«Профиль» ведут в аккаунт */
+/* --- синхронизация: раз в несколько секунд и при сворачивании --- */
+setInterval(()=>{if(acIsAcct())acUpload(false)},6000);
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&acIsAcct())acUpload(false)});
+/* при запуске: если в аккаунте есть более свежие данные (с другого телефона) — подтянуть */
+(function(){const go=()=>{const {A,F,db,auth}=SXF;let done=false;A.onAuthStateChanged(auth,async u=>{if(done||!u||u.isAnonymous)return;done=true;
+  if(!(state.registeredUser&&state.registeredUser.acct)){/* вошли, но профиль на телефоне потерялся — восстановить */try{const s=await F.getDoc(F.doc(db,'users',u.uid));if(s.exists()){acApply(s.data());location.reload()}}catch(e){}return}
+  try{const s=await F.getDoc(F.doc(db,'users',u.uid));if(!s.exists()){acUpload(true);return}const d=s.data(),cloudT=+d.updatedAt||0,localT=+sxGet(AC_SYNC_KEY,0);
+   if(cloudT>localT+1000){acApply(d);location.reload()}else{acLast=JSON.stringify(acCollect());if(cloudT<localT)acUpload(true)}}catch(e){console.warn('[acct] load',e.code)}})};
+ if(window.SXF)go();else addEventListener('sxfb',go,{once:true})})();
+</script>
 </body>
