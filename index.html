@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="color-scheme" content="dark">
+    <style id="darkmode-ok">:root{color-scheme:dark}@media (prefers-color-scheme:dark){:root{color-scheme:dark}}</style>
     <title>СУММА ЛИЧНОСТЕЙ | Диалог цивилизаций 2026 • Липецк</title>
     <meta name="description" content="Команда «Сумма Личностей» на фестивале «Диалог цивилизаций 2026» в Липецке: новости, крутка команды, 10 лидеров и их истории.">
     <meta name="theme-color" content="#040b1a">
@@ -4940,5 +4942,127 @@ function sxPosterBanner(){const old=$('sxPosterShare');if(old)old.remove();const
 (function(){const go=()=>{const {F,db}=SXF;F.onSnapshot(F.collection(db,'team'),snap=>{let ch=false;snap.forEach(d=>{const v=d.data();if(v&&typeof v.img==='string'&&/^data:image\/(jpeg|png|webp);base64,/.test(v.img)&&TEAM_MEMBERS.some(m=>m.id===d.id)&&SX_POSTERS[d.id]!==v.img){SX_POSTERS[d.id]=v.img;ch=true}});if(ch){try{tvPrev=-1;renderShowcaseContent()}catch(e){}}},e=>console.warn('[posters] read',e.code))};
  if(window.SXF)go();else addEventListener('sxfb',go,{once:true});
  setTimeout(sxPosterBanner,2500);addEventListener("load",()=>setTimeout(sxPosterBanner,1500));const _ap=applyTeamUI;applyTeamUI=function(){_ap();setTimeout(sxPosterBanner,50)}})();
+</script>
+<style id="pack30">
+/* ===== pack30: облегчённый режим, шапка всегда видна (iPhone), красивые паки и карты, крутка x5/x10 за Σ ===== */
+/* --- шапка закреплена сверху и не прячется под «чёлку» iPhone --- */
+header.sticky{position:fixed!important;top:0;left:0;right:0;z-index:45;padding-top:env(safe-area-inset-top);transform:translateZ(0)}
+body{padding-top:var(--hdrH,56px)!important}
+main>section{scroll-margin-top:calc(var(--hdrH,56px) + 8px)}
+/* --- облегчённый режим (слабые телефоны) --- */
+html.sx-lite{--th-h:0deg}
+html.sx-lite :is(header,main,nav,#fullPostModal,#composerModal,#phoneAuthModal,#resultModal){filter:none!important}
+html.sx-lite *,html.sx-lite *::before,html.sx-lite *::after{animation-iteration-count:1!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html.sx-lite #sxAurora,html.sx-lite #spSnow,html.sx-lite #spStars,html.sx-lite .cc-snow,html.sx-lite .cc-flame,html.sx-lite .cc-ember,html.sx-lite .cc-gl,html.sx-lite .cc-holo,html.sx-lite .cc-twk{display:none!important}
+html.sx-lite .xpost,html.sx-lite .glass-panel,html.sx-lite .cc,html.sx-lite .lb-row{box-shadow:none!important}
+html.sx-lite main>section:not(:first-child){content-visibility:auto;contain-intrinsic-size:auto 900px}
+/* в альбоме карты не анимируются — сотни анимаций тормозили телефон */
+.cc-grid .cc,.cc-grid .cc *,.cc-grid .cc::before,.cc-grid .cc::after{animation:none!important}
+.cc-grid .cc-flame,.cc-grid .cc-ember,.cc-grid .cc-gl,.cc-grid .cc-snow,.cc-grid .cc-twk{display:none!important}
+.cc-grid .cc{content-visibility:auto;contain-intrinsic-size:auto 150px}
+.cc-off .cc,.cc-off .cc *,.cc-off .cc-foil::after{animation-play-state:paused!important}
+/* --- карты красивее --- */
+.cc{padding:2.4cqw;border-radius:7.5cqw}
+.cc-in{border-radius:5.5cqw;box-shadow:inset 0 0 0 .7cqw rgba(255,255,255,.35)}
+.cc-grid .cc,.cc.fill{border-radius:7.5cqw}
+.cc-grid .cc-in,.cc.fill .cc-in{border-radius:5.5cqw}
+.cc-in::before{content:'';position:absolute;inset:0;z-index:6;pointer-events:none;border-radius:inherit;background:linear-gradient(155deg,rgba(255,255,255,.28),transparent 32%,transparent 70%,rgba(255,255,255,.08))}
+.cc::after{content:'';position:absolute;left:50%;top:-.8cqw;width:7cqw;height:7cqw;transform:translateX(-50%) rotate(45deg);background:var(--rg);border:.7cqw solid #fff;box-shadow:0 0 4cqw var(--rg);z-index:8;border-radius:1cqw}
+.cc.lock::after{background:#64748b;box-shadow:none}
+.cc-name{left:0!important;right:0!important;bottom:0!important;padding:4cqw 6cqw 5cqw;background:linear-gradient(to top,rgba(5,10,30,.96),rgba(5,10,30,.72) 70%,transparent);border-top:.6cqw solid color-mix(in srgb,var(--rg) 70%,transparent)}
+.cc-s-retro .cc-name{background:linear-gradient(to top,#efe4cc,rgba(239,228,204,.85) 70%,transparent);border-top-color:#c9a26b}
+.cc-name small::before{color:var(--rg);letter-spacing:0}
+.cc-r-r .cc-name small::before{content:'★ '}
+.cc-r-e .cc-name small::before{content:'★★ '}
+.cc-r-m .cc-name small::before{content:'★★★ '}
+.cc-r-l .cc-name small::before{content:'★★★★ '}
+.cc-cnt{bottom:30cqw}
+.cc-rar{box-shadow:0 2cqw 5cqw rgba(0,0,0,.4)}
+.cc-back{position:relative;overflow:hidden;background:radial-gradient(circle at 50% 42%,rgba(242,182,211,.35),transparent 46%),repeating-conic-gradient(from 0deg at 50% 42%,rgba(255,255,255,.06) 0 10deg,transparent 10deg 20deg),linear-gradient(160deg,#3b2a8a,#14205a)!important;box-shadow:inset 0 0 0 4px #f2b6d3,inset 0 0 0 7px rgba(20,32,90,1),inset 0 0 0 8px rgba(255,214,241,.5),0 12px 26px -10px rgba(0,0,0,.8)!important;font-size:calc(var(--cw,120px) * .34)!important;text-shadow:0 0 18px rgba(255,143,208,.9)}
+.cc-back::after{content:'СУММА ЛИЧНОСТЕЙ';position:absolute;left:0;right:0;bottom:12%;text-align:center;font:900 calc(var(--cw,120px) * .062)/1 Unbounded,sans-serif;letter-spacing:.08em;color:#ffd6f1;opacity:.85}
+/* --- паки в виде бустеров --- */
+.cc-boost{position:relative;width:76px;height:104px;border-radius:8px;overflow:hidden;display:block;flex-shrink:0;box-shadow:0 10px 22px -8px rgba(0,0,0,.75);clip-path:var(--cc-zig);isolation:isolate}
+.cc-boost .bg{position:absolute;inset:0;z-index:-1}
+.cc-boost .band{position:absolute;left:0;right:0;top:9%;height:14%;display:flex;align-items:center;justify-content:center;font:900 7.5px/1 Unbounded,sans-serif;letter-spacing:.04em;color:#fff;background:rgba(0,0,0,.28);white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.cc-boost .art{position:absolute;left:0;right:0;top:27%;bottom:24%;display:flex;align-items:center;justify-content:center}
+.cc-boost .lbl{position:absolute;left:0;right:0;bottom:8%;text-align:center;font:900 9px/1.15 Unbounded,sans-serif;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);padding:0 4px}
+.cc-boost .glare{position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 48%,transparent 62%);transform:translateX(-120%);animation:ccShine 3s ease-in-out infinite}
+.cc-boost .foil{position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.08) 0 2px,transparent 2px 7px)}
+.cc-boost .faces{display:flex}
+.cc-boost .faces img{width:30px;height:30px;border-radius:50%;object-fit:cover;object-position:center 22%;border:2px solid #fff;margin-left:-10px;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.cc-boost .faces img:first-child{margin-left:0}
+.cc-boost .star{font-size:34px;filter:drop-shadow(0 0 10px rgba(255,255,255,.9))}
+.cc-boost.chars .bg{background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.35),transparent 55%),linear-gradient(160deg,#f7a8cf,#c056a0 45%,#3b4fd6)}
+.cc-boost.skins .bg{background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.4),transparent 55%),conic-gradient(from 200deg at 50% 50%,#ffd166,#ff8fd0,#a78bfa,#7dd3fc,#ffd166)}
+.cc-pk .cc-foil{background:none!important;box-shadow:none!important;width:auto;height:auto;overflow:visible}
+.cc-pk .cc-foil::after{display:none}
+.cc-pk{padding-top:12px}
+.cc-pk .cc-boost{transition:transform .35s var(--spring)}
+.cc-pk:active .cc-boost{transform:scale(.94) rotate(-2deg)}
+.cc-bigpack.cc-big2{width:min(54vw,210px);aspect-ratio:auto;height:calc(min(54vw,210px) * 1.37);border-radius:12px;background:none!important;box-shadow:0 24px 60px -12px rgba(0,0,0,.85),0 0 50px -6px rgba(255,143,208,.65)!important;clip-path:var(--cc-zig);font-size:0}
+.cc-bigpack.cc-big2{display:block!important;overflow:visible}
+.cc-bigpack.cc-big2::after{display:none!important}
+.cc-bigpack.cc-big2 .cc-boost{position:absolute;inset:0;width:100%;height:100%;border-radius:12px;clip-path:var(--cc-zig)}
+.cc-bigpack.cc-big2 .cc-boost .band{font-size:14px}
+.cc-bigpack.cc-big2 .cc-boost .lbl{font-size:15px}
+.cc-bigpack.cc-big2 .cc-boost .faces img{width:58px;height:58px;margin-left:-18px;border-width:3px}
+.cc-bigpack.cc-big2 .cc-boost .faces img:first-child{margin-left:0}
+.cc-bigpack.cc-big2 .cc-boost .star{font-size:72px}
+.cc-bigpack.cc-big2>span{display:none}
+.cc-boost i{font-style:normal;display:block}
+.cc-boost .faces{display:flex!important}
+.cc-boost .art{display:flex!important}
+.cc-boost .band{display:flex!important}
+/* --- крутка x5 / x10 за Σ --- */
+.sx-multi{padding:11px 6px;border-radius:16px;border:1.5px solid rgba(255,214,102,.6);background:linear-gradient(135deg,rgba(255,209,102,.22),rgba(255,143,208,.22));color:#fff;display:grid;gap:2px;justify-items:center;font:900 13px/1.1 Unbounded,sans-serif;transition:transform .2s var(--ease)}
+.sx-multi small{font:800 10.5px/1 Inter,sans-serif;color:#ffe9a6}
+.sx-multi:active{transform:scale(.95)}
+#modalContent>div{animation:sxUp .4s var(--ease) both}
+</style>
+<script id="pack30js">
+/* ===== pack30 ===== */
+/* --- шапка: высота для отступа сверху --- */
+(function(){const h=document.querySelector('header.sticky');if(!h)return;const set=()=>document.documentElement.style.setProperty('--hdrH',h.offsetHeight+'px');set();
+ if('ResizeObserver' in window)new ResizeObserver(set).observe(h);addEventListener('resize',set);addEventListener('load',set)})();
+/* --- облегчённый режим: сам включается на слабых телефонах --- */
+const SX_LITE_KEY='summa_lite';
+function sxLiteMode(){const m=sxGet(SX_LITE_KEY,'auto');return m==='on'||m==='off'?m:'auto'}
+function sxLiteApply(){const m=sxLiteMode(),on=m==='on'||(m==='auto'&&!!sxGet('summa_lite_auto',0));document.documentElement.classList.toggle('sx-lite',on)}
+sxLiteApply();
+(function(){if(sxLiteMode()!=='auto'||sxGet('summa_lite_auto',0))return;
+ const weak=(navigator.deviceMemory&&navigator.deviceMemory<=3)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4);
+ if(weak){sxPut('summa_lite_auto',1);sxLiteApply();return}
+ /* замер плавности: если меньше ~40 кадров в секунду — облегчаем */
+ const go=()=>{let n=0,t0=0;const f=t=>{if(!t0)t0=t;n++;if(t-t0<2000)requestAnimationFrame(f);else{const fps=n*1000/(t-t0);if(fps<40&&!document.hidden){sxPut('summa_lite_auto',1);sxLiteApply();toast('⚡ Включён облегчённый режим — так плавнее')}}};requestAnimationFrame(f)};
+ setTimeout(()=>{if(!document.hidden)go()},2500)})();
+/* настройка в профиле */
+(function(){const _os=openSettings;openSettings=function(){_os();const box=document.querySelector('#sxOv .pe-box');if(!box)return;const secs=[...box.querySelectorAll(':scope>.pe-sec')],last=secs[secs.length-1];const m=sxLiteMode();
+ const html=`<div class="pe-sec"><b>⚡ ПЛАВНОСТЬ</b><p class="sx-note">Облегчённый режим убирает тяжёлые эффекты — сайт летает даже на слабом телефоне.${m==='auto'?` Сейчас: ${document.documentElement.classList.contains('sx-lite')?'включён автоматически':'выключен — телефон справляется'}.`:''}</p>
+ <div class="sx-seg" style="grid-template-columns:repeat(3,1fr)">${[['auto','Авто'],['on','Включён'],['off','Выключен']].map(([k,t])=>`<button class="${m===k?'on':''}" onclick="sxLiteSet('${k}')">${t}</button>`).join('')}</div></div>`;
+ if(last)last.insertAdjacentHTML('beforebegin',html)}})();
+function sxLiteSet(k){sxPut(SX_LITE_KEY,k);if(k==='auto')sxPut('summa_lite_auto',0);sxLiteApply();openSettings();toast(k==='on'?'⚡ Облегчённый режим включён':k==='off'?'Облегчённый режим выключен':'Авто: сайт сам решит')}
+/* анимации карт и паков — только когда раздел на экране */
+(function(){if(!('IntersectionObserver' in window))return;const io=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('cc-off',!e.isIntersecting)),{rootMargin:'60px'});
+ ['sec-cards','sec-news'].forEach(id=>{const el=$(id);if(el)io.observe(el)})})();
+
+/* --- красивые паки --- */
+(function(){const pts=['0% 3%'];for(let i=1;i<=20;i++)pts.push(`${i*5}% ${i%2?0:3}%`);pts.push('100% 97%');for(let i=19;i>=0;i--)pts.push(`${i*5}% ${i%2?100:97}%`);
+ document.documentElement.style.setProperty('--cc-zig',`polygon(${pts.join(',')})`)})();
+function c3Boost(id,big){const faces=[...TEAM_MEMBERS].sort(()=>Math.random()-.5).slice(0,3).map(m=>`<img src="${ccPhoto(m)}" alt="">`).join('');
+ return id==='chars'?`<div class="cc-boost chars"><i class="bg"></i><i class="foil"></i><i class="band">ПЕРСОНАЖИ</i><i class="art"><i class="faces">${faces}</i></i><i class="lbl">${big?'Пак персонажей':'×2 карты'}</i><i class="glare"></i></div>`
+  :`<div class="cc-boost skins"><i class="bg"></i><i class="foil"></i><i class="band">СКИНЫ</i><i class="art"><i class="star">✨</i></i><i class="lbl">${big?'Пак скинов':'×2 скина'}</i><i class="glare"></i></div>`}
+(function(){const _r=ccSecRender;ccSecRender=function(){_r();document.querySelectorAll('#sec-cards .cc-foil').forEach(f=>{const id=f.classList.contains('skins')?'skins':'chars';if(!f.dataset.boost){f.innerHTML=c3Boost(id,false);f.dataset.boost=1}})};ccSecRender();
+ const _o=c2Open;c2Open=function(pid){_o(pid);const b=$('ccPackBig');if(b){b.classList.add('cc-big2');b.insertAdjacentHTML('afterbegin',c3Boost(pid,true))}}})();
+
+/* --- крутка x5 и x10 за Σ --- */
+const SX_MULTI={5:750,10:1400};
+function sxMultiSpin(n,btn){const price=SX_MULTI[n];if(!price||state.isSpinning)return;if(typeof sxLocked==='function'&&sxLocked()){sxLockNudge();return}
+ const need=price-state.synergyPoints;if(need>0){toast(`Не хватает ${shFmt(need)} Σ — покрутите 1x бесплатно 🎰`);sxShake(btn);return}
+ state.synergyPoints-=price;saveState();updateAllCountersUI();try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}quickMultiSlot(n);
+ const t=$('modalTitle');if(t)t.textContent=`Серия x${n} · −${shFmt(price)} Σ`;
+ document.querySelectorAll('#modalContent>div').forEach((r,i)=>r.style.animationDelay=(i*70)+'ms')}
+(function(){const one=$('btnSpinSlot');if(!one)return;const g=one.parentElement,old=g.querySelector('[onclick^="quickMultiSlot"]');if(old)old.remove();
+ g.style.gridTemplateColumns='1fr 1fr';one.style.gridColumn='1 / -1';one.querySelector('span')&&(one.querySelector('span').textContent='🎰 КРУТИТЬ (1x) — бесплатно');
+ g.insertAdjacentHTML('beforeend',[5,10].map(n=>`<button class="sx-multi" onclick="sxMultiSpin(${n},this)">⚡ x${n}<small>${shFmt(SX_MULTI[n])} Σ</small></button>`).join(''))})();
 </script>
 </body>
