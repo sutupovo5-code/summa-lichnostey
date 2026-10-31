@@ -4700,4 +4700,245 @@ shApply();
 /* шапка на узком экране: короткая подпись кнопки входа */
 (function(){const _ua=updateAuthUI;updateAuthUI=function(){_ua();const t=$('headerAuthBtnText');if(t&&!state.registeredUser&&innerWidth<=420)t.textContent='Войти'};updateAuthUI()})();
 </script>
+<style id="pack29">
+/* ===== pack29: без приближения, светлее, 2 пака (персонажи + скины), новые скины, постеры «О нас» для всех ===== */
+/* --- нельзя случайно приблизить страницу (щипок и двойное касание) --- */
+html,body{touch-action:pan-x pan-y}
+:root{color-scheme:dark;--sp-txt2:rgba(226,237,250,.84)}
+/* --- светлее: фон и панели --- */
+body{background:radial-gradient(circle at 50% 0%,#2f5db2 0%,#1a3a7e 42%,#10255a 100%)}
+.glass-panel{background:linear-gradient(135deg,rgba(56,84,150,.9),rgba(30,50,104,.94))!important}
+header.sticky{background:rgba(24,44,96,.97)!important}
+nav.fixed{background:rgba(22,40,90,.97)!important}
+#tvCard.sp-tv{background:linear-gradient(180deg,rgba(54,78,142,.85),rgba(26,44,96,.96))!important}
+.cc-sec{background:linear-gradient(160deg,rgba(66,52,130,.9),rgba(26,40,94,.96))!important}
+.text-sky-200\/60,.text-sky-200\/70,.text-sky-200\/75{color:rgba(214,234,255,.86)!important}
+.x-head span,.x-act{color:rgba(214,232,252,.8)!important}
+@media (max-width:640px){
+ .glass-panel{background:linear-gradient(135deg,rgba(56,84,150,.94),rgba(30,50,104,.97))!important}
+ header.sticky{background:rgba(24,44,96,.98)!important}
+ nav.fixed{background:rgba(22,40,90,.98)!important}
+ .sx-ov{background:rgba(12,24,56,.95)!important}
+ #fullPostModal,#composerModal,#phoneAuthModal,#resultModal{background:rgba(12,24,56,.94)!important}
+}
+.pe-box,.tl-box{background:linear-gradient(180deg,#1c3a78,#0f2452)!important}
+/* --- карточки: персонаж --- */
+.cc-r-c{--rc:linear-gradient(150deg,#f8d3e6,#c56d9a);--rg:#f2b6d3}
+.cc-r-c .cc-rar{color:#ffe1ef;border-color:#f2b6d3}
+.cc-lock-note{position:absolute;left:6cqw;right:6cqw;top:42cqw;z-index:7;text-align:center;font:800 6.5cqw/1.25 Unbounded,sans-serif;color:rgba(255,255,255,.75)}
+/* --- новые и улучшенные скины --- */
+.cc-s-neon .cc-bg{background:#07041a}
+.cc-s-neon .cc-ph img{filter:grayscale(1) contrast(1.3) brightness(1.08)}
+.cc-s-neon .cc-ph::after{content:'';position:absolute;inset:0;background:linear-gradient(165deg,#ff2bd6 0%,#7c3aed 50%,#22d3ee 100%);mix-blend-mode:color;opacity:.95}
+.cc-s-neon .cc-in{box-shadow:inset 0 0 0 1.4cqw #ff4fd8,inset 0 0 9cqw rgba(34,211,238,.8)}
+.cc-s-neon .cc-name b{color:#bdf6ff;text-shadow:0 0 3cqw #22d3ee,0 0 6cqw #ff2bd6}
+.cc-s-retro .cc-bg{background:#efe4cc}
+.cc-s-retro .cc-ph{inset:5cqw 5cqw 31cqw 5cqw;border-radius:1.5cqw}
+.cc-s-retro .cc-ph img{filter:sepia(.7) contrast(1.12) saturate(.85) brightness(1.03)}
+.cc-s-retro .cc-ph::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 14cqw rgba(70,35,0,.6);background:repeating-radial-gradient(circle at 30% 40%,rgba(0,0,0,.05) 0 1px,transparent 1px 3px)}
+.cc-s-retro .cc-sh{display:none}
+.cc-s-retro .cc-name b{color:#3b2a1a;text-shadow:none}
+.cc-s-retro .cc-name small{color:#9a5b23}
+.cc-s-comic .cc-bg{background:repeating-conic-gradient(from 0deg at 50% 40%,#ffd400 0 10deg,#ff4d4d 10deg 20deg)}
+.cc-s-comic .cc-ph{inset:13cqw 7cqw 30cqw 7cqw;border:1.6cqw solid #111;transform:rotate(-3deg);box-shadow:2cqw 2cqw 0 #111}
+.cc-s-comic .cc-ph img{filter:saturate(1.7) contrast(1.25)}
+.cc-s-comic .cc-ph::after{content:'';position:absolute;inset:0;background:radial-gradient(rgba(0,0,0,.28) 1px,transparent 1.6px);background-size:3cqw 3cqw;mix-blend-mode:multiply}
+.cc-s-comic .cc-sh{background:linear-gradient(to top,rgba(17,17,17,.9),transparent 30%)}
+.cc-s-comic .cc-name b{color:#ffd400;-webkit-text-stroke:.9cqw #111;paint-order:stroke fill;text-shadow:1cqw 1cqw 0 #111}
+.cc-s-hallo .cc-bg{background:radial-gradient(circle at 78% 18%,#fff2b8 0 9cqw,#ffd36b 10cqw,transparent 11cqw),linear-gradient(175deg,#3a1460,#1b0830 70%)}
+.cc-s-hallo .cc-ph{inset:18cqw 0 0 0}
+.cc-s-royal .cc-ph{inset:auto;left:18cqw;right:18cqw;top:24cqw;height:62cqw;border-radius:32cqw 32cqw 3cqw 3cqw;box-shadow:0 0 0 1.6cqw #f0cf6a,0 0 0 2.6cqw #7a5212,0 6cqw 14cqw rgba(0,0,0,.5)}
+.cc-s-hallo .cc-ph img{object-position:center 12%}
+.cc-s-royal .cc-ph img{object-position:center 10%}
+.cc-s-hallo .cc-ph img{filter:sepia(.4) hue-rotate(-20deg) saturate(1.5) contrast(1.05)}
+.cc-s-space .cc-bg{background:radial-gradient(1.2px 1.2px at 20% 30%,#fff 60%,transparent),radial-gradient(1px 1px at 70% 20%,#fff 60%,transparent),radial-gradient(1.4px 1.4px at 85% 60%,#cfe8ff 60%,transparent),radial-gradient(1px 1px at 35% 75%,#fff 60%,transparent),radial-gradient(circle at 25% 75%,rgba(255,79,216,.45),transparent 40%),radial-gradient(circle at 75% 25%,rgba(124,58,237,.65),transparent 45%),#0b0630}
+.cc-s-space .cc-ph{box-shadow:0 0 0 3cqw #dfe7f2,0 0 0 4.2cqw #7d8aa3,0 0 14cqw #8fd3ff}
+.cc-s-space .cc-ph::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 30% 22%,rgba(255,255,255,.55),transparent 32%),linear-gradient(160deg,rgba(143,211,255,.25),transparent 60%)}
+.cc-s-cyber .cc-bg{background:linear-gradient(transparent 60%,rgba(255,43,214,.35)),repeating-linear-gradient(90deg,rgba(34,211,238,.25) 0 1px,transparent 1px 8cqw),repeating-linear-gradient(0deg,rgba(34,211,238,.25) 0 1px,transparent 1px 8cqw),#0a0518}
+.cc-s-cyber .cc-in{clip-path:polygon(0 6%,6% 0,100% 0,100% 94%,94% 100%,0 100%)}
+.cc-s-cyber .cc-ph img{filter:contrast(1.2) saturate(1.3)}
+.cc-gl{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%;mix-blend-mode:screen;opacity:.55;pointer-events:none}
+.cc-gl.a{filter:grayscale(1) sepia(1) hue-rotate(-50deg) saturate(6);transform:translateX(-1.6cqw);animation:ccGlitch 2.2s steps(2) infinite}
+.cc-gl.b{filter:grayscale(1) sepia(1) hue-rotate(150deg) saturate(6);transform:translateX(1.6cqw);animation:ccGlitch 2.2s steps(2) infinite reverse}
+@keyframes ccGlitch{0%,86%,100%{clip-path:inset(0 0 0 0)}88%{clip-path:inset(20% 0 55% 0)}92%{clip-path:inset(60% 0 10% 0)}}
+.cc-s-cyber .cc-ph::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
+.cc-s-cyber .cc-name b{color:#7df9ff;text-shadow:-.6cqw 0 #ff2bd6,.6cqw 0 #22d3ee}
+.cc-hud{position:absolute;inset:3cqw;z-index:3;pointer-events:none;border:1px solid rgba(125,249,255,.0);background:linear-gradient(#7df9ff,#7df9ff) left top/8cqw 1px no-repeat,linear-gradient(#7df9ff,#7df9ff) left top/1px 8cqw no-repeat,linear-gradient(#ff2bd6,#ff2bd6) right bottom/8cqw 1px no-repeat,linear-gradient(#ff2bd6,#ff2bd6) right bottom/1px 8cqw no-repeat}
+.cc-s-gold .cc-in{box-shadow:inset 0 0 0 1.8cqw #f0cf6a,inset 0 0 0 3cqw #7a5212,inset 0 0 12cqw rgba(255,215,120,.6)}
+.cc-s-gold .cc-name b{color:#ffe9a6;text-shadow:0 1px 0 #7a5212,0 0 6cqw rgba(255,200,90,.7)}
+.cc-twk{position:absolute;z-index:4;pointer-events:none;font-size:8cqw;animation:ccTwk 2.4s ease-in-out infinite}
+@keyframes ccTwk{0%,100%{opacity:.2;transform:scale(.6) rotate(0)}50%{opacity:1;transform:scale(1.1) rotate(25deg)}}
+.cc-s-holo .cc-ph img{filter:saturate(.75) brightness(1.08)}
+.cc-s-holo .cc-ph::after{content:'';position:absolute;inset:0;background:linear-gradient(125deg,#ff8fd0,#ffd166,#7df9a0,#7dd3fc,#c39bff,#ff8fd0);background-size:300% 300%;mix-blend-mode:color-dodge;opacity:.55;animation:ccHolo 4s ease-in-out infinite}
+.cc-s-holo .cc-ph::before{content:'';position:absolute;inset:0;z-index:2;background:repeating-linear-gradient(115deg,rgba(255,255,255,.0) 0 6cqw,rgba(255,255,255,.22) 6cqw 7cqw)}
+.cc-s-holo .cc-name b{background:linear-gradient(90deg,#ffb3e0,#fff3b0,#b3fff0,#c9b3ff);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.cc-s-fire .cc-bg{background:linear-gradient(180deg,#2a0505,#5a0f05)}
+.cc-s-fire .cc-ph img{filter:sepia(.35) saturate(1.6) hue-rotate(-12deg) contrast(1.1)}
+.cc-flame{position:absolute;left:-10%;right:-10%;bottom:-6%;height:62%;z-index:3;pointer-events:none;background:radial-gradient(ellipse at 20% 100%,rgba(255,200,0,.95),rgba(255,90,0,.7) 30%,transparent 60%),radial-gradient(ellipse at 55% 100%,rgba(255,230,120,.95),rgba(255,70,0,.75) 32%,transparent 62%),radial-gradient(ellipse at 85% 100%,rgba(255,180,0,.9),rgba(255,60,0,.65) 30%,transparent 60%);filter:blur(1.4cqw);animation:ccFlame 1.1s ease-in-out infinite alternate;mix-blend-mode:screen}
+@keyframes ccFlame{0%{transform:scaleY(.9) translateY(4%)}100%{transform:scaleY(1.12) translateY(0)}}
+.cc-ember{position:absolute;z-index:4;width:1.6cqw;height:1.6cqw;border-radius:50%;background:#ffcf5a;box-shadow:0 0 2cqw #ff7a00;pointer-events:none;animation:ccEmber 2.6s linear infinite}
+@keyframes ccEmber{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-70cqw);opacity:0}}
+.cc-s-fire .cc-name b{color:#ffe0a3;text-shadow:0 0 4cqw #ff6a00}
+.cc-s-royal .cc-bg{background:radial-gradient(circle at 50% 30%,#b0122e,#5c0718 70%),#5c0718}
+.cc-s-royal .cc-in{box-shadow:inset 0 0 0 1.6cqw #f0cf6a}
+.cc-s-royal .cc-name b{color:#ffe9a6}
+.cc-s-hero .cc-bg{background:repeating-conic-gradient(from 0deg at 50% 38%,#1d4ed8 0 8deg,#2563eb 8deg 16deg)}
+.cc-s-hero .cc-ph img{filter:saturate(1.35) contrast(1.12)}
+.cc-s-hero .cc-ph::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 55%,rgba(225,29,72,.35))}
+.cc-s-hero .cc-name b{color:#fff;text-shadow:.6cqw .6cqw 0 #e11d48,1.2cqw 1.2cqw 0 #111}
+/* --- раздел карточек v2 --- */
+.cc-packs.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cc-foil.chars{background:linear-gradient(150deg,#f2b6d3,#c56d9a 50%,#3b5bd6)}
+.cc-foil.skins{background:linear-gradient(150deg,#ffd166,#ff8fd0 45%,#7c3aed)}
+.cc-stat{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cc-stat>div{padding:8px 10px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14)}
+.cc-stat b{display:block;font:900 15px/1.1 Unbounded,sans-serif;color:#ffd166}
+.cc-stat small{font-size:11px;color:rgba(226,237,250,.8)}
+.cc-odds{display:flex;flex-wrap:wrap;gap:5px}
+.cc-odds span{font-size:10.5px;font-weight:800;padding:4px 8px;border-radius:99px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14)}
+/* --- «О нас»: поделиться постерами --- */
+.sx-poster-share{display:grid;gap:8px;padding:12px;border-radius:18px;margin-bottom:10px;background:linear-gradient(120deg,rgba(242,182,211,.2),rgba(124,58,237,.25));border:1.5px solid rgba(242,182,211,.55)}
+.sx-poster-share b{font:900 13px/1.25 Unbounded,sans-serif;color:#fff}
+.sx-poster-share p{font-size:12px;line-height:1.4;color:#f3e8ff}
+.sx-poster-share .row{display:flex;gap:4px;overflow:hidden}
+.sx-poster-share .row img{width:34px;height:42px;object-fit:cover;border-radius:6px;flex-shrink:0}
+</style>
+<script id="pack29js">
+/* ===== pack29: без приближения, 2 пака (персонажи и скины), 12 скинов с редкостями, постеры «О нас» для всех ===== */
+/* --- щипок/двойное касание не приближают (на случай, если браузер игнорирует запрет) --- */
+document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
+document.addEventListener('touchmove',e=>{if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false});
+(function(){const m=document.createElement('meta');m.name='color-scheme';m.content='dark';document.head.appendChild(m)})();
+
+/* =====================================================================
+   КАРТОЧКИ v2: «Пак персонажей» (10 участников) и «Пак скинов» (12 скинов, 4 редкости)
+   ===================================================================== */
+const C2_KEY='summa_cards_v2';
+const C2_SKINS=[
+ {id:'neon',n:'Неон',r:'r'},{id:'retro',n:'Ретро',r:'r'},{id:'comic',n:'Комикс',r:'r'},
+ {id:'hallo',n:'Хэллоуин',r:'e'},{id:'space',n:'Космонавт',r:'e'},{id:'cyber',n:'Киберпанк',r:'e'},
+ {id:'gold',n:'Золото',r:'m'},{id:'holo',n:'Голограмма',r:'m'},{id:'fire',n:'Пламя',r:'m'},
+ {id:'frost',n:'Дед Мороз',r:'l'},{id:'royal',n:'Король',r:'l'},{id:'hero',n:'Супергерой',r:'l'}];
+const C2_R={r:{n:'Редкий',w:55,dup:250},e:{n:'Эпический',w:28,dup:600},m:{n:'Мифический',w:13,dup:1800},l:{n:'Легендарный',w:4,dup:6000}};
+const C2_CH_DUP=500;
+const C2_PACKS=[{id:'chars',ic:'🧑‍🤝‍🧑',n:'Пак персонажей',d:'2 участника команды',price:2500},{id:'skins',ic:'✨',n:'Пак скинов',d:'2 скина для ваших персонажей',price:4000}];
+const C2_TOTAL=TEAM_MEMBERS.length*(1+C2_SKINS.length);
+let c2=sxGet(C2_KEY,null);
+if(!c2||typeof c2.ch!=='object'){c2={ch:{},sk:{},log:[]};
+ /* перенос из прошлой версии карточек */
+ try{Object.keys(cc.own||{}).forEach(k=>{const n=Math.floor(+cc.own[k]||0);if(n<=0)return;const[m,s]=k.split(':');if(!TEAM_MEMBERS.some(x=>x.id===m))return;
+  if(s==='classic'){c2.ch[m]=(c2.ch[m]||0)+n}else if(C2_SKINS.some(x=>x.id===s)){c2.sk[k]=(c2.sk[k]||0)+n;if(!c2.ch[m])c2.ch[m]=1}})}catch(e){}
+ sxPut(C2_KEY,c2)}
+if(!Array.isArray(c2.log))c2.log=[];
+const c2Save=()=>sxPut(C2_KEY,c2);
+const c2N=(o,k)=>Math.max(0,Math.floor(+(o||{})[k]||0));
+const c2HasCh=m=>c2N(c2.ch,m)>0;
+const c2HasSk=(m,s)=>c2N(c2.sk,m+':'+s)>0;
+const c2Sk=id=>C2_SKINS.find(s=>s.id===id);
+const c2Count=()=>({ch:TEAM_MEMBERS.filter(m=>c2HasCh(m.id)).length,sk:Object.keys(c2.sk).filter(k=>c2N(c2.sk,k)>0).length});
+function c2Title(m,s){const f=ccFirst(m),g=CC_GIRLS.has(m.id);
+ if(s==='frost')return(g?'Снегурочка ':'Дед Мороз ')+f;if(s==='royal')return(g?'Королева ':'Король ')+f;if(s==='hero')return(g?'Супергероиня ':'Супергерой ')+f;if(s==='hallo')return f+' 🎃';if(s==='space')return(g?'Космонавтка ':'Космонавт ')+f;return f}
+const C2_SVG={
+ crown:'<svg viewBox="0 0 100 62"><path d="M6 58 L12 16 L32 38 L50 6 L68 38 L88 16 L94 58 Z" fill="#f2c94c" stroke="#8a5a12" stroke-width="2.5" stroke-linejoin="round"/><rect x="6" y="50" width="88" height="10" rx="3" fill="#e0a92e" stroke="#8a5a12" stroke-width="2"/><circle cx="50" cy="40" r="6" fill="#e11d48"/><circle cx="28" cy="46" r="4" fill="#38bdf8"/><circle cx="72" cy="46" r="4" fill="#22c55e"/><circle cx="12" cy="16" r="4" fill="#fff3c4"/><circle cx="50" cy="6" r="4.5" fill="#fff3c4"/><circle cx="88" cy="16" r="4" fill="#fff3c4"/></svg>',
+ tiara:'<svg viewBox="0 0 100 44"><path d="M8 40 Q50 8 92 40 Q50 26 8 40Z" fill="#e6edf5" stroke="#9fb3c8" stroke-width="2"/><path d="M50 4 L56 20 L50 30 L44 20Z" fill="#7dd3fc" stroke="#fff" stroke-width="1.5"/><circle cx="30" cy="27" r="3.5" fill="#f9a8d4"/><circle cx="70" cy="27" r="3.5" fill="#f9a8d4"/><circle cx="18" cy="34" r="2.5" fill="#fff"/><circle cx="82" cy="34" r="2.5" fill="#fff"/></svg>',
+ ermine:'<svg viewBox="0 0 100 34"><path d="M0 10 Q50 -6 100 10 L100 34 L0 34Z" fill="#fbfbfb"/><g fill="#111"><path d="M14 16 l2 7 -4 0z"/><path d="M34 12 l2 7 -4 0z"/><path d="M54 11 l2 7 -4 0z"/><path d="M74 13 l2 7 -4 0z"/><path d="M90 18 l2 7 -4 0z"/><path d="M24 26 l2 7 -4 0z"/><path d="M44 24 l2 7 -4 0z"/><path d="M64 24 l2 7 -4 0z"/><path d="M84 28 l2 6 -4 0z"/></g></svg>',
+ shield:'<svg viewBox="0 0 60 64"><path d="M30 2 L58 12 L54 40 Q48 56 30 62 Q12 56 6 40 L2 12 Z" fill="#e11d48" stroke="#facc15" stroke-width="4" stroke-linejoin="round"/><text x="30" y="45" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="34" fill="#facc15">Σ</text></svg>',
+ witch:'<svg viewBox="0 0 100 70"><path d="M6 58 Q50 44 94 58 Q50 72 6 58Z" fill="#5b21b6" stroke="#c4b5fd" stroke-width="2"/><path d="M30 54 L54 4 Q60 0 62 8 L70 54 Z" fill="#6d28d9" stroke="#c4b5fd" stroke-width="2" stroke-linejoin="round"/><rect x="31" y="45" width="39" height="8" fill="#ff8a1f"/><rect x="46" y="44" width="9" height="10" fill="none" stroke="#fde68a" stroke-width="2"/></svg>',
+ burst:'<svg viewBox="0 0 100 100"><path d="M50 2 L58 30 L86 14 L70 40 L98 50 L70 60 L86 86 L58 70 L50 98 L42 70 L14 86 L30 60 L2 50 L30 40 L14 14 L42 30 Z" fill="#fff200" stroke="#111" stroke-width="3" stroke-linejoin="round"/><text x="50" y="58" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="20" fill="#e11d48">ВАУ!</text></svg>'};
+function c2Card(mid,sid,o){o=o||{};const m=ccMem(mid),base=sid==='base',s=base?null:c2Sk(sid),r=base?'c':s.r,lock=!!o.lock,src=ccPhoto(m);let deco='';
+ if(!base){const id=s.id,g=CC_GIRLS.has(m.id);
+  if(id==='frost'){deco+=g?`<div class="cc-deco" style="left:18cqw;width:64cqw;top:3cqw">${CC_SVG.kok}</div>`:`<div class="cc-deco" style="left:6cqw;width:84cqw;top:-14cqw;transform:rotate(-8deg)">${CC_SVG.hat}</div><div class="cc-deco" style="left:28cqw;width:44cqw;top:62cqw">${CC_SVG.beard}</div>`;deco+='<div class="cc-snow"></div>'}
+  if(id==='hallo')deco+=`<div class="cc-deco" style="left:14cqw;width:72cqw;top:-10cqw;transform:rotate(-6deg)">${C2_SVG.witch}</div><div class="cc-deco" style="left:-6cqw;top:-6cqw;width:40cqw;opacity:.6">${CC_SVG.web}</div><div class="cc-deco" style="right:4cqw;top:30cqw;font-size:12cqw">🦇</div><div class="cc-deco" style="left:4cqw;bottom:28cqw;font-size:15cqw">🎃</div><div class="cc-deco" style="right:5cqw;bottom:30cqw;font-size:11cqw">🎃</div>`;
+  if(id==='space')deco+=`<div class="cc-deco" style="right:3cqw;top:66cqw;font-size:15cqw">🪐</div><div class="cc-deco" style="left:5cqw;top:70cqw;font-size:10cqw">☄️</div>`;
+  if(id==='cyber')deco+=`<img class="cc-gl a" src="${src}" alt=""><img class="cc-gl b" src="${src}" alt=""><div class="cc-hud"></div>`;
+  if(id==='gold'||id==='holo')deco+=`<span class="cc-twk" style="left:10cqw;top:24cqw">✨</span><span class="cc-twk" style="right:12cqw;top:44cqw;animation-delay:.8s">✨</span><span class="cc-twk" style="left:40cqw;top:12cqw;animation-delay:1.6s">✨</span>`;
+  if(id==='fire')deco+=`<div class="cc-flame"></div>${[12,30,50,68,84].map((x,i)=>`<span class="cc-ember" style="left:${x}cqw;bottom:${10+i%2*8}cqw;animation-delay:${(i*.5).toFixed(1)}s"></span>`).join('')}`;
+  if(id==='comic')deco+=`<div class="cc-deco" style="right:-3cqw;top:2cqw;width:40cqw;transform:rotate(12deg)">${C2_SVG.burst}</div>`;
+  if(id==='royal')deco+=(g?`<div class="cc-deco" style="left:32cqw;width:36cqw;top:14cqw">${C2_SVG.tiara}</div>`:`<div class="cc-deco" style="left:33cqw;width:34cqw;top:7cqw">${C2_SVG.crown}</div>`)+`<div class="cc-deco" style="left:14cqw;width:72cqw;top:79cqw">${C2_SVG.ermine}</div>`;
+  if(id==='hero')deco+=`<div class="cc-deco" style="right:4cqw;width:20cqw;top:17cqw;transform:rotate(8deg)">${C2_SVG.shield}</div><div class="cc-deco" style="left:4cqw;top:30cqw;font-size:12cqw">⚡</div><div class="cc-deco" style="right:4cqw;top:46cqw;font-size:12cqw">⚡</div>`}
+ const sub=base?(m.badgeIcon+' '+m.role):s.n,rar=base?'Персонаж':C2_R[r].n,title=base?ccFirst(m):c2Title(m,s.id),cnt=base?c2N(c2.ch,m.id):c2N(c2.sk,m.id+':'+s.id);
+ return`<div class="cc cc-r-${r} cc-s-${base?'classic':s.id}${lock?' lock':''}${o.fill?' fill':''}" ${o.attrs||''}><div class="cc-in"><div class="cc-bg"></div><div class="cc-ph"><img src="${src}" alt="" loading="lazy" draggable="false"></div>${deco}<div class="cc-sh"></div>${base?'':'<div class="cc-holo"></div>'}
+  <div class="cc-top"><span class="cc-rar">${rar}</span><span class="cc-ic">${m.badgeIcon}</span></div>
+  ${lock&&o.note?`<div class="cc-lock-note">${o.note}</div>`:''}
+  <div class="cc-name"><small>${esc(sub)}</small><b>${esc(title)}</b></div>${!lock&&cnt>1&&o.count?`<span class="cc-cnt">×${cnt}</span>`:''}</div></div>`}
+/* --- выпадение --- */
+function c2RollSkin(){const x=Math.random()*100;let a=0,r='r';for(const k of ['l','m','e','r']){a+=C2_R[k].w;if(x<a){r=k;break}}const L=C2_SKINS.filter(s=>s.r===r);return L[Math.floor(Math.random()*L.length)]}
+function c2Roll(pid){if(pid==='chars')return[0,1].map(()=>({kind:'ch',m:TEAM_MEMBERS[Math.floor(Math.random()*TEAM_MEMBERS.length)].id,r:'c'}));
+ const own=TEAM_MEMBERS.filter(m=>c2HasCh(m.id));return[0,1].map(()=>{const m=own[Math.floor(Math.random()*own.length)].id,s=c2RollSkin();return{kind:'sk',m,s:s.id,r:s.r}}).sort((a,b)=>'remlc'.indexOf(a.r)-'remlc'.indexOf(b.r))}
+/* --- раздел --- */
+ccSecHTML=function(){const n=c2Count(),pts=state.synergyPoints,have=n.ch+n.sk;
+ const log=c2.log.filter(k=>{const[t,m,s]=k.split(':');return t==='ch'?c2HasCh(m):c2HasSk(m,s)}).slice(0,8);
+ const show=log.length?log.map(k=>{const[t,m,s]=k.split(':');return c2Card(m,t==='ch'?'base':s,{attrs:`style="--cw:92px" onclick="c2View('${m}','${t==='ch'?'base':s}')"`})}).join('')
+  :c2Card('otyutskiy','frost',{attrs:'style="--cw:100px" onclick="ccOpenAlbum()"'})+c2Card('tolstikov','royal',{attrs:'style="--cw:100px" onclick="ccOpenAlbum()"'})+c2Card('morozova','holo',{attrs:'style="--cw:100px" onclick="ccOpenAlbum()"'})+c2Card('varvarin','fire',{attrs:'style="--cw:100px" onclick="ccOpenAlbum()"'});
+ return`<div class="cc-sec"><div class="cc-h"><div><b>🃏 КАРТОЧКИ КОМАНДЫ</b><small>Сначала выбейте персонажей, потом — их скины. ${C2_SKINS.length} скинов на каждого, от редких до легендарных.</small></div><span class="cc-prog">${have}/${C2_TOTAL}</span></div>
+ <div class="cc-bar"><i style="width:${Math.round(have/C2_TOTAL*100)}%"></i></div>
+ <div class="cc-stat"><div><b>${n.ch}/${TEAM_MEMBERS.length}</b><small>персонажей</small></div><div><b>${n.sk}/${TEAM_MEMBERS.length*C2_SKINS.length}</b><small>скинов</small></div></div>
+ <div class="cc-packs two">${C2_PACKS.map(p=>{const dis=p.id==='skins'&&!n.ch;return`<div class="cc-pk"><div class="cc-foil ${p.id}">${p.ic}</div><b>${p.n}</b><small>${dis?'Сначала нужен хотя бы один персонаж':p.d}</small><button class="pe-btn ${pts>=p.price&&!dis?'sh-buy':'sh-lack'}" onclick="c2Buy('${p.id}',this)">${shFmt(p.price)} Σ</button></div>`}).join('')}</div>
+ <div class="cc-odds">${['l','m','e','r'].map(k=>`<span style="color:${{l:'#ffd166',m:'#ff8fd0',e:'#c39bff',r:'#8ec5ff'}[k]}">${C2_R[k].n} ${C2_R[k].w}%</span>`).join('')}</div>
+ <div class="cc-show">${show}</div>
+ <button class="pe-btn main" onclick="ccOpenAlbum()">📒 Альбом · ${have}/${C2_TOTAL}</button></div>`};
+/* --- покупка/открытие --- */
+function c2Buy(pid,btn){const p=C2_PACKS.find(x=>x.id===pid);if(!p)return;
+ if(pid==='skins'&&!c2Count().ch){toast('Сначала откройте «Пак персонажей» 🧑‍🤝‍🧑');sxShake(btn);return}
+ const need=p.price-state.synergyPoints;if(need>0){toast(`Не хватает ${shFmt(need)} Σ — покрутите рулетку 🎰`);sxShake(btn);return}c2Open(pid)}
+function c2Open(pid){const p=C2_PACKS.find(x=>x.id===pid);if(!p||state.synergyPoints<p.price)return;state.synergyPoints-=p.price;saveState();updateAllCountersUI();
+ const res=c2Roll(pid);res.forEach(c=>{if(c.kind==='ch'){c.isNew=!c2HasCh(c.m);c2.ch[c.m]=c2N(c2.ch,c.m)+1;c.key='ch:'+c.m}else{const k=c.m+':'+c.s;c.isNew=!c2HasSk(c.m,c.s);c2.sk[k]=c2N(c2.sk,k)+1;c.key='sk:'+k}c2.log=[c.key,...c2.log.filter(x=>x!==c.key)].slice(0,24)});c2Save();
+ const old=$('ccOv');if(old)old.remove();const ov=document.createElement('div');ov.className='cc-ov';ov.id='ccOv';
+ ov.innerHTML=`<h3>${p.ic} ${p.n}</h3><div class="cc-bigpack" id="ccPackBig" style="background:${pid==='skins'?'linear-gradient(150deg,#ffd166,#ff8fd0 45%,#7c3aed)':'linear-gradient(150deg,#f2b6d3,#c56d9a 50%,#3b5bd6)'}">${p.ic}<span>${p.n}</span></div><p id="ccHint">Нажмите на пак, чтобы открыть</p>`;
+ document.body.appendChild(ov);document.body.style.overflow='hidden';const pk=$('ccPackBig');let go=false;
+ pk.addEventListener('click',()=>{if(go)return;go=true;$('ccHint').textContent='';try{navigator.vibrate&&navigator.vibrate([20,40,20])}catch(e){}
+  pk.classList.add('shake');setTimeout(()=>{pk.classList.remove('shake');pk.classList.add('tear');sxBurst(innerWidth/2,innerHeight/2-40,18,['#ffd6f1','#c39bff','#8ec5ff','#ffd166'])},sxStill()?0:520);setTimeout(()=>c2Reveal(res),sxStill()?0:950)})}
+function c2Reveal(res){const ov=$('ccOv');if(!ov)return;const best=res.reduce((a,c)=>'cremlc'.indexOf(c.r)>'cremlc'.indexOf(a)?c.r:a,'c');
+ ov.innerHTML=`<h3 id="ccRevT">Нажимайте на карты</h3><div class="cc-reveal">${res.map((c,i)=>`<div class="cc-flip" style="--cw:min(40vw,150px);animation-delay:${i*120}ms" data-i="${i}"><div class="cc-fi"><div class="cc-face"><div class="cc-back">Σ</div></div><div class="cc-face front">${c2Card(c.m,c.kind==='ch'?'base':c.s,{fill:true})}</div></div></div>`).join('')}</div>
+ <div class="cc-acts" id="ccActs" style="visibility:hidden"><button class="pe-btn" onclick="ccCloseOpen();ccOpenAlbum()">📒 В альбом</button><button class="pe-btn main" onclick="ccCloseOpen()">Готово</button></div>`;
+ let opened=0;const flip=el=>{if(el.classList.contains('open'))return;el.classList.add('open');const c=res[+el.dataset.i];opened++;
+  setTimeout(()=>{const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;el.insertAdjacentHTML('beforeend',`<span class="cc-new ${c.isNew?'':'dup'}">${c.isNew?'НОВЫЙ':'ПОВТОР'}</span>`);
+   if(c.r==='l')ccLegendFx(c);else if(c.r==='m'){sxBurst(cx,cy,22,['#ff8fd0','#c39bff','#ffffff']);launchConfetti(70)}else if(c.r==='e')sxBurst(cx,cy,14,['#c39bff','#ffffff']);else sxBurst(cx,cy,8,['#f2b6d3','#8ec5ff','#ffffff']);
+   if(opened===res.length){$('ccRevT').textContent=best==='l'?'👑 Легендарный скин!':best==='m'?'💖 Мифический скин!':res[0].kind==='ch'?'Персонажи в альбоме':'Скины в альбоме';$('ccActs').style.visibility='visible';ccSecRender()}},sxStill()?0:380)};
+ ov.querySelectorAll('.cc-flip').forEach((el,i)=>{el.addEventListener('click',()=>flip(el));setTimeout(()=>flip(el),900+i*700)})}
+/* --- альбом --- */
+ccAlbHTML=function(){const n=c2Count(),have=n.ch+n.sk;let dupSum=0,dupN=0;
+ Object.keys(c2.ch).forEach(m=>{const k=c2N(c2.ch,m);if(k>1){dupN+=k-1;dupSum+=(k-1)*C2_CH_DUP}});
+ Object.keys(c2.sk).forEach(key=>{const k=c2N(c2.sk,key),s=c2Sk(key.split(':')[1]);if(k>1&&s){dupN+=k-1;dupSum+=(k-1)*C2_R[s.r].dup}});
+ const F=ccAlbF,ok=(m,s)=>{const own=s==='base'?c2HasCh(m):c2HasSk(m,s);if(F==='all')return true;if(F==='have')return own;if(F==='miss')return!own;if(s==='base')return F==='ch';return c2Sk(s).r===F};
+ const mems=TEAM_MEMBERS.map(m=>{const cells=['base',...C2_SKINS.map(s=>s.id)].filter(s=>ok(m.id,s));if(!cells.length)return'';const hasCh=c2HasCh(m.id),got=C2_SKINS.filter(s=>c2HasSk(m.id,s.id)).length;
+  return`<div class="cc-mem"><div><span>${m.badgeIcon} ${esc(m.name)}</span><small>${hasCh?'✓':'—'} · скины ${got}/${C2_SKINS.length}</small></div><div class="cc-grid">${cells.map(s=>{const own=s==='base'?hasCh:c2HasSk(m.id,s);
+   return c2Card(m.id,s,{lock:!own,count:true,note:!own&&s!=='base'&&!hasCh?'нужен персонаж':'',attrs:own?`onclick="c2View('${m.id}','${s}')"`:''})}).join('')}</div></div>`}).join('');
+ const FL=[['all','Все'],['have','Есть'],['miss','Нет'],['ch','🧑 Персонажи'],['l','👑 Легенд.'],['m','💖 Миф.'],['e','💜 Эпич.'],['r','💙 Редкие']];
+ return`<div class="sx-head"><h3>📒 Альбом карточек</h3><button class="sx-x" onclick="sxCloseOv($('ccAlb'))" aria-label="Закрыть">✕</button></div>
+ <div class="cc-stat"><div><b>${n.ch}/${TEAM_MEMBERS.length}</b><small>персонажей</small></div><div><b>${n.sk}/${TEAM_MEMBERS.length*C2_SKINS.length}</b><small>скинов</small></div></div>
+ <div class="cc-bar"><i style="width:${Math.round(have/C2_TOTAL*100)}%"></i></div>
+ <div class="cc-odds">${['l','m','e','r'].map(k=>`<span>${C2_R[k].n} скин — ${C2_R[k].w}%</span>`).join('')}</div>
+ ${dupN?`<button class="pe-btn" onclick="ccSellDups()">♻️ Разобрать повторки (${dupN}) · +${shFmt(dupSum)} Σ</button>`:''}
+ <div class="cc-seg">${FL.map(([k,t])=>`<button class="${F===k?'on':''}" onclick="ccAlbF='${k}';ccAlbRender()">${t}</button>`).join('')}</div>${mems||'<p class="sx-note" style="text-align:center">Здесь пока пусто</p>'}`};
+ccSellDups=function(){let sum=0,n=0;Object.keys(c2.ch).forEach(m=>{const k=c2N(c2.ch,m);if(k>1){n+=k-1;sum+=(k-1)*C2_CH_DUP}});
+ Object.keys(c2.sk).forEach(key=>{const k=c2N(c2.sk,key),s=c2Sk(key.split(':')[1]);if(k>1&&s){n+=k-1;sum+=(k-1)*C2_R[s.r].dup}});if(!n)return;
+ sxConfirm({title:'♻️ Разобрать повторки?',text:`${n} ${sxPlural(n,'повторная карта','повторные карты','повторных карт')} превратятся в <b style="color:#ffd166">+${shFmt(sum)} Σ</b>. По одной каждого вида останется.`,ok:'Разобрать'},()=>{
+  Object.keys(c2.ch).forEach(m=>{if(c2N(c2.ch,m)>1)c2.ch[m]=1});Object.keys(c2.sk).forEach(k=>{if(c2N(c2.sk,k)>1)c2.sk[k]=1});c2Save();state.synergyPoints+=sum;saveState();updateAllCountersUI();ccAlbRender();launchConfetti(50);toast(`♻️ +${shFmt(sum)} Σ`)})};
+function c2View(mid,sid){const base=sid==='base';if(base?!c2HasCh(mid):!c2HasSk(mid,sid))return;const m=ccMem(mid),s=base?null:c2Sk(sid),n=base?c2N(c2.ch,mid):c2N(c2.sk,mid+':'+sid);
+ const ov=document.createElement('div');ov.className='cc-view';ov.innerHTML=`${c2Card(mid,sid)}<p><b style="color:#fff">${esc(base?m.name:c2Title(m,sid))}</b> · ${base?'персонаж':C2_R[s.r].n+' скин «'+s.n+'»'}<br>В альбоме: ${n}${n>1?` · повторку можно разобрать за ${shFmt(base?C2_CH_DUP:C2_R[s.r].dup)} Σ`:''}</p><button class="pe-btn" style="width:min(100%,300px)">Закрыть</button>`;
+ const card=ov.querySelector('.cc');if(!sxStill()){ov.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=`perspective(800px) rotateY(${x*18}deg) rotateX(${-y*18}deg) scale(1.02)`});ov.addEventListener('pointerleave',()=>card.style.transform='')}
+ ov.addEventListener('click',e=>{if(!e.target.closest('.cc'))ov.remove()});document.body.appendChild(ov)}
+ccSecRender();
+
+/* =====================================================================
+   «О НАС»: постеры, загруженные на одном телефоне, — для всех (коллекция team)
+   ===================================================================== */
+const SX_POSTERS={};
+(function(){const _g=getMemberRealPhotoSrc,_rs=renderShowcaseContent;
+ renderShowcaseContent=function(){getMemberRealPhotoSrc=m=>customMemberPhotos[m.id]||SX_POSTERS[m.id]||_g(m);try{return _rs.apply(this,arguments)}finally{getMemberRealPhotoSrc=_g}}})();
+function sxPosterShrink(src){return new Promise(ok=>{const im=new Image();im.onload=()=>{const s=Math.min(1,900/im.height,720/im.width),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+ let q=.86,u=c.toDataURL('image/jpeg',q);while(u.length>850000&&q>.4){q-=.08;u=c.toDataURL('image/jpeg',q)}ok(u)};im.onerror=()=>ok(null);im.src=src})}
+async function sxPostersUpload(btn){if(!window.SXF||!SXC.uid){toast('Нет связи с базой — попробуйте позже');return}const ids=Object.keys(customMemberPhotos||{}).filter(id=>TEAM_MEMBERS.some(m=>m.id===id));if(!ids.length)return;
+ if(btn){btn.disabled=true;btn.textContent='Отправляем…'}const {F,db}=SXF;let ok=0,fail='';
+ for(const id of ids){const u=await sxPosterShrink(customMemberPhotos[id]);if(!u)continue;try{await F.setDoc(F.doc(db,'team',id),{img:u,owner:SXC.uid,at:Date.now()});ok++;if(btn)btn.textContent=`Отправлено ${ok}/${ids.length}…`}catch(e){fail=e.code||'error';console.warn('[posters]',id,e.code,e.message);break}}
+ if(fail){toast(fail==='permission-denied'?'⚠️ База не пустила — сначала обновите правила Firebase (блок team)':'⚠️ Не получилось отправить');if(btn){btn.disabled=false;btn.textContent='Попробовать ещё раз'}return}
+ sxPut('summa_posters_sent',ids.length);launchConfetti(60);toast(`📤 ${ok} фото «О нас» теперь видят все`);sxPosterBanner()}
+function sxPosterBanner(){const old=$('sxPosterShare');if(old)old.remove();const ids=Object.keys(customMemberPhotos||{}).filter(id=>TEAM_MEMBERS.some(m=>m.id===id));
+ if(!ids.length||!isTeam()||+sxGet('summa_posters_sent',0)>=ids.length)return;const host=$('teamV2')||$('sec-team');if(!host)return;
+ host.insertAdjacentHTML('afterbegin',`<div class="sx-poster-share" id="sxPosterShare"><b>📤 Показать ваши фото «О нас» всем?</b><p>На этом телефоне в «О нас» стоят ваши фото (${ids.length}). Остальные пока видят старые. Отправьте их в общую базу — и их увидят все.</p><div class="row">${ids.slice(0,10).map(id=>`<img src="${customMemberPhotos[id]}" alt="">`).join('')}</div><button class="pe-btn main" onclick="sxPostersUpload(this)">📤 Отправить ${ids.length} фото всем</button></div>`)}
+(function(){const go=()=>{const {F,db}=SXF;F.onSnapshot(F.collection(db,'team'),snap=>{let ch=false;snap.forEach(d=>{const v=d.data();if(v&&typeof v.img==='string'&&/^data:image\/(jpeg|png|webp);base64,/.test(v.img)&&TEAM_MEMBERS.some(m=>m.id===d.id)&&SX_POSTERS[d.id]!==v.img){SX_POSTERS[d.id]=v.img;ch=true}});if(ch){try{tvPrev=-1;renderShowcaseContent()}catch(e){}}},e=>console.warn('[posters] read',e.code))};
+ if(window.SXF)go();else addEventListener('sxfb',go,{once:true});
+ setTimeout(sxPosterBanner,2500);addEventListener("load",()=>setTimeout(sxPosterBanner,1500));const _ap=applyTeamUI;applyTeamUI=function(){_ap();setTimeout(sxPosterBanner,50)}})();
+</script>
 </body>

@@ -31,6 +31,22 @@ service cloud.firestore {
         && request.resource.data.type in ['video/mp4', 'video/webm', 'video/quicktime'];
       allow update, delete: if false;
     }
+    // Фото участников в «О нас» для всех. Первый, кто загрузил фото участника, становится его хозяином —
+    // заменить фото может только он; удалять нельзя.
+    match /team/{memberId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['img', 'owner', 'at'])
+        && request.resource.data.owner == request.auth.uid
+        && request.resource.data.img is string && request.resource.data.img.size() < 1000000
+        && request.resource.data.img.matches('^data:image/(jpeg|png|webp);base64,.*');
+      allow update: if request.auth != null && resource.data.owner == request.auth.uid
+        && request.resource.data.keys().hasOnly(['img', 'owner', 'at'])
+        && request.resource.data.owner == request.auth.uid
+        && request.resource.data.img is string && request.resource.data.img.size() < 1000000
+        && request.resource.data.img.matches('^data:image/(jpeg|png|webp);base64,.*');
+      allow delete: if false;
+    }
     // Рейтинг джекпотов и профили: каждый пишет только свою строку.
     // look — купленный в магазине вид профиля (рамка, значок, цвет имени, карточка).
     match /players/{uid} {
