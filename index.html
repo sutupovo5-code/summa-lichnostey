@@ -5065,4 +5065,120 @@ function sxMultiSpin(n,btn){const price=SX_MULTI[n];if(!price||state.isSpinning)
  g.style.gridTemplateColumns='1fr 1fr';one.style.gridColumn='1 / -1';one.querySelector('span')&&(one.querySelector('span').textContent='🎰 КРУТИТЬ (1x) — бесплатно');
  g.insertAdjacentHTML('beforeend',[5,10].map(n=>`<button class="sx-multi" onclick="sxMultiSpin(${n},this)">⚡ x${n}<small>${shFmt(SX_MULTI[n])} Σ</small></button>`).join(''))})();
 </script>
+<style id="pack31">
+/* ===== pack31: темы без перекраски фото, одновременные барабаны x5/x10, аккуратные карточки ===== */
+/* --- 1. ТЕМЫ: больше не перекрашиваем страницу фильтром (он портил фото — зелёные и бледные) --- */
+html[data-th]{--th-h:0deg!important;--sp-ac:var(--th-ac,#e07aa8);--sp-ac2:color-mix(in srgb,var(--th-ac,#e07aa8) 55%,#9ec5ff)}
+html[data-th] :is(header,main,nav,#fullPostModal,#composerModal,#phoneAuthModal,#resultModal,.sx-ov .pe-box,.tl-ov .tl-box){filter:none!important}
+html[data-th] :is(header,main,nav,#fullPostModal,#composerModal,#phoneAuthModal,#resultModal,.sx-ov .pe-box,.tl-ov .tl-box) :is(img,canvas,video):not(.cc-ph img):not(.cc-gl){filter:none!important}
+html[data-th] #headerAuthBtn,html[data-th] .sx-hero b{filter:none!important}
+/* тема меняет акцентный цвет */
+html[data-th] .text-neon-light{color:color-mix(in srgb,var(--th-ac) 62%,#fff)!important}
+html[data-th] .text-neon-pink{color:var(--th-ac)!important}
+html[data-th] .bg-neon-pink{background-color:var(--th-ac)!important}
+html[data-th] [class*="bg-neon-pink/"]{background-color:color-mix(in srgb,var(--th-ac) 26%,transparent)!important}
+html[data-th] [class*="border-neon-pink"]{border-color:color-mix(in srgb,var(--th-ac) 60%,transparent)!important}
+html[data-th] .from-neon-pink{--tw-gradient-from:var(--th-ac) var(--tw-gradient-from-position)!important}
+html[data-th] .to-blue-600{--tw-gradient-to:color-mix(in srgb,var(--th-ac) 45%,#1e3a8a) var(--tw-gradient-to-position)!important}
+
+html[data-th] .pe-btn.main{background:linear-gradient(90deg,var(--th-ac),color-mix(in srgb,var(--th-ac) 50%,#38bdf8))!important}
+html[data-th] .x-act.like.on,html[data-th] .x-act.like:hover{color:var(--th-ac)!important}
+html[data-th] .x-act.like.on svg{fill:var(--th-ac)!important}
+html[data-th] #xInk,html[data-th] .nav-pill{background:linear-gradient(90deg,var(--th-ac),color-mix(in srgb,var(--th-ac) 50%,#38bdf8))!important}
+html[data-th] .glass-panel{border-color:color-mix(in srgb,var(--th-ac) 45%,transparent)!important}
+/* фильтры скинов на картах сильнее правил темы */
+html body :is(.cc-s-neon,#_z) .cc-ph img{filter:grayscale(1) contrast(1.3) brightness(1.08)}
+html body :is(.cc-s-retro,#_z) .cc-ph img{filter:sepia(.7) contrast(1.12) saturate(.85) brightness(1.03)}
+html body :is(.cc-s-comic,#_z) .cc-ph img{filter:saturate(1.7) contrast(1.25)}
+html body :is(.cc-s-hallo,#_z) .cc-ph img{filter:sepia(.4) hue-rotate(-20deg) saturate(1.5) contrast(1.05)}
+html body :is(.cc-s-cyber,#_z) .cc-ph img{filter:contrast(1.2) saturate(1.3)}
+html body :is(.cc-s-gold,#_z) .cc-ph img{filter:sepia(.75) saturate(1.6) hue-rotate(-12deg) brightness(1.06) contrast(1.05)}
+html body :is(.cc-s-holo,#_z) .cc-ph img{filter:saturate(.75) brightness(1.08)}
+html body :is(.cc-s-fire,#_z) .cc-ph img{filter:sepia(.35) saturate(1.6) hue-rotate(-12deg) contrast(1.1)}
+html body :is(.cc-s-hero,#_z) .cc-ph img{filter:saturate(1.35) contrast(1.12)}
+html body :is(.cc-s-classic,.cc-s-space,.cc-s-frost,.cc-s-royal,#_z) .cc-ph img{filter:none}
+html body :is(.cc.lock,#_z) .cc-ph img{filter:brightness(0) opacity(.45)}
+html body :is(.cc,#_z) .cc-gl.a{filter:grayscale(1) sepia(1) hue-rotate(-50deg) saturate(6)}
+html body :is(.cc,#_z) .cc-gl.b{filter:grayscale(1) sepia(1) hue-rotate(150deg) saturate(6)}
+/* --- 2. ОДНОВРЕМЕННЫЕ БАРАБАНЫ x5 / x10 --- */
+.ms-ov{position:fixed;inset:0;z-index:560;display:flex;flex-direction:column;gap:10px;padding:calc(env(safe-area-inset-top) + 14px) 12px calc(env(safe-area-inset-bottom) + 14px);overflow-y:auto;overscroll-behavior:contain;background:radial-gradient(circle at 50% 22%,rgba(70,46,150,.97),rgba(8,16,44,.99) 72%);animation:sxFade .25s both}
+.ms-ov.sx-closing{animation:sxFadeOut .22s both}
+.ms-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ms-head b{font:900 16px/1.2 Unbounded,sans-serif;color:#fff}
+.ms-head small{display:block;font-size:11.5px;color:#d6e4ff;margin-top:2px}
+.ms-tot{font:900 15px/1 Unbounded,sans-serif;color:#ffd166;padding:9px 12px;border-radius:99px;background:rgba(255,209,102,.14);border:1.5px solid rgba(255,209,102,.5);white-space:nowrap;font-variant-numeric:tabular-nums}
+.ms-grid{display:grid;gap:8px;grid-template-columns:repeat(var(--mc,2),minmax(0,1fr));align-content:start}
+.ms-m{position:relative;border-radius:16px;padding:7px 7px 5px;display:grid;gap:5px;background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:1.5px solid rgba(255,255,255,.16);transition:border-color .35s,box-shadow .35s,transform .35s var(--spring)}
+.ms-no{position:absolute;top:-7px;left:9px;font:900 10px/1 Unbounded,sans-serif;color:#0b1b40;background:#d6e4ff;padding:3px 6px;border-radius:99px}
+.ms-reels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.ms-r{height:var(--rh,46px);overflow:hidden;border-radius:11px;position:relative;background:linear-gradient(180deg,#0a1636,#16295a 50%,#0a1636);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.ms-r::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(6,12,32,.85),transparent 28%,transparent 72%,rgba(6,12,32,.85))}
+.ms-s{will-change:transform;transform:translate3d(0,0,0)}
+.ms-s img{display:block;width:var(--rh,46px);height:var(--rh,46px);max-width:100%;margin:0 auto;padding:4px;border-radius:50%;object-fit:cover}
+.ms-out{font:800 11px/1.2 Inter,sans-serif;text-align:center;color:#cfe0ff;min-height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ms-m.done{animation:msPop .35s var(--spring)}
+.ms-m.w-pair{border-color:#ff8fd0;box-shadow:0 0 16px -4px #ff8fd0}
+.ms-m.w-pair .ms-out{color:#ffc4e6}
+.ms-m.w-jack{border-color:#ffd166;box-shadow:0 0 24px 0 rgba(255,209,102,.7);background:linear-gradient(160deg,rgba(255,209,102,.3),rgba(255,143,208,.18))}
+.ms-m.w-jack .ms-out{color:#ffe08a}
+@keyframes msPop{50%{transform:scale(1.05)}}
+.ms-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto}
+.ms-acts .pe-btn{padding:12px 8px}
+/* --- 3. АККУРАТНЫЕ КАРТОЧКИ --- */
+.cc{padding:1.8cqw!important;box-shadow:0 10px 20px -12px rgba(0,0,0,.75),0 0 0 .5px rgba(255,255,255,.22)!important}
+.cc::after{display:none!important}
+.cc-in{box-shadow:inset 0 0 0 .5cqw rgba(255,255,255,.28)}
+.cc-top{top:4.5cqw;left:4.5cqw;right:4.5cqw}
+.cc-rar{font:900 5.4cqw/1 Unbounded,sans-serif;padding:2.4cqw 3.6cqw;letter-spacing:.07em;background:rgba(6,12,32,.74);border:1px solid color-mix(in srgb,var(--rg) 70%,transparent);box-shadow:none}
+.cc-ic{width:11.5cqw;height:11.5cqw;border-radius:50%;background:rgba(6,12,32,.74);border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;font-size:6.4cqw;filter:none}
+.cc-name{padding:3.6cqw 5.5cqw 4.6cqw!important;border-top:.5cqw solid color-mix(in srgb,var(--rg) 75%,transparent)}
+.cc-name small{display:flex;justify-content:space-between;align-items:center;gap:2cqw;font:800 5.4cqw/1.2 Unbounded,sans-serif;letter-spacing:.06em;white-space:nowrap;overflow:hidden}
+.cc-name small::before{content:none!important}
+.cc-r-r .cc-name small::after{content:'★';color:var(--rg);letter-spacing:.1em;flex-shrink:0}
+.cc-r-e .cc-name small::after{content:'★★';color:var(--rg);letter-spacing:.1em;flex-shrink:0}
+.cc-r-m .cc-name small::after{content:'★★★';color:var(--rg);letter-spacing:.1em;flex-shrink:0}
+.cc-r-l .cc-name small::after{content:'★★★★';color:var(--rg);letter-spacing:.1em;flex-shrink:0}
+.cc-name b{font:900 9.2cqw/1.08 Unbounded,sans-serif;margin-top:1.4cqw;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cc-s-frost .cc-name b,.cc-s-royal .cc-name b,.cc-s-hero .cc-name b,.cc-s-space .cc-name b{white-space:normal;font-size:8.4cqw}
+.cc-show{gap:10px;padding-top:6px}
+.cc-show>.cc{--cw:112px!important}
+.cc-show>.cc:active,.cc-grid .cc:active{transform:scale(.97)}
+</style>
+<script id="pack31js">
+/* ===== pack31 ===== */
+/* --- 1. тема: акцентный цвет вместо перекраски всей страницы --- */
+(function(){const _a=shApply;shApply=function(){_a();const h=document.documentElement,t=SH_THEMES.find(x=>x.id===sh.theme);
+ if(h.dataset.th&&t&&t.sw)h.style.setProperty('--th-ac',t.sw[0]);else h.style.removeProperty('--th-ac')};shApply()})();
+
+/* --- 2. x5 / x10: все барабаны крутятся одновременно --- */
+let msApplied=true,msOuts=null;
+sxMultiSpin=function(n,btn){const price=SX_MULTI[n];if(!price||state.isSpinning||$('msOv'))return;if(typeof sxLocked==='function'&&sxLocked()){sxLockNudge();return}
+ const need=price-state.synergyPoints;if(need>0){toast(`Не хватает ${shFmt(need)} Σ — покрутите 1x бесплатно 🎰`);sxShake(btn);return}
+ state.synergyPoints-=price;saveState();updateAllCountersUI();try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}
+ const outs=Array.from({length:n},()=>rollThreeReelsOutcome());msOuts=outs;msApplied=false;state.isSpinning=true;msShow(outs,n,price)};
+function msApply(){if(msApplied||!msOuts)return;msApplied=true;state.isSpinning=false;const outs=msOuts,last=outs[outs.length-1];
+ state.lastThreeSlots=last.reels;try{initHorizontalRouletteStrips();renderLockedThreeSlotsPreview(last.reels,last.type)}catch(e){}applySlotOutcomes(outs)}
+function msLabel(o){return o.type==='jackpot'?`👑 ДЖЕКПОТ +${shFmt(o.reward)} Σ`:o.type==='pair'?`⚡ Дуэт +${o.reward} Σ`:`Трио +${o.reward} Σ`}
+function msShow(outs,n,price){const one=n<=5,rh=one?58:44,K=16,lite=document.documentElement.classList.contains('sx-lite')||sxStill(),rnd=()=>TEAM_MEMBERS[Math.floor(Math.random()*TEAM_MEMBERS.length)];
+ const ov=document.createElement('div');ov.className='ms-ov';ov.id='msOv';
+ ov.innerHTML=`<div class="ms-head"><div><b>🎰 Серия x${n}</b><small>Списано ${shFmt(price)} Σ · крутятся все ${n} сразу</small></div><span class="ms-tot" id="msTot">…</span></div>
+ <div class="ms-grid" style="--mc:${one?1:2};--rh:${rh}px">${outs.map((o,i)=>`<div class="ms-m" id="msM${i}"><span class="ms-no">#${i+1}</span><div class="ms-reels">${o.reels.map((m,j)=>`<div class="ms-r"><div class="ms-s" id="msS${i}_${j}">${Array.from({length:K},(_,k)=>`<img src="${getRouletteDetailedAvatarURI(k===K-1?m:rnd())}" alt="">`).join('')}</div></div>`).join('')}</div><div class="ms-out" id="msO${i}">крутится…</div></div>`).join('')}</div>
+ <div class="ms-acts"><button class="pe-btn" id="msSkip" onclick="msFinish(true)">⏩ Сразу итог</button><button class="pe-btn main" id="msTake" onclick="msClose()" disabled style="opacity:.5">Забрать Σ</button></div>`;
+ document.body.appendChild(ov);document.body.style.overflow='hidden';
+ let left=n*3;const stopOne=i=>{const o=outs[i],m=$('msM'+i);if(!m||m.classList.contains('done'))return;m.classList.add('done',o.type==='jackpot'?'w-jack':o.type==='pair'?'w-pair':'w-trio');$('msO'+i).textContent=msLabel(o);
+  if(o.type==='jackpot'){const r=m.getBoundingClientRect();sxBurst(r.left+r.width/2,r.top+r.height/2,18,['#ffd166','#ff8fd0','#ffffff'])}};
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{outs.forEach((o,i)=>o.reels.forEach((_,j)=>{const s=$(`msS${i}_${j}`);if(!s)return;const d=lite?.55+j*.12:1.5+(i%5)*.18+j*.45;
+  s.style.transition=`transform ${d}s cubic-bezier(.12,.8,.18,1)`;s.style.transform=`translate3d(0,${-(K-1)*rh}px,0)`;
+  setTimeout(()=>{left--;if(j===2)stopOne(i);if(left===0)msFinish(false)},d*1000+40)}))}));
+ window._msTimer=setTimeout(()=>msFinish(false),9000)}
+function msFinish(skip){const ov=$('msOv');if(!ov||ov.dataset.done)return;ov.dataset.done=1;clearTimeout(window._msTimer);const outs=msOuts||[];
+ if(skip)outs.forEach((o,i)=>{o.reels.forEach((_,j)=>{const s=$(`msS${i}_${j}`);if(s){s.style.transition='none';s.style.transform=`translate3d(0,${-(15)*(s.firstElementChild?s.firstElementChild.offsetHeight:46)}px,0)`}});const m=$('msM'+i);if(m&&!m.classList.contains('done')){m.classList.add('done',o.type==='jackpot'?'w-jack':o.type==='pair'?'w-pair':'w-trio');$('msO'+i).textContent=msLabel(o)}});
+ const tot=outs.reduce((a,o)=>a+o.reward,0),jp=outs.filter(o=>o.type==='jackpot').length;$('msTot').textContent=`+${shFmt(tot)} Σ`;
+ const sk=$('msSkip');if(sk)sk.style.visibility='hidden';const tk=$('msTake');if(tk){tk.disabled=false;tk.style.opacity=1;tk.textContent=jp?`👑 Забрать +${shFmt(tot)} Σ`:`Забрать +${shFmt(tot)} Σ`}
+ msApply();if(!jp)launchConfetti(40)}
+function msClose(){msApply();const o=$('msOv');if(o)sxCloseOv(o)}
+
+/* --- 3. витрина карточек: аккуратнее --- */
+try{ccSecRender()}catch(e){}
+</script>
 </body>
