@@ -3990,6 +3990,9 @@ html.sx-still #spSnow i{display:none}
 body:not(.is-team) .x-compose{display:flex!important}
 body:not(.is-team) .x-compose .fake[onclick*="openComposerModal"]{display:block!important}
 body:not(.is-team) .x-compose button[onclick*="openComposerModal"]{display:inline-block!important}
+/* прокрутка на Android: страницу листает окно, а не body (раньше body перехватывал свайп и не отдавал его) */
+html{overflow-x:hidden;overscroll-behavior-y:none}
+body{overflow-x:visible;overflow-y:visible;overscroll-behavior-y:auto}
 </style>
 <script id="pack27js">
 /* ===== pack27: видео в постах, пост без фото — без фото, плавная лента, магазин 2.0, чужие профили,
