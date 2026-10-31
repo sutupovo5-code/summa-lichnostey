@@ -5425,4 +5425,21 @@ setTimeout(scLoop,60000);
 (function(){const _os=openSettings;openSettings=function(){_os();const box=document.querySelector('#sxOv .pe-box');if(!box)return;const secs=[...box.querySelectorAll(':scope>.pe-sec')],last=secs[secs.length-1];
  if(last)last.insertAdjacentHTML('beforebegin',`<div class="pe-sec"><b>😈 СКРИМЕРЫ</b><label class="sx-row"><span>Пугать в случайные моменты<small>Редко: раз в 8–20 минут. Без мигания.</small></span><span class="sx-sw"><input type="checkbox" ${scOn()?'checked':''} onchange="sxPut('${SC_KEY}',this.checked?'on':'off');toast(this.checked?'😈 Скримеры включены':'Скримеры выключены')"><i></i></span></label><button class="pe-btn" onclick="closeSettings();setTimeout(()=>scScream('ПРОВЕРКА СВЯЗИ'),400)">👻 Проверить скример</button></div>`)}})();
 </script>
+<style id="pack36">
+/* ===== pack36: вкладка «Карты» в нижнем меню (5 вкладок) ===== */
+nav .nav-wrap{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+.nav-pill{width:calc((100% - 16px)/5)!important}
+nav .mobile-nav-btn span:last-child{white-space:nowrap}
+@media (max-width:360px){nav .mobile-nav-btn .text-\[9px\]{font-size:9.5px!important}}
+</style>
+<script id="pack36js">
+/* ===== pack36: «Карты» в нижнем меню — между «Крутка» и «О нас» ===== */
+(function(){const r=document.querySelector('nav [data-nav="roulette"]');if(!r||document.querySelector('nav [data-nav="cards"]'))return;
+ const b=r.cloneNode(true);b.dataset.nav='cards';b.setAttribute('onclick',"switchMobileView('cards')");
+ const sp=b.querySelectorAll('span');if(sp[0])sp[0].textContent='🃏';if(sp[1])sp[1].textContent='Карты';r.insertAdjacentElement('afterend',b);
+ const i=NAV_ORDER.indexOf('team');NAV_ORDER.splice(i<0?2:i,0,'cards');
+ /* порядок разделов на странице: новости, крутка, карты, о нас — от него зависит подсветка при прокрутке */
+ const team=NAV_SEC.team;delete NAV_SEC.team;NAV_SEC.cards='sec-cards';NAV_SEC.team=team;
+ try{dispatchEvent(new Event('scroll'))}catch(e){}})();
+</script>
 </body>
