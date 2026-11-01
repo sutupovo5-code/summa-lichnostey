@@ -5541,4 +5541,51 @@ ccSecRender();
 (function(){const _p=spOpenProfile;spOpenProfile=async function(w){await _p(w);if(!w||w.k!=='u')return;const ov=$('spPfOv');if(!ov||/КОЛЛЕКЦИЯ/.test(ov.textContent))return;
  const posts=[...ov.querySelectorAll('.pe-sec')].pop();if(posts)posts.insertAdjacentHTML('beforebegin','<div class="pe-sec"><b>🃏 КОЛЛЕКЦИЯ</b><p class="pc-wait">Коллекция появится здесь, когда игрок зайдёт на обновлённый сайт.</p></div>')}})();
 </script>
+<style id="pack39">
+/* ===== pack39: титулы ярче с каждым уровнем + аура карты X у её владельца ===== */
+.tt-b{position:relative;overflow:hidden;isolation:isolate}
+.tt-b.tt-l2::after,.tt-b.tt-l3::after,.tt-b.tt-l4::after,.tt-b.tt-l5::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);animation:ccShine 3.2s ease-in-out infinite}
+.tt-b.tt-l3{box-shadow:0 0 10px -2px var(--tc);animation:ttPulse 2.2s ease-in-out infinite}
+.tt-b.tt-l4,.tt-b.tt-l5{text-shadow:0 1px 2px rgba(0,0,0,.65)}
+.tt-b.tt-l4{color:#fff;border-color:transparent;background:linear-gradient(90deg,#7b3fe4,#c39bff,#ff8fd0,#7b3fe4) 0 0/250% 100%;box-shadow:0 0 14px -2px #c39bff;animation:ttFlow 4s linear infinite,ttPulse 2.2s ease-in-out infinite}
+.tt-b.tt-l5{color:#fff;border-color:transparent;background:linear-gradient(90deg,#0b2f5e,#1d6fd6,#7df9ff,#1d6fd6,#0b2f5e) 0 0/250% 100%;box-shadow:0 0 18px -2px #7df9ff,0 0 4px #fff inset;animation:ttFlow 3s linear infinite,ttPulse 1.6s ease-in-out infinite}
+.tt-b.tt-l5::before{content:'';position:absolute;inset:0;z-index:-1;border-radius:inherit;padding:1.5px;background:conic-gradient(from var(--ang,0deg),#ff4fd8,#ffd166,#7df9ff,#7b3fe4,#ff4fd8);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:ccSpin 2.5s linear infinite}
+.tt-b .tt-sp{display:inline-block;animation:ttTw 1.4s ease-in-out infinite}
+@keyframes ttPulse{50%{filter:brightness(1.25)}}
+@keyframes ttFlow{to{background-position:250% 0}}
+@keyframes ttTw{50%{transform:scale(1.35) rotate(20deg);opacity:.6}}
+.tt-pop.tt-l4{background:radial-gradient(circle at 50% 40%,rgba(90,40,140,.95),rgba(6,10,28,.97) 70%)}
+.tt-pop.tt-l5{background:radial-gradient(circle at 50% 40%,rgba(10,70,120,.95),rgba(6,10,28,.97) 70%)}
+.tt-pop.tt-l4 h3,.tt-pop.tt-l5 h3{color:#fff;text-shadow:0 0 18px var(--tc),0 0 40px var(--tc)}
+/* аура карты X: переливающаяся обводка как у самой карты */
+.x-aura{position:relative;isolation:isolate;border-color:transparent!important;box-shadow:0 0 22px -4px rgba(255,209,102,.75),0 0 40px -10px rgba(255,79,216,.6)}
+.x-aura::before{content:'';position:absolute;inset:0;z-index:2;border-radius:inherit;padding:2.5px;pointer-events:none;background:conic-gradient(from var(--ang,0deg),#111,#ffd166,#111,#ff4fd8,#111,#7df9ff,#111);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:ccSpin 3s linear infinite}
+.x-aura::after{content:'X';position:absolute;right:10px;top:50%;transform:translateY(-50%);z-index:-1;pointer-events:none;font:900 64px/1 Unbounded,sans-serif;color:transparent;background:linear-gradient(135deg,#fff7d6,#ffd166 40%,#b8862e 60%,#ffd166);-webkit-background-clip:text;background-clip:text;opacity:.22}
+.lb-row.x-aura::after{display:none}
+.x-tag{display:inline-grid;place-items:center;width:17px;height:17px;margin-left:4px;border-radius:5px;vertical-align:middle;font:900 10px/1 Unbounded,sans-serif;color:#ffd166;background:#000;box-shadow:0 0 6px rgba(255,209,102,.8)}
+.pc-strip .cc-x{--cw:96px!important}
+.pe-box.x-box,.x-box{box-shadow:0 0 0 2px rgba(255,209,102,.35),0 0 40px -6px rgba(255,209,102,.55)!important}
+</style>
+<script id="pack39js">
+/* ===== pack39: эффекты титулов по уровням; владелец карты X — она первой в коллекции, профиль в её ауре ===== */
+const ttLvl=j=>{j=+j||0;return j>=1000?5:j>=500?4:j>=300?3:j>=200?2:j>=100?1:0};
+ttBadge=function(j){const t=ttTitle(j);if(!t)return'';const l=ttLvl(j),sp=l>=4?` <span class="tt-sp">✦</span>`:'';return`<span class="tt-b tt-l${l}" style="--tc:${t.c}">${t.ic} ${t.text}${sp}</span>`};
+/* всплывашка нового титула — по уровню */
+new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.classList&&n.classList.contains('tt-pop')){const l=ttLvl(state.jackpotsWon),t=ttTitle(state.jackpotsWon);n.classList.add('tt-l'+l);if(t)n.style.setProperty('--tc',t.c);if(l>=4)try{launchConfetti(260)}catch(e){}}}))).observe(document.body,{childList:true});
+const xIsOwner=uid=>!!(XHOLD&&uid&&XHOLD.uid===uid);
+/* рейтинг: строка владельца X — в ауре и с меткой X */
+(function(){const _row=sxLBRow;sxLBRow=function(p,i){let h=_row(p,i);const b=ttBadge(p.jackpots);if(b&&h.includes(b))h=h.replace(" "+b,"").replace(b,"").replace("</b><small>","</b><small>"+b);if(!xIsOwner(p.id))return h;
+ return h.replace('class="lb-row ','class="lb-row x-aura ').replace('</b><small>','<span class="x-tag">X</span></b><small>')};try{sxLBRender()}catch(e){}})();
+/* свой профиль */
+(function(){const _os=openSettings;openSettings=function(){_os();if(!c2.x)return;const box=document.querySelector('#sxOv .pe-box');if(!box)return;box.classList.add('x-box');
+ const hero=box.querySelector('.sx-hero');if(hero)hero.classList.add('x-aura')}})();
+/* чужой профиль; если человек ещё не обновил сайт — всё равно показываем его карту X первой */
+(function(){const _p=spOpenProfile;spOpenProfile=async function(w){await _p(w);if(!w||w.k!=='u'||!xIsOwner(w.id))return;const ov=$('spPfOv');if(!ov)return;
+ const h=ov.querySelector('.sp-pfh');if(h){h.classList.add('x-aura');const box=ov.querySelector(".pe-box");if(box)box.classList.add("x-box")}
+ if(!ov.querySelector('.cc-x')){const w8=ov.querySelector('.pc-wait');const card=`<div class="pc-strip">${c3XCard(XHOLD.name)}</div>`;
+  if(w8)w8.insertAdjacentHTML('beforebegin',card);else{const s=ov.querySelector('.pc-strip');if(s)s.insertAdjacentHTML('afterbegin',c3XCard(XHOLD.name))}}}})();
+/* рейтинг перерисовываем, когда узнали владельца X */
+(function(){const go=()=>{SXF.F.onSnapshot(SXF.F.doc(SXF.db,'meta','firstX'),()=>setTimeout(()=>{try{sxLBRender()}catch(e){}},50),()=>{})};if(window.SXF)go();else addEventListener('sxfb',go,{once:true})})();
+try{sxLBRender()}catch(e){}
+</script>
 </body>
