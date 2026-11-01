@@ -5528,4 +5528,17 @@ sxPushStats=function(){clearTimeout(sxPushT);sxPushT=setTimeout(async()=>{const 
  for(const d of tries){try{await F.setDoc(F.doc(db,'players',SXC.uid),d);return}catch(e){if(e.code!=='permission-denied'){console.warn('[lb] push',e.code);return}if(d.coll)c3NoColl=true;else if(d.look)spNoLook=true}}},1200)};
 ccSecRender();
 </script>
+<style id="pack38">
+/* ===== pack38: рейтинг не шире экрана (титул растягивал строки) ===== */
+.lb-card>*,#sxLBList,.lb-row{min-width:0}
+.lb-row .lb-n small .tt-b{margin:0 5px 0 0;font-size:8.5px;padding:1px 6px}
+.pc-wait{font-size:12px;line-height:1.4;color:rgba(226,237,250,.72)}
+</style>
+<script id="pack38js">
+/* ===== pack38: титул в рейтинге — во второй строке, имя целиком; заглушка коллекции в чужом профиле ===== */
+(function(){const _row=sxLBRow;sxLBRow=function(p,i){let h=_row(p,i);const m=h.match(/ ?<span class="tt-b"[^>]*>[^<]*<\/span>(?=<\/b><small>)/);
+ if(m)h=h.replace(m[0],'').replace('</b><small>','</b><small>'+m[0].trim());return h};try{sxLBRender()}catch(e){}})();
+(function(){const _p=spOpenProfile;spOpenProfile=async function(w){await _p(w);if(!w||w.k!=='u')return;const ov=$('spPfOv');if(!ov||/КОЛЛЕКЦИЯ/.test(ov.textContent))return;
+ const posts=[...ov.querySelectorAll('.pe-sec')].pop();if(posts)posts.insertAdjacentHTML('beforebegin','<div class="pe-sec"><b>🃏 КОЛЛЕКЦИЯ</b><p class="pc-wait">Коллекция появится здесь, когда игрок зайдёт на обновлённый сайт.</p></div>')}})();
+</script>
 </body>
