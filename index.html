@@ -5651,11 +5651,11 @@ main h2.font-display{font-size:22px!important;line-height:1.1!important;color:#f
 .ck-track::after{content:'';position:absolute;top:0;bottom:0;right:28px;width:12px;background:repeating-conic-gradient(#fff 0 25%,#141414 0 50%) 0 0/12px 12px;opacity:.9}
 .ck-lane{position:relative;height:54px;border-bottom:2px dashed rgba(255,255,255,.22)}
 .ck-lane:last-child{border-bottom:0}
-.ck-lane>i{position:absolute;left:6px;top:50%;transform:translateY(-50%);font:800 11px/1 Unbounded,sans-serif;color:rgba(255,255,255,.55);font-style:normal;z-index:1}
+.ck-lane>i{position:absolute;left:5px;top:50%;transform:translateY(-50%);font:800 11px/1 Unbounded,sans-serif;color:rgba(255,255,255,.55);font-style:normal;z-index:1}
 .ck-lane.win{background:linear-gradient(90deg,rgba(243,201,105,.0),rgba(243,201,105,.35))}
 .ck-lane.mine>i{color:#ffd6e4}
 .ck-lane.mine::before{content:'';position:absolute;inset:0;background:rgba(236,111,155,.16);pointer-events:none}
-.ck-ch{position:absolute;left:16px;top:1px;width:62px;height:52px;will-change:transform;z-index:2}
+.ck-ch{position:absolute;left:20px;top:1px;width:62px;height:52px;will-change:transform;z-index:2}
 .ck-ch svg{position:absolute;left:0;bottom:0;width:46px;height:42px;overflow:visible}
 .ck-ch .face{position:absolute;right:0;top:0;width:28px;height:28px;border-radius:50%;object-fit:cover;object-position:center 20%;border:2.5px solid #fff7ec;background:#a35;z-index:2;box-shadow:0 2px 4px rgba(0,0,0,.35)}
 .ck-ch svg.comb{position:absolute;left:auto;bottom:auto;right:6px;top:-6px;width:16px;height:10px;z-index:3}
@@ -5760,7 +5760,7 @@ function ckRender(){const r=ck.round;if(!r||!$('ckTrack'))return;const bal=Math.
  const st=sh.ck;$('ckStat').innerHTML=`<div><b>${shFmt(st.r)}</b><small>забегов</small></div><div><b>${shFmt(st.w)}</b><small>побед</small></div><div><b style="color:${st.won>=st.bet?'#9be7c4':'#ffb0b0'}">${st.won>=st.bet?'+':'−'}${shFmt(Math.abs(st.won-st.bet))}</b><small>итог Σ</small></div>`}
 function ckPick(i){if(ck.busy||!ck.round||ck.round.done)return;ck.sel=i;ckRender()}
 function ckSetAmt(a){if(ck.busy)return;ck.amt=a;ckRender()}
-function ckTrackW(){const t=$('ckTrack');return t?Math.max(80,t.clientWidth-16-62-40):200}
+function ckTrackW(){const t=$('ckTrack');return t?Math.max(80,t.clientWidth-20-62-40):200}
 function ckX(f){return Math.round(ckTrackW()*Math.max(0,Math.min(1,f)))}
 function ckGoBtn(){const r=ck.round;if(!r||ck.busy)return;if(r.done){ckNewRound();return}ckStart()}
 function ckStart(){const r=ck.round,i=ck.sel,amt=ckAmtVal();if(i<0||amt<=0||amt>state.synergyPoints)return;
