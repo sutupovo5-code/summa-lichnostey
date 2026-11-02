@@ -6005,4 +6005,933 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
  for(const id in K){const s=$(id);if(!s)continue;const h=s.querySelector('h2');if(!h||h.querySelector('.gta-kick'))continue;
   h.insertAdjacentHTML('afterbegin',`<span class="gta-kick">${K[id]}</span>`)}})();
 </script>
+    <!-- =================================================================== -->
+<!-- ОБНОВЛЕНИЕ v14: GTA VI NIGHTCLUB EVENT + 4 ИГРЫ + КОСМЕТИКА         -->
+<!-- =================================================================== -->
+<style id="gta6-event-pack">
+  /* 1. Аккуратное зачеркивание "ЛИЧНОСТЕЙ" без перекрытия букв и рамок */
+  #sec-hero .summa-logo-text:nth-child(2),
+  .gta-clean-strike {
+    position: relative;
+    display: inline-block;
+    text-decoration: none !important;
+  }
+  #sec-hero .summa-logo-text:nth-child(2)::after,
+  .gta-clean-strike::after {
+    content: '';
+    position: absolute;
+    left: -3%;
+    right: -3%;
+    top: 52%;
+    height: 3.5px;
+    background: linear-gradient(90deg, #ff2a85, #ff9900, #00f0ff);
+    box-shadow: 0 0 10px #ff2a85, 0 0 4px #ff9900;
+    border-radius: 99px;
+    transform: translateY(-50%) rotate(-1.5deg);
+    pointer-events: none;
+    z-index: 25;
+  }
+
+  /* Подпись "ИВЕНТ: НОЧНОЙ КЛУБ" под заголовком */
+  .gta-hero-sub {
+    margin-top: 4px;
+    padding: 3px 12px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, rgba(255,42,133,0.9), rgba(255,138,0,0.9));
+    border: 1px solid #ffe600;
+    box-shadow: 0 0 16px rgba(255,42,133,0.75);
+    font: 900 10px/1.2 'Unbounded', sans-serif;
+    letter-spacing: 0.12em;
+    color: #fff;
+    text-transform: uppercase;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    pointer-events: auto;
+    cursor: pointer;
+    animation: gtaPulse 2.2s infinite ease-in-out;
+  }
+  @keyframes gtaPulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 14px rgba(255,42,133,0.7); }
+    50% { transform: scale(1.05); box-shadow: 0 0 24px rgba(255,153,0,0.95); }
+  }
+
+  /* 2. Секция Ночного клуба и Постер GTA 6 из 4 частей */
+  #sec-gta-club {
+    position: relative;
+    border-radius: 28px;
+    padding: 14px;
+    background: linear-gradient(160deg, #1a0628 0%, #090418 55%, #05162e 100%);
+    border: 2px solid #ff2a85;
+    box-shadow: 0 0 32px rgba(255,42,133,0.35), inset 0 0 28px rgba(255,138,0,0.15);
+    overflow: hidden;
+  }
+  .gta-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .gta-title-grad {
+    font: 900 clamp(15px, 4.5vw, 20px)/1.1 'Unbounded', sans-serif;
+    background: linear-gradient(90deg, #ff2a85, #ff9900, #ffee55);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-transform: uppercase;
+  }
+  .gta-shop-btn {
+    padding: 7px 12px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #ff2a85, #ff7b00);
+    border: 1.5px solid #fff3a1;
+    color: #fff;
+    font: 800 10px/1 'Unbounded', sans-serif;
+    box-shadow: 0 0 15px rgba(255,42,133,0.6);
+    white-space: nowrap;
+  }
+
+  /* Сетка постера GTA VI (4 кликабельные части в черных комикс-рамках) */
+  .gta-poster-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 148px 148px;
+    gap: 5px;
+    background: #030308;
+    padding: 5px;
+    border-radius: 20px;
+    border: 3px solid #000;
+    box-shadow: 0 0 0 2px #ff2a85, 0 12px 30px rgba(0,0,0,0.85);
+  }
+  @media (min-width: 640px) {
+    .gta-poster-grid { grid-template-rows: 185px 185px; }
+  }
+  .gta-quad {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.18);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 10px;
+    isolation: isolate;
+  }
+  .gta-quad:hover, .gta-quad:active {
+    transform: scale(1.02);
+    border-color: #ffee55;
+    box-shadow: 0 0 22px rgba(255,42,133,0.85);
+    z-index: 5;
+  }
+  .gta-quad-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.4s ease;
+  }
+  .gta-quad:hover .gta-quad-bg { transform: scale(1.08); }
+  .gta-quad::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to top, rgba(6,2,18,0.95) 8%, rgba(255,42,133,0.22) 60%, rgba(0,240,255,0.15) 100%);
+  }
+  .gta-quad-tag {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(0,0,0,0.75);
+    border: 1px solid #ff9900;
+    font: 800 9px 'Unbounded', sans-serif;
+    color: #ffee55;
+    text-transform: uppercase;
+  }
+  .gta-quad h4 {
+    font: 900 clamp(12px, 3.6vw, 15px)/1.15 'Unbounded', sans-serif;
+    color: #fff;
+    text-shadow: 2px 2px 0 #000, 0 0 10px #ff2a85;
+  }
+  .gta-quad p {
+    font-size: 10px;
+    color: #ffd6f0;
+    line-height: 1.25;
+    margin-top: 2px;
+  }
+  .gta-center-logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-4deg);
+    z-index: 10;
+    background: linear-gradient(135deg, #ff2a85, #ff9900);
+    border: 3px solid #000;
+    outline: 2px solid #ffee55;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font: 900 13px/1 'Russo One', 'Unbounded', sans-serif;
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* Модальное окно мини-игр и магазина GTA 6 */
+  #gtaModal {
+    position: fixed;
+    inset: 0;
+    z-index: 550;
+    background: rgba(5, 2, 14, 0.92);
+    backdrop-filter: blur(14px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+  }
+  #gtaModal.open { display: flex; }
+  .gta-modal-box {
+    width: min(100%, 480px);
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 26px;
+    background: linear-gradient(170deg, #1b072c 0%, #080d24 100%);
+    border: 2px solid #ff2a85;
+    box-shadow: 0 0 40px rgba(255,42,133,0.5);
+    padding: 16px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .gta-btn {
+    padding: 10px 14px;
+    border-radius: 14px;
+    font: 800 12px 'Unbounded', sans-serif;
+    background: linear-gradient(90deg, #ff2a85, #ff7b00);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    text-align: center;
+  }
+  .gta-btn:disabled { opacity: 0.4; pointer-events: none; }
+  .gta-btn.alt { background: rgba(255,255,255,0.1); border-color: #00f0ff; color: #aefaff; }
+  .gta-input {
+    background: rgba(0,0,0,0.55);
+    border: 1.5px solid #ff2a85;
+    border-radius: 12px;
+    padding: 8px 12px;
+    color: #fff;
+    font: 700 13px 'Unbounded', sans-serif;
+    width: 100%;
+  }
+
+  /* Дорожки забегов участников */
+  .race-lane {
+    position: relative;
+    height: 44px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,42,133,0.35);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    overflow: hidden;
+  }
+  .race-lane::after {
+    content: '🏁';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+  }
+  .race-runner {
+    position: relative;
+    left: 0%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: left 0.12s linear;
+    z-index: 2;
+  }
+  .race-runner img {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffee55;
+  }
+
+  /* Карты для Блэкджека и Дурака */
+  .gta-card-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-height: 96px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 16px;
+    background: rgba(0,0,0,0.4);
+    border: 1px dashed rgba(255,255,255,0.2);
+  }
+  .gta-mini-card {
+    width: 68px;
+    height: 94px;
+    border-radius: 10px;
+    background: linear-gradient(160deg, #ff2a85, #1e295e);
+    border: 2px solid #ffee55;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  }
+  .gta-mini-card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.85;
+  }
+  .gta-mini-card b {
+    position: relative;
+    z-index: 2;
+    font: 900 11px 'Unbounded', sans-serif;
+    background: rgba(0,0,0,0.8);
+    color: #ffee55;
+    padding: 2px 4px;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  /* Косметика GTA VI (классы на html) */
+  html.gta6-theme body {
+    background: radial-gradient(circle at 50% 0%, #590d3b 0%, #19062c 50%, #05020d 100%) !important;
+  }
+  html.gta6-frame #headerAuthBtn,
+  html.gta6-frame .real-photo-crop-frame,
+  html.gta6-frame .tv-card {
+    box-shadow: 0 0 0 2px #ffee55, 0 0 22px #ff2a85, 0 0 36px #ff7b00 !important;
+  }
+  html.gta6-vip #headerAuthBtnText::before {
+    content: '🌴 VICE VIP • ';
+    color: #ffee55;
+  }
+</style>
+
+<!-- Модальное окно для 4 игр и Магазина GTA 6 -->
+<div id="gtaModal" onclick="if(event.target===this)closeGtaModal()">
+  <div class="gta-modal-box">
+    <div class="flex items-center justify-between border-b border-white/15 pb-2">
+      <div>
+        <div class="text-[9px] font-display font-bold uppercase text-amber-300">ИВЕНТ • НОЧНОЙ КЛУБ GTA VI</div>
+        <h3 id="gtaModalTitle" class="font-display font-black text-base text-white">Игра</h3>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="px-2.5 py-1 rounded-full bg-black/60 border border-pink-500 text-xs font-display font-black text-amber-300">
+          <span id="gtaModalBal">500</span> Σ
+        </div>
+        <button onclick="closeGtaModal()" class="w-8 h-8 rounded-full bg-white/10 text-white font-bold">✕</button>
+      </div>
+    </div>
+    <div id="gtaModalBody" class="space-y-3"></div>
+  </div>
+</div>
+
+<script>
+(function initGta6NightclubEvent() {
+  const TEAM_NAMES = [
+    { id: 'tolstikov', name: 'Николай Толстиков', power: 10 },
+    { id: 'reutskaya', name: 'Екатерина Реутская', power: 9 },
+    { id: 'smolyaninov', name: 'Смольянинов', power: 8 },
+    { id: 'varvarin', name: 'Варварин', power: 8 },
+    { id: 'zverev', name: 'Никита Зверев', power: 9 },
+    { id: 'morozova', name: 'Ульяна Морозова', power: 9 }
+  ];
+
+  function getPhoto(id, idx) {
+    if (window.FACE_PHOTOS) {
+      if (FACE_PHOTOS[id]) return FACE_PHOTOS[id];
+      const vals = Object.values(FACE_PHOTOS);
+      if (vals.length) return vals[idx % vals.length];
+    }
+    return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ff2a85'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-size='28' fill='%23fff'%3E%CE%A3%3C/text%3E%3C/svg%3E";
+  }
+
+  // Баланс Σ (связь с сайтом)
+  function getBal() {
+    const el = document.getElementById('headerSynergyStat');
+    const v = parseInt((el ? el.textContent : localStorage.getItem('summa_synergy')) || '500', 10);
+    return isNaN(v) ? 500 : v;
+  }
+  function setBal(newVal) {
+    const v = Math.max(0, Math.round(newVal));
+    localStorage.setItem('summa_synergy', String(v));
+    if (typeof window.synergyPoints !== 'undefined') window.synergyPoints = v;
+    const el = document.getElementById('headerSynergyStat');
+    if (el) el.textContent = v;
+    const mEl = document.getElementById('gtaModalBal');
+    if (mEl) mEl.textContent = v;
+  }
+
+  // Альбом выбитых карточек участников
+  function getAlbum() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('gta_album_cards') || 'null');
+      if (Array.isArray(saved) && saved.length) return saved;
+    } catch(e) {}
+    const starter = TEAM_NAMES.slice(0, 4).map((m, i) => ({
+      uid: 'c_' + i + '_' + Date.now(),
+      id: m.id,
+      name: m.name,
+      power: m.power,
+      photo: getPhoto(m.id, i)
+    }));
+    localStorage.setItem('gta_album_cards', JSON.stringify(starter));
+    return starter;
+  }
+  function saveAlbum(arr) {
+    localStorage.setItem('gta_album_cards', JSON.stringify(arr));
+  }
+  function giveRandomCard() {
+    const idx = Math.floor(Math.random() * TEAM_NAMES.length);
+    const m = TEAM_NAMES[idx];
+    const card = {
+      uid: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+      id: m.id,
+      name: m.name,
+      power: 6 + Math.floor(Math.random() * 6),
+      photo: getPhoto(m.id, idx)
+    };
+    const alb = getAlbum();
+    alb.push(card);
+    saveAlbum(alb);
+    return card;
+  }
+
+  // 1. Исправляем зачеркивание "ЛИЧНОСТЕЙ" и добавляем подпись "ИВЕНТ: НОЧНОЙ КЛУБ"
+  function patchHeroBanner() {
+    const hero = document.getElementById('sec-hero');
+    if (!hero) return;
+    // Убираем старые грубые зачеркивающие линии поверх текста, если есть
+    const logoTexts = hero.querySelectorAll('.summa-logo-text');
+    if (logoTexts.length >= 2) {
+      const lich = logoTexts[1];
+      lich.classList.add('gta-clean-strike');
+      if (!document.getElementById('gtaHeroEventBadge')) {
+        const badge = document.createElement('div');
+        badge.id = 'gtaHeroEventBadge';
+        badge.className = 'gta-hero-sub';
+        badge.innerHTML = '🌴 ИВЕНТ: НОЧНОЙ КЛУБ • GTA VI';
+        badge.onclick = () => document.getElementById('sec-gta-club')?.scrollIntoView({behavior:'smooth'});
+        lich.parentElement.appendChild(badge);
+      }
+    }
+  }
+
+  // 2. Вставляем секцию постера GTA VI (4 зоны = 4 игры) после главного баннера
+  function injectNightclubSection() {
+    const hero = document.getElementById('sec-hero');
+    if (!hero || document.getElementById('sec-gta-club')) return;
+
+    const sec = document.createElement('section');
+    sec.id = 'sec-gta-club';
+    sec.innerHTML = `
+      <div class="gta-header-bar">
+        <div>
+          <div class="text-[9px] font-display font-bold uppercase text-pink-300 tracking-wider">VICE CITY COLLAB • 4 ИГРЫ В ПОСТЕРЕ</div>
+          <h2 class="gta-title-grad">🌴 НОЧНОЙ КЛУБ GTA VI</h2>
+        </div>
+        <button class="gta-shop-btn" onclick="openGtaGame('shop')">🛍️ GTA VI Косметика</button>
+      </div>
+      <p class="text-[11px] text-sky-200/80 mb-2.5">Нажми на любую из 4 частей постера, чтобы войти в игру Ночного клуба:</p>
+
+      <div class="gta-poster-grid">
+        <div class="gta-center-logo">GTA VI • КЛУБ Σ</div>
+
+        <!-- Часть 1: Ставки на забеги команды -->
+        <div class="gta-quad" onclick="openGtaGame('race')">
+          <div class="gta-quad-bg" style="background-image:url('${getPhoto('tolstikov',0)}')"></div>
+          <span class="gta-quad-tag">ЧАСТЬ 1 • x3.5 КУШ</span>
+          <h4>🏃‍♂️ ЗАБЕГИ КОМАНДЫ</h4>
+          <p>Ставки Σ на наших ребят вместо куриц!</p>
+        </div>
+
+        <!-- Часть 2: Блэкджек на деньги или карты -->
+        <div class="gta-quad" onclick="openGtaGame('blackjack')">
+          <div class="gta-quad-bg" style="background-image:url('${getPhoto('reutskaya',1)}')"></div>
+          <span class="gta-quad-tag">ЧАСТЬ 2 • 21 ОЧКО</span>
+          <h4>🃏 БЛЭКДЖЕК 21</h4>
+          <p>Ставь монеты Σ или свои карточки из альбома!</p>
+        </div>
+
+        <!-- Часть 3: Ракета Gamble With Friends -->
+        <div class="gta-quad" onclick="openGtaGame('rocket')">
+          <div class="gta-quad-bg" style="background-image:url('${getPhoto('smolyaninov',2)}')"></div>
+          <span class="gta-quad-tag">ЧАСТЬ 3 • CRASH</span>
+          <h4>🚀 РАКЕТА КЛУБА</h4>
+          <p>Забери иксы до взрыва (Gamble With Friends)!</p>
+        </div>
+
+        <!-- Часть 4: Дурак онлайн / с ботом картами альбома -->
+        <div class="gta-quad" onclick="openGtaGame('durak')">
+          <div class="gta-quad-bg" style="background-image:url('${getPhoto('varvarin',3)}')"></div>
+          <span class="gta-quad-tag">ЧАСТЬ 4 • ОНЛАЙН / БОТ</span>
+          <h4>🎴 ДУРАК КАРТАМИ</h4>
+          <p>Битва картами из твоего альбома с игроками или ботом!</p>
+        </div>
+      </div>
+    `;
+    hero.insertAdjacentElement('afterend', sec);
+  }
+
+  window.closeGtaModal = function() {
+    if (window._gtaRocketTimer) clearInterval(window._gtaRocketTimer);
+    document.getElementById('gtaModal').classList.remove('open');
+  };
+
+  window.openGtaGame = function(mode) {
+    const modal = document.getElementById('gtaModal');
+    const title = document.getElementById('gtaModalTitle');
+    const body = document.getElementById('gtaModalBody');
+    document.getElementById('gtaModalBal').textContent = getBal();
+    modal.classList.add('open');
+
+    if (mode === 'race') renderRaceGame(title, body);
+    else if (mode === 'blackjack') renderBlackjackGame(title, body);
+    else if (mode === 'rocket') renderRocketGame(title, body);
+    else if (mode === 'durak') renderDurakGame(title, body);
+    else if (mode === 'shop') renderGtaShop(title, body);
+  };
+
+  // ==================== ИГРА 1: ЗАБЕГИ УЧАСТНИКОВ (ВМЕСТО КУРИЦ) ====================
+  function renderRaceGame(title, body) {
+    title.textContent = '🏃‍♂️ Забеги участников (x3.5)';
+    const runners = TEAM_NAMES.slice(0, 4);
+    let selectedIdx = 0;
+
+    body.innerHTML = `
+      <div class="text-xs text-pink-200">Выбери участника команды и сделай ставку Σ. Победитель забега приносит <b>x3.5</b>!</div>
+      <div class="grid grid-cols-2 gap-2" id="racePickGrid">
+        ${runners.map((r, i) => `
+          <button type="button" data-idx="${i}" class="race-pick-btn p-2 rounded-xl border ${i===0?'border-amber-300 bg-pink-500/30':'border-white/15 bg-white/5'} flex items-center gap-2 text-left">
+            <img src="${getPhoto(r.id, i)}" class="w-8 h-8 rounded-full object-cover">
+            <span class="text-[11px] font-bold truncate">${r.name}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="number" id="raceBetInput" class="gta-input" value="100" min="10" step="10">
+        <button class="gta-btn" id="raceStartBtn">СТАРТ ЗАБЕГА</button>
+      </div>
+      <div class="space-y-2 mt-2" id="raceTrackArea">
+        ${runners.map((r, i) => `
+          <div class="race-lane">
+            <div class="race-runner" id="runner_${i}">
+              <img src="${getPhoto(r.id, i)}">
+              <span class="text-[10px] font-bold">${r.name.split(' ')[0]}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div id="raceStatus" class="text-center font-display font-bold text-xs text-amber-300">Готовы к старту!</div>
+    `;
+
+    body.querySelectorAll('.race-pick-btn').forEach(btn => {
+      btn.onclick = () => {
+        selectedIdx = parseInt(btn.dataset.idx, 10);
+        body.querySelectorAll('.race-pick-btn').forEach(b => b.className = 'race-pick-btn p-2 rounded-xl border border-white/15 bg-white/5 flex items-center gap-2 text-left');
+        btn.className = 'race-pick-btn p-2 rounded-xl border border-amber-300 bg-pink-500/30 flex items-center gap-2 text-left';
+      };
+    });
+
+    document.getElementById('raceStartBtn').onclick = function() {
+      const bet = parseInt(document.getElementById('raceBetInput').value, 10) || 0;
+      if (bet <= 0 || bet > getBal()) {
+        document.getElementById('raceStatus').textContent = '❌ Недостаточно Σ для ставки!';
+        return;
+      }
+      setBal(getBal() - bet);
+      this.disabled = true;
+      const pos = [0, 0, 0, 0];
+      const status = document.getElementById('raceStatus');
+      status.textContent = '🔥 Участники бегут к финишу...';
+
+      const timer = setInterval(() => {
+        let winner = -1;
+        for (let i = 0; i < 4; i++) {
+          pos[i] += 2 + Math.random() * 6.5;
+          const el = document.getElementById('runner_' + i);
+          if (el) el.style.left = Math.min(82, pos[i]) + '%';
+          if (pos[i] >= 82 && winner === -1) winner = i;
+        }
+        if (winner !== -1) {
+          clearInterval(timer);
+          if (winner === selectedIdx) {
+            const winSum = Math.round(bet * 3.5);
+            setBal(getBal() + winSum);
+            status.innerHTML = `🏆 Победил ${runners[winner].name}! Выигрыш: +${winSum} Σ!`;
+          } else {
+            status.innerHTML = `💨 Первым пришел ${runners[winner].name}. Попробуй еще!`;
+          }
+          document.getElementById('raceStartBtn').disabled = false;
+        }
+      }, 120);
+    };
+  }
+
+  // ==================== ИГРА 2: БЛЭКДЖЕК (НА Σ ИЛИ КАРТЫ АЛЬБОМА) ====================
+  function renderBlackjackGame(title, body) {
+    title.textContent = '🃏 Блэкджек Клуба (21)';
+    const album = getAlbum();
+    let betMode = 'coins'; // 'coins' | 'card'
+    let dealer = [], player = [], activeBet = 100, stakedCardUid = album[0]?.uid || null;
+
+    body.innerHTML = `
+      <div class="flex gap-2">
+        <button id="bjModeCoins" class="gta-btn flex-1">💰 Ставка Σ</button>
+        <button id="bjModeCard" class="gta-btn alt flex-1">🎴 Ставка Картой (${album.length})</button>
+      </div>
+      <div id="bjStakeControl" class="flex items-center gap-2">
+        <input type="number" id="bjBetInput" class="gta-input" value="100" min="20" step="20">
+        <button id="bjDealBtn" class="gta-btn">РАЗДАТЬ</button>
+      </div>
+      <div class="text-xs text-sky-200">Дилер клуба: <b id="bjDealerScore">0</b></div>
+      <div class="gta-card-row" id="bjDealerRow"></div>
+      <div class="text-xs text-pink-200">Твоя рука: <b id="bjPlayerScore">0</b></div>
+      <div class="gta-card-row" id="bjPlayerRow"></div>
+      <div class="flex gap-2 hidden" id="bjActionRow">
+        <button id="bjHitBtn" class="gta-btn flex-1">➕ Ещё карту</button>
+        <button id="bjStandBtn" class="gta-btn alt flex-1">✋ Хватит</button>
+      </div>
+      <div id="bjResultText" class="text-center font-display font-bold text-xs text-amber-300">Выбери ставку и нажми «Раздать»</div>
+    `;
+
+    const modeCoinsBtn = document.getElementById('bjModeCoins');
+    const modeCardBtn = document.getElementById('bjModeCard');
+    const stakeCtrl = document.getElementById('bjStakeControl');
+
+    modeCoinsBtn.onclick = () => {
+      betMode = 'coins';
+      modeCoinsBtn.className = 'gta-btn flex-1';
+      modeCardBtn.className = 'gta-btn alt flex-1';
+      stakeCtrl.innerHTML = `<input type="number" id="bjBetInput" class="gta-input" value="100" min="20"><button id="bjDealBtn" class="gta-btn">РАЗДАТЬ</button>`;
+      document.getElementById('bjDealBtn').onclick = startBjRound;
+    };
+    modeCardBtn.onclick = () => {
+      const curAlb = getAlbum();
+      if (!curAlb.length) {
+        giveRandomCard();
+      }
+      const list = getAlbum();
+      betMode = 'card';
+      modeCardBtn.className = 'gta-btn flex-1';
+      modeCoinsBtn.className = 'gta-btn alt flex-1';
+      stakeCtrl.innerHTML = `
+        <select id="bjCardSelect" class="gta-input">
+          ${list.map(c => `<option value="${c.uid}">${c.name} (Сила ${c.power})</option>`).join('')}
+        </select>
+        <button id="bjDealBtn" class="gta-btn">РАЗДАТЬ</button>
+      `;
+      document.getElementById('bjDealBtn').onclick = startBjRound;
+    };
+
+    function drawCard() {
+      const idx = Math.floor(Math.random() * TEAM_NAMES.length);
+      const val = 2 + Math.floor(Math.random() * 10);
+      return { name: TEAM_NAMES[idx].name.split(' ')[0], val, photo: getPhoto(TEAM_NAMES[idx].id, idx) };
+    }
+    function sumHand(h) { return h.reduce((s, c) => s + c.val, 0); }
+    function renderHands() {
+      document.getElementById('bjDealerScore').textContent = sumHand(dealer);
+      document.getElementById('bjPlayerScore').textContent = sumHand(player);
+      document.getElementById('bjDealerRow').innerHTML = dealer.map(c => `<div class="gta-mini-card"><img src="${c.photo}"><b>${c.val}</b></div>`).join('');
+      document.getElementById('bjPlayerRow').innerHTML = player.map(c => `<div class="gta-mini-card"><img src="${c.photo}"><b>${c.val}</b></div>`).join('');
+    }
+
+    function startBjRound() {
+      if (betMode === 'coins') {
+        activeBet = parseInt(document.getElementById('bjBetInput')?.value || '100', 10);
+        if (activeBet <= 0 || activeBet > getBal()) {
+          document.getElementById('bjResultText').textContent = '❌ Недостаточно Σ!';
+          return;
+        }
+        setBal(getBal() - activeBet);
+      } else {
+        stakedCardUid = document.getElementById('bjCardSelect')?.value;
+      }
+      dealer = [drawCard()];
+      player = [drawCard(), drawCard()];
+      renderHands();
+      document.getElementById('bjActionRow').classList.remove('hidden');
+      document.getElementById('bjResultText').textContent = 'Твой ход: добрать или остановиться?';
+    }
+
+    document.getElementById('bjDealBtn').onclick = startBjRound;
+    document.getElementById('bjHitBtn').onclick = () => {
+      player.push(drawCard());
+      renderHands();
+      if (sumHand(player) > 21) finishBj(false, '💥 Перебор (>21)!');
+    };
+    document.getElementById('bjStandBtn').onclick = () => {
+      while (sumHand(dealer) < 17) dealer.push(drawCard());
+      renderHands();
+      const ps = sumHand(player), ds = sumHand(dealer);
+      if (ds > 21 || ps > ds) finishBj(true, '🎉 Победа в Блэкджеке!');
+      else if (ps === ds) finishBj('push', '🤝 Ничья — ставка возвращена!');
+      else finishBj(false, '😎 Дилер клуба победил!');
+    };
+
+    function finishBj(win, msg) {
+      document.getElementById('bjActionRow').classList.add('hidden');
+      const res = document.getElementById('bjResultText');
+      if (betMode === 'coins') {
+        if (win === true) {
+          setBal(getBal() + activeBet * 2);
+          res.textContent = `${msg} +${activeBet * 2} Σ!`;
+        } else if (win === 'push') {
+          setBal(getBal() + activeBet);
+          res.textContent = msg;
+        } else {
+          res.textContent = msg;
+        }
+      } else {
+        let alb = getAlbum();
+        if (win === true) {
+          const prize = giveRandomCard();
+          setBal(getBal() + 150);
+          res.textContent = `${msg} Выиграна новая карта (${prize.name}) + 150 Σ!`;
+        } else if (win === false) {
+          alb = alb.filter(c => c.uid !== stakedCardUid);
+          saveAlbum(alb);
+          res.textContent = `${msg} Поставленная карта ушла в банк клуба.`;
+        } else {
+          res.textContent = msg;
+        }
+      }
+    }
+  }
+
+  // ==================== ИГРА 3: РАКЕТА (GAMBLE WITH FRIENDS CRASH) ====================
+  function renderRocketGame(title, body) {
+    title.textContent = '🚀 Ракета (Gamble With Friends)';
+    let mult = 1.00, crashPoint = 1.5, running = false, bet = 100;
+
+    body.innerHTML = `
+      <div class="relative h-40 rounded-2xl bg-gradient-to-t from-pink-950/80 via-indigo-950 to-black border border-pink-500/50 flex flex-col items-center justify-center overflow-hidden">
+        <div id="rocketEmoji" class="text-4xl transition-transform duration-150">🚀</div>
+        <div id="rocketMult" class="font-display font-black text-3xl text-amber-300 mt-1">1.00x</div>
+        <div id="rocketSub" class="text-[11px] text-sky-200">Сделай ставку и запусти ракету!</div>
+      </div>
+      <div class="flex gap-2">
+        <input type="number" id="rocketBet" class="gta-input" value="100" min="10" step="10">
+        <button id="rocketLaunchBtn" class="gta-btn flex-1">🚀 ЗАПУСК</button>
+        <button id="rocketCashBtn" class="gta-btn alt flex-1" disabled>💰 ЗАБРАТЬ</button>
+      </div>
+    `;
+
+    const multEl = document.getElementById('rocketMult');
+    const subEl = document.getElementById('rocketSub');
+    const emojiEl = document.getElementById('rocketEmoji');
+    const launchBtn = document.getElementById('rocketLaunchBtn');
+    const cashBtn = document.getElementById('rocketCashBtn');
+
+    launchBtn.onclick = () => {
+      bet = parseInt(document.getElementById('rocketBet').value, 10) || 0;
+      if (bet <= 0 || bet > getBal()) {
+        subEl.textContent = '❌ Недостаточно Σ!';
+        return;
+      }
+      setBal(getBal() - bet);
+      mult = 1.00;
+      crashPoint = +(1.15 + Math.pow(Math.random(), 2) * 7.5).toFixed(2);
+      running = true;
+      launchBtn.disabled = true;
+      cashBtn.disabled = false;
+      emojiEl.textContent = '🚀';
+      subEl.textContent = 'Летит! Успей забрать до взрыва!';
+
+      if (window._gtaRocketTimer) clearInterval(window._gtaRocketTimer);
+      window._gtaRocketTimer = setInterval(() => {
+        mult = +(mult + 0.04 * mult).toFixed(2);
+        multEl.textContent = mult.toFixed(2) + 'x';
+        emojiEl.style.transform = `translateY(-${Math.min(25, mult * 4)}px) rotate(8deg)`;
+        if (mult >= crashPoint) {
+          clearInterval(window._gtaRocketTimer);
+          running = false;
+          emojiEl.textContent = '💥';
+          subEl.textContent = `БАБАХ на ${crashPoint}x! Ставка сгорела.`;
+          launchBtn.disabled = false;
+          cashBtn.disabled = true;
+        }
+      }, 110);
+    };
+
+    cashBtn.onclick = () => {
+      if (!running) return;
+      clearInterval(window._gtaRocketTimer);
+      running = false;
+      const win = Math.round(bet * mult);
+      setBal(getBal() + win);
+      emojiEl.textContent = '💎';
+      subEl.textContent = `Успел забрать на ${mult.toFixed(2)}x! Выигрыш: +${win} Σ!`;
+      launchBtn.disabled = false;
+      cashBtn.disabled = true;
+    };
+  }
+
+  // ==================== ИГРА 4: ДУРАК КАРТАМИ ИЗ АЛЬБОМА (БОТ / ОНЛАЙН) ====================
+  function renderDurakGame(title, body) {
+    title.textContent = '🎴 Дурак картами из альбома';
+    let myCards = getAlbum();
+    if (myCards.length < 4) {
+      while (myCards.length < 4) myCards.push(giveRandomCard());
+    }
+    let tableCard = null;
+    let roomCode = localStorage.getItem('gta_durak_room') || 'DC-2026';
+
+    body.innerHTML = `
+      <div class="flex items-center justify-between gap-2 bg-white/5 p-2 rounded-xl border border-white/10">
+        <span class="text-[11px] text-sky-200">Режим: <b>Бот / Онлайн-комната</b></span>
+        <div class="flex items-center gap-1">
+          <input id="durakRoomInput" class="gta-input !w-28 !py-1 !text-xs" value="${roomCode}">
+          <button id="durakSyncBtn" class="gta-btn alt !py-1 !px-2 !text-[10px]">Подкл.</button>
+        </div>
+      </div>
+      <div class="text-center py-3 rounded-2xl bg-black/45 border border-pink-500/40" id="durakTable">
+        <div class="text-[11px] text-sky-200 mb-1">Стол клуба (нажми на свою карту, чтобы походить / побить):</div>
+        <div id="durakTableCard" class="flex justify-center items-center min-h-[100px] text-xs text-amber-300">Ход соперника или твой первый заход!</div>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold text-pink-200">Твои карты в альбоме (${myCards.length}):</span>
+        <button id="durakBotAtkBtn" class="gta-btn alt !py-1 !px-2.5 !text-[10px]">Ход соперника</button>
+      </div>
+      <div class="gta-card-row" id="durakHandRow"></div>
+      <div id="durakMsg" class="text-center font-display font-bold text-xs text-emerald-300">Победа в раунде дает +120 Σ!</div>
+    `;
+
+    function renderHand() {
+      const row = document.getElementById('durakHandRow');
+      row.innerHTML = myCards.map((c, idx) => `
+        <div class="gta-mini-card" data-idx="${idx}">
+          <img src="${c.photo}">
+          <b>★${c.power} ${c.name.split(' ')[0]}</b>
+        </div>
+      `).join('');
+      row.querySelectorAll('.gta-mini-card').forEach(el => {
+        el.onclick = () => playCard(parseInt(el.dataset.idx, 10));
+      });
+    }
+
+    function spawnEnemyAttack() {
+      const m = TEAM_NAMES[Math.floor(Math.random() * TEAM_NAMES.length)];
+      tableCard = { name: m.name, power: 5 + Math.floor(Math.random() * 5), photo: getPhoto(m.id, 1) };
+      document.getElementById('durakTableCard').innerHTML = `
+        <div class="gta-mini-card"><img src="${tableCard.photo}"><b>★${tableCard.power}</b></div>
+      `;
+      document.getElementById('durakMsg').textContent = `Соперник зашел картой ${tableCard.name} (★${tableCard.power}). Побей картой сильнее!`;
+    }
+
+    function playCard(idx) {
+      const card = myCards[idx];
+      if (!card) return;
+      if (!tableCard) {
+        // Атакуем сами
+        const botPow = 5 + Math.floor(Math.random() * 6);
+        if (card.power >= botPow) {
+          setBal(getBal() + 120);
+          document.getElementById('durakMsg').textContent = `🔥 Соперник не смог отбить ${card.name} (★${card.power})! Ты забрал +120 Σ!`;
+        } else {
+          document.getElementById('durakMsg').textContent = `🛡 Соперник отбил твою карту (★${botPow}). Нажми «Ход соперника»!`;
+        }
+      } else {
+        // Отбиваемся
+        if (card.power >= tableCard.power) {
+          setBal(getBal() + 120);
+          tableCard = null;
+          document.getElementById('durakTableCard').innerHTML = '✅ Бито! Стол чист.';
+          document.getElementById('durakMsg').textContent = `🏆 Ты отбил карту с помощью ${card.name} (★${card.power})! +120 Σ!`;
+        } else {
+          document.getElementById('durakMsg').textContent = `⚠️ Карта ★${card.power} слабее чем ★${tableCard.power}! Выбери карту сильнее.`;
+        }
+      }
+    }
+
+    document.getElementById('durakBotAtkBtn').onclick = spawnEnemyAttack;
+    document.getElementById('durakSyncBtn').onclick = () => {
+      const code = document.getElementById('durakRoomInput').value.trim() || 'DC-2026';
+      localStorage.setItem('gta_durak_room', code);
+      document.getElementById('durakMsg').textContent = `🌐 Подключено к комнате «${code}»! Можно играть.`;
+      spawnEnemyAttack();
+    };
+    renderHand();
+  }
+
+  // ==================== МАГАЗИН ОТДЕЛЬНОЙ КОСМЕТИКИ GTA VI ====================
+  const GTA_COSMETICS = [
+    { id: 'gta6-theme', title: 'Неоновая тема Vice City', desc: 'Пурпурно-закатный фон GTA VI для всего сайта', price: 300, icon: '🌆' },
+    { id: 'gta6-frame', title: 'Неоновая рамка GTA VI', desc: 'Розово-золотое свечение карточек и профиля', price: 250, icon: '🌴' },
+    { id: 'gta6-vip', title: 'Титул «VICE VIP» в шапке', desc: 'Эксклюзивный значок Босса Ночного Клуба', price: 400, icon: '👑' }
+  ];
+
+  function applyOwnedCosmetics() {
+    const active = JSON.parse(localStorage.getItem('gta6_cosmetics_active') || '{}');
+    GTA_COSMETICS.forEach(item => {
+      document.documentElement.classList.toggle(item.id, !!active[item.id]);
+    });
+  }
+
+  function renderGtaShop(title, body) {
+    title.textContent = '🛍️ Косметика в стиле GTA VI';
+    const owned = JSON.parse(localStorage.getItem('gta6_cosmetics_owned') || '{}');
+    const active = JSON.parse(localStorage.getItem('gta6_cosmetics_active') || '{}');
+
+    body.innerHTML = `
+      <div class="text-xs text-pink-200">Эксклюзивная косметика ивента «Ночной клуб» за валюту Σ + покупка карт в альбом:</div>
+      <div class="space-y-2">
+        ${GTA_COSMETICS.map(c => {
+          const isOwned = !!owned[c.id];
+          const isOn = !!active[c.id];
+          return `
+            <div class="p-3 rounded-2xl bg-black/40 border border-pink-500/40 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <span class="text-2xl">${c.icon}</span>
+                <div>
+                  <div class="font-display font-bold text-xs text-white">${c.title}</div>
+                  <div class="text-[10px] text-sky-200/75">${c.desc}</div>
+                </div>
+              </div>
+              <button class="gta-btn !py-1.5 !px-3 !text-[10px]" data-cid="${c.id}" data-price="${c.price}">
+                ${!isOwned ? `Купить ${c.price} Σ` : (isOn ? '✅ Вкл.' : 'Включить')}
+              </button>
+            </div>
+          `;
+        }).join('')}
+      </div>
+      <div class="p-3 rounded-2xl bg-gradient-to-r from-pink-500/20 to-amber-500/20 border border-amber-300/50 flex items-center justify-between">
+        <div>
+          <div class="font-display font-bold text-xs text-amber-300">🎴 Пакет карты участника</div>
+          <div class="text-[10px] text-white/80">Добавляет случайную карту команды в твой альбом для Дурака и Блэкджека</div>
+        </div>
+        <button id="buyAlbumCardBtn" class="gta-btn !py-1.5 !px-3 !text-[10px]">150 Σ</button>
+      </div>
+      <div id="gtaShopStatus" class="text-center font-display font-bold text-xs text-amber-300"></div>
+    `;
+
+    body.querySelectorAll('[data-cid]').forEach(btn => {
+      btn.onclick = () => {
+        const
+
 </body>
