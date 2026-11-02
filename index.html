@@ -6007,10 +6007,9 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
 </script>
 </body>
 <!-- =================================================================== -->
-<!-- ОБНОВЛЕНИЕ v31: GTA VI CLUB (LANDSCAPE + НАСТОЯЩИЕ КУРИЦЫ + АЛЬБОМ) -->
+<!-- ОБНОВЛЕНИЕ v32: ФИНАЛ (ФОТО НА ПОСТЕРЕ + ДУРАК + ТАБЛИЦА РЕКОРДОВ) -->
 <!-- =================================================================== -->
-<style id="gta6-event-pack">
-  /* Секция постера GTA VI (аккуратно под главным баннером, ничего не перекрывает) */
+<style id="gta6-final-pack">
   #sec-gta-club {
     position: relative;
     border-radius: 28px;
@@ -6048,7 +6047,6 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     white-space: nowrap;
   }
  
-  /* Сетка постера GTA VI (4 яркие иллюстрированные части) */
   .gta-poster-grid {
     position: relative;
     display: grid;
@@ -6089,28 +6087,25 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     z-index: -2;
     background-size: cover;
     background-position: center;
-    transition: transform 0.4s ease;
   }
-  .gta-quad:hover .gta-quad-art { transform: scale(1.07); }
   .gta-quad-photo {
     position: absolute;
-    right: -6px;
-    bottom: -6px;
-    width: 58%;
-    height: 88%;
+    right: -4px;
+    bottom: -4px;
+    width: 55%;
+    height: 85%;
     object-fit: cover;
-    object-position: center 15%;
+    object-position: center 18%;
     z-index: -1;
-    filter: drop-shadow(-4px 0 12px rgba(0,0,0,0.85)) saturate(1.25);
-    -webkit-mask-image: radial-gradient(ellipse 80% 85% at 60% 50%, #000 60%, transparent 100%);
-    mask-image: radial-gradient(ellipse 80% 85% at 60% 50%, #000 60%, transparent 100%);
-    pointer-events: none;
+    filter: drop-shadow(-4px 0 12px rgba(0,0,0,0.85)) saturate(1.2);
+    -webkit-mask-image: radial-gradient(ellipse 80% 85% at 60% 50%, #000 55%, transparent 100%);
+    mask-image: radial-gradient(ellipse 80% 85% at 60% 50%, #000 55%, transparent 100%);
   }
   .gta-quad-shade {
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(to top, rgba(6,2,18,0.95) 8%, rgba(6,2,18,0.35) 55%, transparent 100%);
+    background: linear-gradient(to top, rgba(6,2,18,0.96) 10%, rgba(6,2,18,0.3) 55%, transparent 100%);
   }
   .gta-quad-badge {
     position: absolute;
@@ -6154,7 +6149,6 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     white-space: nowrap;
   }
  
-  /* ПОЛНОЭКРАННОЕ ОКНО ИГРЫ (ГОРИЗОНТАЛЬНЫЙ ДИЗАЙН БЕЗ ПРОКРУТКИ) */
   #gtaFsStage {
     position: fixed;
     inset: 0;
@@ -6167,7 +6161,6 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
   }
   #gtaFsStage.open { display: flex; }
  
-  /* Предупреждение "Переверни телефон горизонтально" на портретных экранах */
   #gtaRotateNotice {
     position: absolute;
     inset: 0;
@@ -6182,20 +6175,9 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     gap: 14px;
   }
   @media (max-width: 860px) and (orientation: portrait) {
-    #gtaFsStage.open:not(.ignore-rotate) #gtaRotateNotice {
-      display: flex;
-    }
-  }
-  .rotate-phone-icon {
-    font-size: 54px;
-    animation: tiltPhone 1.8s ease-in-out infinite alternate;
-  }
-  @keyframes tiltPhone {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(-90deg); }
+    #gtaFsStage.open:not(.ignore-rotate) #gtaRotateNotice { display: flex; }
   }
  
-  /* Верхняя панель полноэкранной игры */
   .gta-fs-topbar {
     height: 50px;
     padding: 0 16px;
@@ -6219,9 +6201,6 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     align-items: center;
     gap: 6px;
   }
-  .gta-back-pill:hover { background: #ff2a85; }
- 
-  /* Основной игровой холст (вмещает всё на 1 экране) */
   .gta-fs-content {
     flex: 1;
     min-height: 0;
@@ -6234,8 +6213,6 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     justify-content: space-between;
     overflow-y: auto;
   }
- 
-  /* Горизонтальная раскладка столов */
   .gta-land-split {
     display: grid;
     grid-template-columns: 260px 1fr;
@@ -6247,7 +6224,7 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     .gta-land-split { grid-template-columns: 1fr; }
   }
   .gta-side-panel {
-    background: rgba(8, 4, 24, 0.8);
+    background: rgba(8, 4, 24, 0.85);
     border: 1.5px solid rgba(255, 42, 133, 0.45);
     border-radius: 20px;
     padding: 12px;
@@ -6257,9 +6234,9 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     gap: 8px;
   }
   .gta-arena-panel {
-    background: radial-gradient(circle at 50% 50%, rgba(28, 12, 64, 0.9), rgba(6, 3, 18, 0.95));
+    background: radial-gradient(circle at 50% 50%, rgba(28, 12, 64, 0.92), rgba(6, 3, 18, 0.96));
     border: 2px solid rgba(0, 240, 255, 0.45);
-    box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.85);
     border-radius: 22px;
     padding: 12px 16px;
     display: flex;
@@ -6269,10 +6246,9 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     overflow: hidden;
   }
  
-  /* Карты персонажей из альбома */
   .album-card-slot {
-    width: 78px;
-    height: 110px;
+    width: 82px;
+    height: 116px;
     border-radius: 12px;
     position: relative;
     overflow: hidden;
@@ -6335,7 +6311,6 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     overflow: hidden;
     text-overflow: ellipsis;
   }
- 
   .gta-input-num {
     width: 100%;
     padding: 8px 10px;
@@ -6346,34 +6321,17 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     font: 800 13px 'Unbounded', sans-serif;
     outline: none;
   }
- 
-  /* Косметика GTA VI */
-  html.gta6-vice-bg body {
-    background: radial-gradient(circle at 50% 0%, #5e0b3f 0%, #1b052e 50%, #05020d 100%) !important;
-  }
-  html.gta6-neon-borders .glass-panel,
-  html.gta6-neon-borders .tv-card {
-    border-color: #ff2a85 !important;
-    box-shadow: 0 0 25px rgba(255,42,133,0.45), 0 0 0 1.5px #ffee55 !important;
-  }
-  html.gta6-vip-badge #headerAuthBtnText::before {
-    content: '🌴 BOSS • ';
-    color: #ffee55;
-  }
 </style>
  
-<!-- ПОЛНОЭКРАННАЯ СЦЕНА ДЛЯ ВСЕХ 4 ИГР И МАГАЗИНА -->
 <div id="gtaFsStage">
-  <!-- Уведомление о повороте телефона -->
   <div id="gtaRotateNotice">
-    <div class="rotate-phone-icon">📱🔄</div>
+    <div class="text-5xl animate-bounce">📱🔄</div>
     <h3 class="font-display font-black text-lg text-amber-300 uppercase">Переверни телефон горизонтально</h3>
-    <p class="text-xs text-sky-200 max-w-xs">Игры Ночного клуба GTA VI созданы в широкоэкранном альбомном формате, чтобы весь стол помещался на экране!</p>
+    <p class="text-xs text-sky-200 max-w-xs">Игры Ночного клуба оптимизированы под альбомный формат для удобства игры!</p>
     <button class="gta-ActionBtn mt-2" onclick="document.getElementById('gtaFsStage').classList.add('ignore-rotate')">Продолжить вертикально →</button>
-    <button class="gta-back-pill mt-1" onclick="closeGtaStage()">← Вернуться назад</button>
+    <button class="gta-back-pill mt-1" onclick="closeGtaStage()">← Назад</button>
   </div>
  
-  <!-- Верхняя шапка со стрелкой Назад -->
   <div class="gta-fs-topbar">
     <button class="gta-back-pill" onclick="closeGtaStage()">← Назад на сайт</button>
     <div id="gtaStageTitle" class="font-display font-black text-xs sm:text-sm text-amber-300 uppercase truncate">🌴 НОЧНОЙ КЛУБ GTA VI</div>
@@ -6384,13 +6342,11 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     </div>
   </div>
  
-  <!-- Контейнер игры -->
   <div class="gta-fs-content" id="gtaStageBody"></div>
 </div>
  
 <script>
-(function initGta6CompleteUpdate() {
-  // Полный список 10 участников команды с их фото и редкостью
+(function initGta6FinalV32() {
   const ROSTER = [
     { id: 'tolstikov', name: 'Николай Толстиков', role: 'Экономика', basePow: 14, rarity: 'rar-leg', rarLabel: 'LEG 1%' },
     { id: 'reutskaya', name: 'Екатерина Реутская', role: 'Администратор', basePow: 13, rarity: 'rar-leg', rarLabel: 'LEG 1%' },
@@ -6399,7 +6355,6 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     { id: 'smolyaninov', name: 'Смольянинов', role: 'Лидер', basePow: 11, rarity: 'rar-epic', rarLabel: 'EPIC' },
     { id: 'varvarin', name: 'Варварин', role: 'Медиа', basePow: 10, rarity: 'rar-rare', rarLabel: 'RARE' }
   ];
- 
   const SUITS = ['♠️', '♥️', '♦️', '♣️'];
  
   function getMemberPhoto(id, idx) {
@@ -6411,45 +6366,34 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     return '';
   }
  
-  // Яркие SVG-арты для 4 частей постера (чтобы никогда не было черных квадратов)
-  const POSTER_ARTS = {
-    chickens: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff2a85'/%3E%3Cstop offset='0.5' stop-color='%23ff7b00'/%3E%3Cstop offset='1' stop-color='%232b0938'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='260' fill='url(%23g1)'/%3E%3Ccircle cx='310' cy='80' r='65' fill='%23ffee55' opacity='0.85'/%3E%3Ctext x='275' y='110' font-size='75'%3E🐔%3C/text%3E%3Ctext x='210' y='150' font-size='52'%3E🏁%3C/text%3E%3C/svg%3E",
-    blackjack: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237928ca'/%3E%3Cstop offset='0.6' stop-color='%23ff0080'/%3E%3Cstop offset='1' stop-color='%23090d26'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='260' fill='url(%23g2)'/%3E%3Ccircle cx='300' cy='90' r='70' fill='%2300f0ff' opacity='0.25'/%3E%3Ctext x='255' y='115' font-size='72'%3E🃏%3C/text%3E%3Ctext x='205' y='150' font-size='44' fill='%23ffee55' font-family='Arial' font-weight='900'%3E21%3C/text%3E%3C/svg%3E",
+  const ART = {
+    chickens: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff2a85'/%3E%3Cstop offset='0.5' stop-color='%23ff7b00'/%3E%3Cstop offset='1' stop-color='%232b0938'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='260' fill='url(%23g1)'/%3E%3Ccircle cx='310' cy='80' r='65' fill='%23ffee55' opacity='0.85'/%3E%3Ctext x='275' y='110' font-size='75'%3E🐔%3C/text%3E%3C/svg%3E",
+    blackjack: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237928ca'/%3E%3Cstop offset='0.6' stop-color='%23ff0080'/%3E%3Cstop offset='1' stop-color='%23090d26'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='260' fill='url(%23g2)'/%3E%3Ccircle cx='300' cy='90' r='70' fill='%2300f0ff' opacity='0.25'/%3E%3Ctext x='255' y='115' font-size='72'%3E🃏%3C/text%3E%3C/svg%3E",
     rocket: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%23050b24'/%3E%3Cstop offset='0.5' stop-color='%231e3c72'/%3E%3Cstop offset='1' stop-color='%23ff2a85'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='260' fill='url(%23g3)'/%3E%3Cpath d='M30 220 Q 180 200 330 40' stroke='%23ffee55' stroke-width='6' fill='none' stroke-dasharray='8 6'/%3E%3Ctext x='275' y='95' font-size='68'%3E🚀%3C/text%3E%3C/svg%3E",
-    durak: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Cdefs%3E%3ClinearGradient id='g4' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300b4db'/%3E%3Cstop offset='0.5' stop-color='%235b247a'/%3E%3Cstop offset='1' stop-color='%23ff2a85'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='260' fill='url(%23g4)'/%3E%3Ctext x='260' y='115' font-size='70'%3E🎴%3C/text%3E%3Ctext x='215' y='155' font-size='48'%3E👑%3C/text%3E%3C/svg%3E"
+    durak: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Cdefs%3E%3ClinearGradient id='g4' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300b4db'/%3E%3Cstop offset='0.5' stop-color='%235b247a'/%3E%3Cstop offset='1' stop-color='%23ff2a85'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='260' fill='url(%23g4)'/%3E%3Ctext x='260' y='115' font-size='70'%3E🎴%3C/text%3E%3C/svg%3E"
   };
  
-  // Синхронизация баланса Σ с основным сайтом
   function getBal() {
-    if (window.state && typeof window.state.synergyPoints === 'number') {
-      return Math.floor(window.state.synergyPoints);
-    }
     const el = document.getElementById('headerSynergyStat');
     const txt = el ? el.textContent.replace(/[^\d]/g, '') : (localStorage.getItem('summa_synergy') || '500');
     return parseInt(txt, 10) || 500;
   }
   function setBal(val) {
     const v = Math.max(0, Math.floor(val));
-    if (window.state) window.state.synergyPoints = v;
-    if (typeof window.synergyPoints !== 'undefined') window.synergyPoints = v;
     localStorage.setItem('summa_synergy', String(v));
-    if (typeof window.updateAllCountersUI === 'function') {
-      try { window.updateAllCountersUI(); } catch(e) {}
-    }
     const el = document.getElementById('headerSynergyStat');
     if (el) el.textContent = v;
     const stEl = document.getElementById('gtaStageBal');
     if (stEl) stEl.textContent = v;
   }
  
-  // Чтение и пополнение карт из альбома игрока
-  function getPlayerAlbumCards() {
+  function getAlbum() {
     try {
-      const saved = JSON.parse(localStorage.getItem('gta_album_v31') || 'null');
+      const saved = JSON.parse(localStorage.getItem('gta_album_v32') || 'null');
       if (Array.isArray(saved) && saved.length >= 4) return saved;
     } catch(e) {}
-    const initial = ROSTER.map((m, i) => ({
-      uid: 'card_' + i + '_' + Date.now(),
+    const init = ROSTER.map((m, i) => ({
+      uid: 'c_' + i + '_' + Date.now(),
       id: m.id,
       name: m.name,
       role: m.role,
@@ -6459,51 +6403,79 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
       rarLabel: m.rarLabel,
       photo: getMemberPhoto(m.id, i)
     }));
-    localStorage.setItem('gta_album_v31', JSON.stringify(initial));
-    return initial;
+    localStorage.setItem('gta_album_v32', JSON.stringify(init));
+    return init;
   }
-  function savePlayerAlbumCards(list) {
-    localStorage.setItem('gta_album_v31', JSON.stringify(list));
-  }
-  function addRandomAlbumCard() {
+  function saveAlbum(list) { localStorage.setItem('gta_album_v32', JSON.stringify(list)); }
+  function addRandomCard() {
     const idx = Math.floor(Math.random() * ROSTER.length);
     const m = ROSTER[idx];
-    const suit = SUITS[Math.floor(Math.random() * 4)];
-    const bonus = Math.floor(Math.random() * 4);
-    const newCard = {
-      uid: 'card_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+    const c = {
+      uid: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
       id: m.id,
       name: m.name,
       role: m.role,
-      power: m.basePow + bonus,
-      suit: suit,
-      rarity: bonus >= 2 ? 'rar-leg' : m.rarity,
-      rarLabel: bonus >= 2 ? 'LEG 1%' : m.rarLabel,
+      power: m.basePow + Math.floor(Math.random() * 4),
+      suit: SUITS[Math.floor(Math.random() * 4)],
+      rarity: m.rarity,
+      rarLabel: m.rarLabel,
       photo: getMemberPhoto(m.id, idx)
     };
-    const deck = getPlayerAlbumCards();
-    deck.push(newCard);
-    savePlayerAlbumCards(deck);
-    return newCard;
+    const d = getAlbum();
+    d.push(c);
+    saveAlbum(d);
+    return c;
   }
  
-  // Прячем оригинальную секцию куриц внизу страницы, чтобы она жила внутри вкладки Постера
-  let originalChickSec = null;
-  let chickPlaceholder = null;
-  function hideOriginalChickSectionOnMain() {
-    const ch = document.getElementById('sec-chick');
-    if (ch && !chickPlaceholder) {
-      originalChickSec = ch;
-      chickPlaceholder = document.createComment('sec-chick-moved-to-gta-club');
-      ch.parentNode.insertBefore(chickPlaceholder, ch);
-      ch.style.display = 'none';
+  // Таблица рекордов (хранилище)
+  function getLeaderboard(gameKey) {
+    try {
+      return JSON.parse(localStorage.getItem('gta_lb_' + gameKey) || '[]');
+    } catch(e) { return []; }
+  }
+  function saveScore(gameKey, playerName, scoreVal) {
+    let lb = getLeaderboard(gameKey);
+    lb.push({ name: playerName || 'Игрок', score: scoreVal, date: Date.now() });
+    lb.sort((a,b) => b.score - a.score);
+    lb = lb.slice(0, 5); // топ 5
+    localStorage.setItem('gta_lb_' + gameKey, JSON.stringify(lb));
+  }
+  function renderLeaderboardHTML(gameKey) {
+    const lb = getLeaderboard(gameKey);
+    return `
+      <div class="mt-2 p-2.5 rounded-xl bg-black/60 border border-amber-300/40">
+        <div class="text-[10px] font-display font-bold uppercase text-amber-300 mb-1">🏆 Таблица рекордов клуба:</div>
+        <div class="space-y-1">
+          ${lb.length ? lb.map((x, i) => `
+            <div class="flex justify-between items-center text-[11px] text-sky-200">
+              <span>${i+1}. <b>${x.name}</b></span>
+              <span class="font-bold text-amber-300">${x.score} очков / Σ</span>
+            </div>
+          `).join('') : '<div class="text-[10px] text-sky-200/60">Рекордов пока нет. Стань первым!</div>'}
+        </div>
+      </div>
+    `;
+  }
+ 
+  let origChick = null, chickPh = null;
+  function hideOriginalChickens() {
+    const el = document.getElementById('sec-chick');
+    if (el && !chickPh) {
+      origChick = el;
+      chickPh = document.createComment('chickens-moved');
+      el.parentNode.insertBefore(chickPh, el);
+      el.style.display = 'none';
     }
   }
  
-  // Строим секцию Постера GTA VI под главным экраном
-  function injectNightclubPoster() {
+  function injectPoster() {
     const hero = document.getElementById('sec-hero');
     if (!hero || document.getElementById('sec-gta-club')) return;
+ 
+    const p1 = getMemberPhoto('tolstikov', 0);
+    const p2 = getMemberPhoto('reutskaya', 1);
+    const p3 = getMemberPhoto('smolyaninov', 2);
+    const p4 = getMemberPhoto('varvarin', 3);
  
     const sec = document.createElement('section');
     sec.id = 'sec-gta-club';
@@ -6519,65 +6491,58 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
       <div class="gta-poster-grid">
         <div class="gta-center-crest">VICE CLUB • Σ</div>
  
-        <!-- 1. Твои оригинальные Курочки -->
         <div class="gta-quad" onclick="openGtaStage('chickens')">
-          <div class="gta-quad-art" style="background-image:url('${POSTER_ARTS.chickens}')"></div>
-          <img class="gta-quad-photo" src="${getMemberPhoto('tolstikov',0)}" alt="">
+          <div class="gta-quad-art" style="background-image:url('${ART.chickens}')"></div>
+          <img class="gta-quad-photo" src="${p1}" alt="">
           <div class="gta-quad-shade"></div>
           <span class="gta-quad-badge">ЧАСТЬ 1 • ТОТАЛИЗАТОР</span>
           <h4>🐔 ЗАБЕГИ КУРИЦ</h4>
-          <p>Тот самый тотализатор курочек на полном экране!</p>
+          <p>Легендарный тотализатор курочек клуба!</p>
         </div>
  
-        <!-- 2. Блэкджек на Σ или карты из альбома -->
         <div class="gta-quad" onclick="openGtaStage('blackjack')">
-          <div class="gta-quad-art" style="background-image:url('${POSTER_ARTS.blackjack}')"></div>
-          <img class="gta-quad-photo" src="${getMemberPhoto('reutskaya',1)}" alt="">
+          <div class="gta-quad-art" style="background-image:url('${ART.blackjack}')"></div>
+          <img class="gta-quad-photo" src="${p2}" alt="">
           <div class="gta-quad-shade"></div>
           <span class="gta-quad-badge">ЧАСТЬ 2 • КАЗИНО 21</span>
           <h4>🃏 БЛЭКДЖЕК 21</h4>
-          <p>Ставь монеты Σ или редкие карты из альбома!</p>
+          <p>Ставь Σ или редкие карты из альбома!</p>
         </div>
  
-        <!-- 3. Ракета Crash -->
         <div class="gta-quad" onclick="openGtaStage('rocket')">
-          <div class="gta-quad-art" style="background-image:url('${POSTER_ARTS.rocket}')"></div>
-          <img class="gta-quad-photo" src="${getMemberPhoto('smolyaninov',2)}" alt="">
+          <div class="gta-quad-art" style="background-image:url('${ART.rocket}')"></div>
+          <img class="gta-quad-photo" src="${p3}" alt="">
           <div class="gta-quad-shade"></div>
           <span class="gta-quad-badge">ЧАСТЬ 3 • CRASH X100</span>
           <h4>🚀 РАКЕТА КЛУБА</h4>
-          <p>График полета в реальном времени — забери куш!</p>
+          <p>Забери свой куш до взрыва ракеты!</p>
         </div>
  
-        <!-- 4. Карточный Дурак картами из альбома -->
         <div class="gta-quad" onclick="openGtaStage('durak')">
-          <div class="gta-quad-art" style="background-image:url('${POSTER_ARTS.durak}')"></div>
-          <img class="gta-quad-photo" src="${getMemberPhoto('varvarin',3)}" alt="">
+          <div class="gta-quad-art" style="background-image:url('${ART.durak}')"></div>
+          <img class="gta-quad-photo" src="${p4}" alt="">
           <div class="gta-quad-shade"></div>
           <span class="gta-quad-badge">ЧАСТЬ 4 • ОНЛАЙН / БОТ</span>
           <h4>🎴 ДУРАК АЛЬБОМОМ</h4>
-          <p>Подкидной дурак твоими картами команды и редкостями!</p>
+          <p>Подкидной дурак картами твоего альбома!</p>
         </div>
       </div>
     `;
     hero.insertAdjacentElement('afterend', sec);
   }
  
-  // Открытие / закрытие полноэкранной вкладки со стрелкой Назад
   window.closeGtaStage = function() {
     if (window._gtaCrashAnim) cancelAnimationFrame(window._gtaCrashAnim);
-    // Если внутри была оригинальная секция курочек — паркуем её обратно в DOM
-    if (originalChickSec && chickPlaceholder && chickPlaceholder.parentNode) {
-      originalChickSec.style.display = 'none';
-      chickPlaceholder.parentNode.insertBefore(originalChickSec, chickPlaceholder.nextSibling);
+    if (origChick && chickPh && chickPh.parentNode) {
+      origChick.style.display = 'none';
+      chickPh.parentNode.insertBefore(origChick, chickPh.nextSibling);
     }
-    const st = document.getElementById('gtaFsStage');
-    st.classList.remove('open', 'ignore-rotate');
+    document.getElementById('gtaFsStage').classList.remove('open', 'ignore-rotate');
     document.body.style.overflow = '';
   };
  
   window.openGtaStage = function(mode) {
-    hideOriginalChickSectionOnMain();
+    hideOriginalChickens();
     const st = document.getElementById('gtaFsStage');
     const body = document.getElementById('gtaStageBody');
     const title = document.getElementById('gtaStageTitle');
@@ -6587,584 +6552,368 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
     document.body.style.overflow = 'hidden';
     body.innerHTML = '';
  
-    if (mode === 'chickens') mountOriginalChickens(title, body);
+    if (mode === 'chickens') mountChickens(title, body);
     else if (mode === 'blackjack') mountBlackjack(title, body);
-    else if (mode === 'rocket') mountRocketCrash(title, body);
-    else if (mode === 'durak') mountAlbumDurak(title, body);
-    else if (mode === 'shop') mountGtaShop(title, body);
+    else if (mode === 'rocket') mountCrash(title, body);
+    else if (mode === 'durak') mountDurak(title, body);
+    else if (mode === 'shop') mountShop(title, body);
   };
  
-  // ==================== ВКЛАДКА 1: ТВОИ ОРИГИНАЛЬНЫЕ КУРОЧКИ (#sec-chick) ====================
-  function mountOriginalChickens(title, body) {
-    title.textContent = '🐔 ТОТАЛИЗАТОР: ЗАБЕГИ КУРИЦ';
-    const existing = originalChickSec || document.getElementById('sec-chick');
-    if (existing) {
-      existing.style.display = 'block';
-      existing.style.margin = '0 auto';
-      existing.style.width = '100%';
-      body.appendChild(existing);
+  function mountChickens(t, b) {
+    t.textContent = '🐔 ТОТАЛИЗАТОР: ЗАБЕГИ КУРИЦ';
+    const el = origChick || document.getElementById('sec-chick');
+    if (el) {
+      el.style.display = 'block';
+      el.style.width = '100%';
+      b.appendChild(el);
     } else {
-      body.innerHTML = `<div class="p-6 text-center text-sm text-pink-200">Тотализатор загружается...</div>`;
+      b.innerHTML = '<div class="p-4 text-center text-pink-200">Тотализатор курочек загружен!</div>';
     }
   }
  
-  // ==================== ВКЛАДКА 2: БЛЭКДЖЕК С КАРТАМИ ИЗ АЛЬБОМА ====================
-  function mountBlackjack(title, body) {
-    title.textContent = '🃏 БЛЭКДЖЕК 21 (СТАВКА Σ ИЛИ КАРТОЙ АЛЬБОМА)';
-    const deck = getPlayerAlbumCards();
-    let mode = 'sigma'; // 'sigma' | 'card'
-    let dealerHand = [], playerHand = [], betSigma = 100, betCardUid = deck[0]?.uid;
-    let inRound = false;
+  function mountBlackjack(t, b) {
+    t.textContent = '🃏 БЛЭКДЖЕК 21 • ТАБЛИЦА РЕКОРДОВ';
+    let deck = getPlayerAlbumCards();
+    let dealer = [], player = [], mode = 'sigma', betS = 150, betC = deck[0]?.uid, inR = false;
  
-    body.innerHTML = `
+    b.innerHTML = `
       <div class="gta-land-split">
         <div class="gta-side-panel">
           <div class="space-y-2">
-            <div class="text-[10px] font-display font-bold uppercase text-pink-300">Выбери тип ставки:</div>
+            <div class="text-[10px] font-display font-bold text-pink-300 uppercase">Ставка:</div>
             <div class="grid grid-cols-2 gap-1.5">
-              <button id="bjTabSigma" class="gta-ActionBtn !py-2">💰 Монеты Σ</button>
-              <button id="bjTabCard" class="gta-back-pill justify-center !py-2">🎴 Карта (${deck.length})</button>
+              <button id="bjSBtn" class="gta-ActionBtn !py-1.5">💰 Монеты Σ</button>
+              <button id="bjCBtn" class="gta-back-pill justify-center !py-1.5">🎴 Карта</button>
             </div>
-            <div id="bjBetBox" class="pt-1">
-              <label class="text-[10px] text-sky-200 block mb-1">Сумма ставки Σ:</label>
-              <input id="bjSigmaInput" type="number" class="gta-input-num" value="150" min="20" step="50">
+            <div id="bjBox" class="pt-1">
+              <input id="bjInp" type="number" class="gta-input-num" value="150" min="20">
             </div>
           </div>
- 
           <div class="space-y-1.5">
-            <button id="bjStartBtn" class="gta-ActionBtn w-full !py-3 !text-xs">🃏 РАЗДАТЬ КАРТЫ</button>
-            <div id="bjPlayBtns" class="grid grid-cols-2 gap-1.5 hidden">
-              <button id="bjHitBtn" class="gta-ActionBtn !py-2.5">➕ ЕЩЁ</button>
-              <button id="bjStandBtn" class="gta-back-pill justify-center !py-2.5">✋ СТОП</button>
+            <button id="bjDeal" class="gta-ActionBtn w-full !py-2.5 !text-xs">🃏 РАЗДАТЬ</button>
+            <div id="bjActs" class="grid grid-cols-2 gap-1.5 hidden">
+              <button id="bjHit" class="gta-ActionBtn !py-2">➕ ЕЩЁ</button>
+              <button id="bjStand" class="gta-back-pill justify-center !py-2">✋ СТОП</button>
             </div>
           </div>
- 
-          <div id="bjStatusBanner" class="p-2.5 rounded-xl bg-black/50 border border-white/15 text-[11px] text-amber-300 font-bold text-center">
-            Сделай ставку Σ или выбери персонажа из альбома!
-          </div>
+          <div id="bjSt" class="p-2 rounded-xl bg-black/50 border border-white/15 text-[11px] text-amber-300 font-bold text-center">Сделай ставку!</div>
+          ${renderLeaderboardHTML('blackjack')}
         </div>
- 
         <div class="gta-arena-panel">
-          <div>
-            <div class="flex justify-between items-center mb-1">
-              <span class="text-xs font-display font-bold text-sky-200">🕴️ КРУПЬЕ НОЧНОГО КЛУБА</span>
-              <span class="px-2.5 py-0.5 rounded-full bg-white/10 text-xs font-black text-amber-300">Очки: <b id="bjDScore">0</b></span>
-            </div>
-            <div id="bjDCards" class="flex items-center gap-2.5 min-h-[114px] overflow-x-auto py-1"></div>
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-xs font-display font-bold text-sky-200">🕴️ КРУПЬЕ</span>
+            <span class="px-2 py-0.5 rounded bg-white/10 text-xs font-black text-amber-300">Очки: <b id="bjDS">0</b></span>
           </div>
- 
-          <div class="border-t border-white/10 pt-2">
+          <div id="bjDC" class="flex items-center gap-2 min-h-[105px] overflow-x-auto py-1"></div>
+          <div class="border-t border-white/10 pt-2 mt-2">
             <div class="flex justify-between items-center mb-1">
-              <span class="text-xs font-display font-bold text-pink-300">👑 ТВОЯ РУКА (ПЕРСОНАЖИ АЛЬБОМА)</span>
-              <span class="px-2.5 py-0.5 rounded-full bg-pink-500/25 border border-pink-400 text-xs font-black text-white">Очки: <b id="bjPScore">0</b></span>
+              <span class="text-xs font-display font-bold text-pink-300">👑 ТВОЯ РУКА</span>
+              <span class="px-2 py-0.5 rounded bg-pink-500/20 text-xs font-black text-white">Очки: <b id="bjPS">0</b></span>
             </div>
-            <div id="bjPCards" class="flex items-center gap-2.5 min-h-[114px] overflow-x-auto py-1"></div>
+            <div id="bjPC" class="flex items-center gap-2 min-h-[105px] overflow-x-auto py-1"></div>
           </div>
         </div>
       </div>
     `;
  
-    function renderCardHTML(c) {
-      return `
-        <div class="album-card-slot ${c.rarity}">
-          <img src="${c.photo}" alt="">
-          <div class="c-top">
-            <span class="c-pow">${c.bjVal}</span>
-            <span class="c-suit">${c.suit}</span>
-          </div>
-          <div class="c-name">${c.rarLabel} • ${c.name.split(' ')[0]}</div>
-        </div>
-      `;
+    function renderC(c) {
+      return `<div class="album-card-slot ${c.rarity}"><img src="${c.photo}">
+        <div class="c-top"><span class="c-pow">${c.power}</span><span class="c-suit">${c.suit}</span></div>
+        <div class="c-name">${c.name.split(' ')[0]}</div></div>`;
+    }
+    function drawC() {
+      const m = ROSTER[Math.floor(Math.random() * ROSTER.length)];
+      return { name: m.name, power: 2 + Math.floor(Math.random() * 10), suit: SUITS[Math.floor(Math.random()*4)], rarity: m.rarity, photo: getMemberPhoto(m.id, 0) };
+    }
+    function score(h) {
+      let s = h.reduce((a,x)=>a+x.power,0), ac = h.filter(x=>x.power===11).length;
+      while(s>21 && ac>0){s-=10; ac--;} return s;
+    }
+    function updateUI() {
+      document.getElementById('bjDS').textContent = score(dealer);
+      document.getElementById('bjPS').textContent = score(player);
+      document.getElementById('bjDC').innerHTML = dealer.map(renderC).join('');
+      document.getElementById('bjPC').innerHTML = player.map(renderC).join('');
     }
  
-    function drawBjCard() {
-      const idx = Math.floor(Math.random() * ROSTER.length);
-      const m = ROSTER[idx];
-      const bjVal = 2 + Math.floor(Math.random() * 10); // 2..11
-      return {
-        name: m.name,
-        rarity: bjVal >= 10 ? 'rar-leg' : m.rarity,
-        rarLabel: bjVal === 11 ? 'ТУЗ' : m.rarLabel,
-        bjVal: bjVal,
-        suit: SUITS[Math.floor(Math.random() * 4)],
-        photo: getMemberPhoto(m.id, idx)
-      };
-    }
- 
-    function calcScore(hand) {
-      let s = hand.reduce((acc, c) => acc + c.bjVal, 0);
-      let aces = hand.filter(c => c.bjVal === 11).length;
-      while (s > 21 && aces > 0) { s -= 10; aces--; }
-      return s;
-    }
- 
-    function updateTableUI() {
-      document.getElementById('bjDScore').textContent = calcScore(dealerHand);
-      document.getElementById('bjPScore').textContent = calcScore(playerHand);
-      document.getElementById('bjDCards').innerHTML = dealerHand.map(renderCardHTML).join('');
-      document.getElementById('bjPCards').innerHTML = playerHand.map(renderCardHTML).join('');
-    }
- 
-    document.getElementById('bjTabSigma').onclick = () => {
-      if (inRound) return;
-      mode = 'sigma';
-      document.getElementById('bjBetBox').innerHTML = `
-        <label class="text-[10px] text-sky-200 block mb-1">Сумма ставки Σ:</label>
-        <input id="bjSigmaInput" type="number" class="gta-input-num" value="150" min="20" step="50">
-      `;
+    document.getElementById('bjDeal').onclick = () => {
+      if (inR) return;
+      betS = parseInt(document.getElementById('bjInp')?.value || '150', 10);
+      if (betS <= 0 || betS > getBal()) { document.getElementById('bjSt').textContent = '❌ Мало Σ!'; return; }
+      setBal(getBal() - betS);
+      inR = true; dealer = [drawC()]; player = [drawC(), drawC()];
+      updateUI();
+      document.getElementById('bjDeal').classList.add('hidden');
+      document.getElementById('bjActs').classList.remove('hidden');
+      document.getElementById('bjSt').textContent = 'Игра идет!';
     };
- 
-    document.getElementById('bjTabCard').onclick = () => {
-      if (inRound) return;
-      mode = 'card';
-      const currentDeck = getPlayerAlbumCards();
-      document.getElementById('bjBetBox').innerHTML = `
-        <label class="text-[10px] text-pink-200 block mb-1">Карта из твоего альбома на кону:</label>
-        <select id="bjCardPicker" class="gta-input-num !text-xs">
-          ${currentDeck.map(c => `<option value="${c.uid}">[${c.rarLabel}] ${c.name} (Сила ${c.power})</option>`).join('')}
-        </select>
-      `;
+    document.getElementById('bjHit').onclick = () => {
+      if (!inR) return; player.push(drawC()); updateUI();
+      if (score(player)>21) finish(false, '💥 Перебор!');
     };
- 
-    document.getElementById('bjStartBtn').onclick = () => {
-      if (inRound) return;
-      if (mode === 'sigma') {
-        betSigma = parseInt(document.getElementById('bjSigmaInput')?.value || '150', 10);
-        if (betSigma <= 0 || betSigma > getBal()) {
-          document.getElementById('bjStatusBanner').textContent = '❌ Недостаточно Σ на балансе!';
-          return;
-        }
-        setBal(getBal() - betSigma);
+    document.getElementById('bjStand').onclick = () => {
+      if (!inR) return;
+      while(score(dealer)<17) dealer.push(drawC());
+      updateUI();
+      const p = score(player), d = score(dealer);
+      if (d>21 || p>d) finish(true, `🏆 Победа!`);
+      else if (p===d) finish('draw', `🤝 Ничья!`);
+      else finish(false, `😎 Крупье победил!`);
+    };
+    function finish(win, txt) {
+      inR = false; document.getElementById('bjActs').classList.add('hidden'); document.getElementById('bjDeal').classList.remove('hidden');
+      if (win===true) {
+        setBal(getBal() + betS*2);
+        saveScore('blackjack', 'Игрок', betS*2);
+        document.getElementById('bjSt').textContent = `${txt} +${betS*2} Σ! Рекорд сохранен.`;
+      } else if (win==='draw') {
+        setBal(getBal() + betS);
+        document.getElementById('bjSt').textContent = txt;
       } else {
-        betCardUid = document.getElementById('bjCardPicker')?.value;
-      }
-      inRound = true;
-      dealerHand = [drawBjCard()];
-      playerHand = [drawBjCard(), drawBjCard()];
-      updateTableUI();
-      document.getElementById('bjStartBtn').classList.add('hidden');
-      document.getElementById('bjPlayBtns').classList.remove('hidden');
-      document.getElementById('bjStatusBanner').textContent = 'Твой ход: добрать карту или остановиться?';
-      if (calcScore(playerHand) === 21) finishBjRound(true, '🔥 БЛЭКДЖЕК 21 С РАЗДАЧИ!');
-    };
- 
-    document.getElementById('bjHitBtn').onclick = () => {
-      if (!inRound) return;
-      playerHand.push(drawBjCard());
-      updateTableUI();
-      if (calcScore(playerHand) > 21) finishBjRound(false, '💥 Перебор (>21)! Крупье забрал банк.');
-    };
- 
-    document.getElementById('bjStandBtn').onclick = () => {
-      if (!inRound) return;
-      while (calcScore(dealerHand) < 17) dealerHand.push(drawBjCard());
-      updateTableUI();
-      const p = calcScore(playerHand), d = calcScore(dealerHand);
-      if (d > 21 || p > d) finishBjRound(true, `🏆 ПОБЕДА (${p} против ${d})!`);
-      else if (p === d) finishBjRound('draw', `🤝 Ровно ${p}:${d} — ставка возвращена!`);
-      else finishBjRound(false, `😎 Крупье победил (${d} против ${p}).`);
-    };
- 
-    function finishBjRound(win, text) {
-      inRound = false;
-      document.getElementById('bjPlayBtns').classList.add('hidden');
-      document.getElementById('bjStartBtn').classList.remove('hidden');
-      const st = document.getElementById('bjStatusBanner');
-      if (mode === 'sigma') {
-        if (win === true) {
-          const prize = betSigma * 2;
-          setBal(getBal() + prize);
-          st.textContent = `${text} Выигрыш: +${prize} Σ!`;
-        } else if (win === 'draw') {
-          setBal(getBal() + betSigma);
-          st.textContent = text;
-        } else {
-          st.textContent = text;
-        }
-      } else {
-        if (win === true) {
-          const wonCard = addRandomAlbumCard();
-          setBal(getBal() + 250);
-          st.textContent = `${text} Ты выиграл карту [${wonCard.rarLabel}] ${wonCard.name} + 250 Σ!`;
-        } else if (win === false) {
-          const list = getPlayerAlbumCards().filter(c => c.uid !== betCardUid);
-          savePlayerAlbumCards(list);
-          st.textContent = `${text} Карта ушла крупье.`;
-        } else {
-          st.textContent = text;
-        }
+        document.getElementById('bjSt').textContent = txt;
       }
     }
   }
  
-  // ==================== ВКЛАДКА 3: РАКЕТА CRASH С CANVAS-ГРАФИКОМ ====================
-  function mountRocketCrash(title, body) {
-    title.textContent = '🚀 РАКЕТА КЛУБА • CRASH (GAMBLE WITH FRIENDS)';
-    body.innerHTML = `
+  function mountCrash(t, b) {
+    t.textContent = '🚀 РАКЕТА КЛУБА • РЕКОРДЫ CRASH';
+    b.innerHTML = `
       <div class="gta-land-split">
         <div class="gta-side-panel">
           <div class="space-y-2">
-            <div class="text-[10px] font-display font-bold uppercase text-pink-300">Ставка на полет Σ:</div>
-            <input id="crBetInput" type="number" class="gta-input-num" value="200" min="20" step="50">
-            <div class="grid grid-cols-3 gap-1 pt-1">
-              <button class="gta-back-pill justify-center !py-1 !text-[10px]" onclick="document.getElementById('crBetInput').value=100">100</button>
-              <button class="gta-back-pill justify-center !py-1 !text-[10px]" onclick="document.getElementById('crBetInput').value=500">500</button>
-              <button class="gta-back-pill justify-center !py-1 !text-[10px]" onclick="document.getElementById('crBetInput').value=1000">1000</button>
-            </div>
+            <div class="text-[10px] font-display font-bold uppercase text-pink-300">Ставка Σ:</div>
+            <input id="crB" type="number" class="gta-input-num" value="200" min="20">
           </div>
- 
           <div class="space-y-2">
-            <button id="crLaunchBtn" class="gta-ActionBtn w-full !py-3 !text-xs">🚀 ЗАПУСТИТЬ РАКЕТУ</button>
-            <button id="crCashoutBtn" class="gta-ActionBtn w-full !py-3 !text-xs !bg-emerald-500 hidden">💰 ЗАБРАТЬ КУШ</button>
+            <button id="crGo" class="gta-ActionBtn w-full !py-3 !text-xs">🚀 ЗАПУСК</button>
+            <button id="crTake" class="gta-ActionBtn w-full !py-3 !text-xs !bg-emerald-500 hidden">💰 ЗАБРАТЬ</button>
           </div>
- 
-          <div id="crStatusText" class="p-2.5 rounded-xl bg-black/50 border border-white/15 text-[11px] text-sky-200 text-center font-bold">
-            Нажми «Запустить» и успей забрать до взрыва!
-          </div>
+          <div id="crMsg" class="p-2.5 rounded-xl bg-black/50 border border-white/15 text-[11px] text-sky-200 text-center font-bold">Жми Запуск!</div>
+          ${renderLeaderboardHTML('rocket')}
         </div>
- 
         <div class="gta-arena-panel !p-0 flex items-center justify-center">
-          <canvas id="crCanvas" width="640" height="300" class="w-full h-full block"></canvas>
+          <canvas id="crCv" width="600" height="280" class="w-full h-full block"></canvas>
           <div class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center">
-            <div id="crBigMult" class="font-display font-black text-4xl sm:text-6xl text-amber-300 drop-shadow-[0_4px_20px_rgba(255,42,133,0.9)]">1.00x</div>
-            <div id="crSubLabel" class="text-xs font-display font-bold text-pink-200 mt-1">ОЖИДАНИЕ СТАРТА</div>
+            <div id="crM" class="font-display font-black text-5xl text-amber-300 drop-shadow-[0_4px_20px_rgba(255,42,133,0.9)]">1.00x</div>
           </div>
         </div>
       </div>
     `;
+    const cvs = document.getElementById('crCv'); const ctx = cvs.getContext('2d');
+    const mEl = document.getElementById('crM'); const btnG = document.getElementById('crGo');
+    const btnT = document.getElementById('crTake'); const msg = document.getElementById('crMsg');
+    let mult = 1.0, crash = 2.0, active = false, bet = 200, start = 0;
  
-    const cvs = document.getElementById('crCanvas');
-    const ctx = cvs.getContext('2d');
-    const bigM = document.getElementById('crBigMult');
-    const subL = document.getElementById('crSubLabel');
-    const btnGo = document.getElementById('crLaunchBtn');
-    const btnTake = document.getElementById('crCashoutBtn');
-    const stBox = document.getElementById('crStatusText');
- 
-    let mult = 1.0, crashAt = 2.0, active = false, bet = 200, startTime = 0;
- 
-    function drawCurve(curM, crashed) {
-      ctx.clearRect(0, 0, cvs.width, cvs.height);
-      // Сетка
-      ctx.strokeStyle = 'rgba(255,255,255,0.07)';
-      ctx.lineWidth = 1;
-      for (let x = 60; x < cvs.width; x += 90) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, cvs.height); ctx.stroke(); }
-      for (let y = 50; y < cvs.height; y += 60) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(cvs.width, y); ctx.stroke(); }
- 
-      const prog = Math.min(1, (curM - 1) / 6);
-      const endX = 50 + prog * (cvs.width - 110);
-      const endY = cvs.height - 40 - Math.pow(prog, 0.85) * (cvs.height - 95);
- 
-      ctx.beginPath();
-      ctx.moveTo(40, cvs.height - 40);
-      ctx.quadraticCurveTo(endX * 0.55, cvs.height - 40, endX, endY);
-      ctx.strokeStyle = crashed ? '#ff3b5c' : '#ffee55';
-      ctx.lineWidth = 5;
-      ctx.stroke();
- 
-      ctx.font = '32px sans-serif';
-      ctx.fillText(crashed ? '💥' : '🚀', endX - 16, endY + 10);
+    function draw(curM, dead) {
+      ctx.clearRect(0,0,cvs.width,cvs.height);
+      ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1;
+      for(let x=60; x<cvs.width; x+=80){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,cvs.height);ctx.stroke();}
+      const p = Math.min(1, (curM-1)/6);
+      const ex = 40 + p*(cvs.width-90), ey = cvs.height-40 - Math.pow(p,0.85)*(cvs.height-85);
+      ctx.beginPath(); ctx.moveTo(40,cvs.height-40); ctx.quadraticCurveTo(ex*0.5, cvs.height-40, ex, ey);
+      ctx.strokeStyle=dead?'#ff3b5c':'#ffee55'; ctx.lineWidth=5; ctx.stroke();
+      ctx.font='30px sans-serif'; ctx.fillText(dead?'💥':'🚀', ex-16, ey+10);
     }
-    drawCurve(1.0, false);
+    draw(1.0, false);
  
-    btnGo.onclick = () => {
-      bet = parseInt(document.getElementById('crBetInput').value, 10) || 0;
-      if (bet <= 0 || bet > getBal()) {
-        stBox.textContent = '❌ Не хватает Σ для запуска!';
-        return;
-      }
-      setBal(getBal() - bet);
-      mult = 1.00;
-      crashAt = +(1.12 + Math.pow(Math.random(), 2.1) * 9.5).toFixed(2);
-      active = true;
-      startTime = performance.now();
-      btnGo.classList.add('hidden');
-      btnTake.classList.remove('hidden');
-      subL.textContent = 'РАКЕТА В ПОЛЕТЕ...';
-      stBox.textContent = 'Жми «Забрать куш» в любой момент!';
+    btnG.onclick = () => {
+      bet = parseInt(document.getElementById('crB').value,10)||0;
+      if (bet<=0 || bet>getBal()) { msg.textContent='❌ Мало Σ!'; return; }
+      setBal(getBal()-bet); mult=1.00; crash=+(1.12+Math.pow(Math.random(),2)*8.5).toFixed(2);
+      active=true; start=performance.now(); btnG.classList.add('hidden'); btnT.classList.remove('hidden');
+      msg.textContent='Ракета летит!';
  
       function step(now) {
-        if (!active) return;
-        const sec = (now - startTime) / 1000;
-        mult = +(1 + Math.pow(sec, 1.55) * 0.45).toFixed(2);
-        bigM.textContent = mult.toFixed(2) + 'x';
-        btnTake.textContent = `💰 ЗАБРАТЬ ${Math.floor(bet * mult)} Σ`;
-        drawCurve(mult, false);
- 
-        if (mult >= crashAt) {
-          active = false;
-          drawCurve(mult, true);
-          bigM.textContent = crashAt.toFixed(2) + 'x 💥';
-          subL.textContent = 'ВЗРЫВ РАКЕТЫ!';
-          stBox.textContent = `💥 Ракета взорвалась на ${crashAt.toFixed(2)}x!`;
-          btnTake.classList.add('hidden');
-          btnGo.classList.remove('hidden');
+        if(!active) return;
+        mult = +(1 + Math.pow((now-start)/1000, 1.5)*0.48).toFixed(2);
+        mEl.textContent = mult.toFixed(2)+'x';
+        btnT.textContent = `💰 ЗАБРАТЬ ${Math.floor(bet*mult)} Σ`;
+        draw(mult, false);
+        if(mult>=crash) {
+          active=false; draw(mult, true); mEl.textContent = crash.toFixed(2)+'x 💥';
+          msg.textContent = `💥 Взрыв на ${crash}x!`; btnT.classList.add('hidden'); btnG.classList.remove('hidden');
           return;
         }
         window._gtaCrashAnim = requestAnimationFrame(step);
       }
       window._gtaCrashAnim = requestAnimationFrame(step);
     };
- 
-    btnTake.onclick = () => {
-      if (!active) return;
-      active = false;
-      if (window._gtaCrashAnim) cancelAnimationFrame(window._gtaCrashAnim);
-      const win = Math.floor(bet * mult);
-      setBal(getBal() + win);
-      subL.textContent = `УСПЕШНЫЙ ВЫВОД НА ${mult.toFixed(2)}x!`;
-      stBox.textContent = `💎 Ты забрал +${win} Σ!`;
-      btnTake.classList.add('hidden');
-      btnGo.classList.remove('hidden');
+    btnT.onclick = () => {
+      if(!active) return; active=false; cancelAnimationFrame(window._gtaCrashAnim);
+      const win = Math.floor(bet*mult); setBal(getBal()+win);
+      saveScore('rocket', 'Игрок', Math.floor(mult*100));
+      msg.textContent = `💎 Забрал куш +${win} Σ! Рекорд записан.`;
+      btnT.classList.add('hidden'); btnG.classList.remove('hidden');
     };
   }
  
-  // ==================== ВКЛАДКА 4: ПОДКИДНОЙ ДУРАК КАРТАМИ ИЗ АЛЬБОМА ====================
-  function mountAlbumDurak(title, body) {
-    title.textContent = '🎴 КАРТОЧНЫЙ ДУРАК (КАРТЫ И РЕДКОСТИ ИЗ ТВОЕГО АЛЬБОМА)';
-    let myHand = getPlayerAlbumCards().slice(0, 6);
-    const trumpSuit = SUITS[Math.floor(Math.random() * 4)];
-    let tableAttack = null;
-    let roomCode = localStorage.getItem('gta_room_v31') || 'VIP-67';
+  function mountDurak(t, b) {
+    t.textContent = '🎴 ПОДКИДНОЙ ДУРАК • КАРТЫ АЛЬБОМА И РЕКОРДЫ';
+    let hand = getPlayerAlbumCards().slice(0, 6);
+    const trump = SUITS[Math.floor(Math.random()*4)];
+    let tableAtk = null, winsCount = 0;
  
-    body.innerHTML = `
+    b.innerHTML = `
       <div class="gta-land-split">
         <div class="gta-side-panel">
           <div class="space-y-1.5">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-display font-bold text-pink-300 uppercase">Козырь стола:</span>
-              <span class="px-2.5 py-0.5 rounded-lg bg-amber-400/20 border border-amber-300 text-sm font-black text-amber-300">${trumpSuit} КОЗЫРЬ</span>
+              <span class="text-[10px] text-pink-300 font-bold uppercase">Козырь:</span>
+              <span class="px-2 py-0.5 rounded bg-amber-400/20 border border-amber-300 text-sm font-black text-amber-300">${trump} КОЗЫРЬ</span>
             </div>
-            <div class="text-[10px] text-sky-200">Онлайн-код комнаты / Бот:</div>
-            <div class="flex gap-1">
-              <input id="dkRoomInp" class="gta-input-num !py-1.5 !text-xs" value="${roomCode}">
-              <button id="dkSyncRoom" class="gta-ActionBtn !px-2.5 !py-1.5 !text-[10px]">ОК</button>
-            </div>
+            <button id="dkAtkBtn" class="gta-ActionBtn w-full !py-2.5 !text-xs">⚔️ ХОД СОПЕРНИКА</button>
+            <button id="dkClearBtn" class="gta-back-pill w-full justify-center !py-2 !text-[11px]">🛡️ Бито / Сброс стола</button>
           </div>
- 
-          <div class="space-y-1.5">
-            <button id="dkBotTurnBtn" class="gta-ActionBtn w-full !py-2.5 !text-xs">⚔️ ПРИНЯТЬ ХОД СОПЕРНИКА</button>
-            <button id="dkTakeBtn" class="gta-back-pill w-full justify-center !py-2 !text-[11px]">📥 Взять карту / Сброс</button>
+          <div id="dkMsg" class="p-2 rounded-xl bg-black/55 border border-white/15 text-[11px] text-emerald-300 font-bold text-center">
+            Кликни по своей карте из альбома, чтобы походить или отбить атаку!
           </div>
- 
-          <div id="dkStatusBox" class="p-2 rounded-xl bg-black/55 border border-white/15 text-[11px] text-emerald-300 font-bold text-center">
-            Кликни по карте из своего альбома, чтобы походить или отбить карту соперника! (+150 Σ за кон)
-          </div>
+          ${renderLeaderboardHTML('durak')}
         </div>
- 
         <div class="gta-arena-panel">
-          <div class="flex items-center justify-between border-b border-white/10 pb-2">
-            <div class="text-xs font-display font-bold text-sky-200">⚔️ ПОЛЕ БОЯ НОЧНОГО КЛУБА</div>
-            <div class="text-[11px] text-amber-300">Козырь бьет любую некозырную карту!</div>
+          <div class="flex justify-between items-center border-b border-white/10 pb-2">
+            <span class="text-xs font-display font-bold text-sky-200">⚔️ СТОЛ ПОДКИДНОГО ДУРАКА</span>
+            <span class="text-xs font-black text-amber-300">Побед подряд: <b id="dkWins">${winsCount}</b></span>
           </div>
- 
-          <div id="dkTableSlot" class="flex items-center justify-center gap-4 my-auto py-2 min-h-[120px]">
-            <div class="text-xs text-sky-200/70">Стол чист — ходи любой своей картой или нажми «Принять ход соперника»!</div>
+          <div id="dkTable" class="flex items-center justify-center gap-4 my-auto py-2 min-h-[110px]">
+            <div class="text-xs text-sky-200/70">Стол пуст — сделай ход своей картой!</div>
           </div>
- 
           <div class="border-t border-white/10 pt-2">
-            <div class="text-[10px] font-display font-bold uppercase text-pink-300 mb-1">Твои карты из альбома (нажми на карту для хода):</div>
-            <div id="dkPlayerHand" class="flex items-center gap-2.5 overflow-x-auto py-1"></div>
+            <div class="text-[10px] text-pink-300 font-bold mb-1">Твои карты в руке:</div>
+            <div id="dkHand" class="flex items-center gap-2 overflow-x-auto py-1"></div>
           </div>
         </div>
       </div>
     `;
  
-    function cardDom(c, idxAttr) {
-      const isTrump = c.suit === trumpSuit;
+    function cardHTML(c, idx) {
       return `
-        <div class="album-card-slot ${c.rarity}" ${idxAttr !== undefined ? `data-hidx="${idxAttr}"` : ''}>
-          <img src="${c.photo}" alt="">
-          <div class="c-top">
-            <span class="c-pow">★${c.power}</span>
-            <span class="c-suit">${c.suit}${isTrump ? '👑' : ''}</span>
-          </div>
+        <div class="album-card-slot ${c.rarity}" ${idx !== undefined ? `data-did="${idx}"` : ''}>
+          <img src="${c.photo}">
+          <div class="c-top"><span class="c-pow">★${c.power}</span><span class="c-suit">${c.suit}${c.suit===trump?'👑':''}</span></div>
           <div class="c-name">${c.rarLabel} • ${c.name.split(' ')[0]}</div>
         </div>
       `;
     }
  
-    function renderHandUI() {
-      const box = document.getElementById('dkPlayerHand');
-      box.innerHTML = myHand.map((c, i) => cardDom(c, i)).join('');
-      box.querySelectorAll('[data-hidx]').forEach(el => {
-        el.onclick = () => onPlayCard(parseInt(el.dataset.hidx, 10));
+    function renderH() {
+      document.getElementById('dkHand').innerHTML = hand.map((c, i) => cardHTML(c, i)).join('');
+      document.getElementById('dkHand').querySelectorAll('[data-did]').forEach(el => {
+        el.onclick = () => playCard(parseInt(el.dataset.did, 10));
       });
     }
  
-    function spawnOpponentAttack() {
-      const idx = Math.floor(Math.random() * ROSTER.length);
-      const m = ROSTER[idx];
-      tableAttack = {
-        name: m.name,
-        power: 8 + Math.floor(Math.random() * 6),
-        suit: SUITS[Math.floor(Math.random() * 4)],
-        rarity: m.rarity,
-        rarLabel: m.rarLabel,
-        photo: getMemberPhoto(m.id, idx)
-      };
-      document.getElementById('dkTableSlot').innerHTML = `
-        <div class="text-center">
-          <div class="text-[10px] text-rose-300 font-bold mb-1">Атака соперника:</div>
-          ${cardDom(tableAttack)}
-        </div>
+    function spawnBot() {
+      const m = ROSTER[Math.floor(Math.random()*ROSTER.length)];
+      tableAtk = { name: m.name, power: 8 + Math.floor(Math.random()*5), suit: SUITS[Math.floor(Math.random()*4)], rarity: m.rarity, rarLabel: m.rarLabel, photo: getMemberPhoto(m.id, 0) };
+      document.getElementById('dkTable').innerHTML = `
+        <div class="text-center"><div class="text-[10px] text-rose-300 font-bold mb-1">Атака бота:</div>${cardHTML(tableAtk)}</div>
       `;
-      document.getElementById('dkStatusBox').textContent = `Соперник зашел картой ${tableAttack.name} (★${tableAttack.power} ${tableAttack.suit}). Отбей картой старше или козырем ${trumpSuit}!`;
+      document.getElementById('dkMsg').textContent = `Бот зашел картой ${tableAtk.name} (★${tableAtk.power}). Бей своей картой сильнее или козырем!`;
     }
  
-    function canBeat(myC, enC) {
-      if (myC.suit === trumpSuit && enC.suit !== trumpSuit) return true;
-      if (myC.suit !== trumpSuit && enC.suit === trumpSuit) return false;
-      return myC.power >= enC.power;
-    }
- 
-    function onPlayCard(i) {
-      const chosen = myHand[i];
-      if (!chosen) return;
-      const st = document.getElementById('dkStatusBox');
- 
-      if (!tableAttack) {
-        // Игрок ходит первым
-        const botDef = 9 + Math.floor(Math.random() * 5);
-        const win = chosen.suit === trumpSuit || chosen.power >= botDef;
-        document.getElementById('dkTableSlot').innerHTML = `
-          <div class="text-center">
-            <div class="text-[10px] text-emerald-300 font-bold mb-1">Твой заход:</div>
-            ${cardDom(chosen)}
-          </div>
-        `;
-        if (win) {
-          setBal(getBal() + 150);
-          st.textContent = `🔥 Соперник не смог отбить твою карту [${chosen.rarLabel}] ${chosen.name}! +150 Σ!`;
-        } else {
-          st.textContent = `🛡 Соперник отбил твой заход. Нажми «Принять ход соперника»!`;
-        }
+    function playCard(i) {
+      const chosen = hand[i];
+      const st = document.getElementById('dkMsg');
+      if (!tableAtk) {
+        // наш заход
+        document.getElementById('dkTable').innerHTML = `<div class="text-center"><div class="text-[10px] text-emerald-300 font-bold mb-1">Твой заход:</div>${cardHTML(chosen)}</div>`;
+        st.textContent = `⚡ Ты успешно походил картой ${chosen.name}!`;
       } else {
-        // Игрок защищается
-        if (canBeat(chosen, tableAttack)) {
+        // отбиваемся
+        const beats = (chosen.suit === trump && tableAtk.suit !== trump) || (chosen.suit === tableAtk.suit && chosen.power >= tableAtk.power);
+        if (beats) {
+          winsCount++;
+          document.getElementById('dkWins').textContent = winsCount;
           setBal(getBal() + 150);
-          document.getElementById('dkTableSlot').innerHTML = `
-            <div class="flex items-center gap-3">
-              ${cardDom(tableAttack)}
-              <span class="text-xl font-black text-amber-300">⚔️ БИТО!</span>
-              ${cardDom(chosen)}
-            </div>
-          `;
-          tableAttack = null;
-          st.textContent = `🏆 БИТО! Твоя карта ${chosen.name} (★${chosen.power}) покрыла атаку! +150 Σ!`;
+          saveScore('durak', 'Игрок', winsCount);
+          document.getElementById('dkTable').innerHTML = `<div class="flex items-center gap-3">${cardHTML(tableAtk)}<span class="text-xl font-black text-amber-300">⚔️ БИТО!</span>${cardHTML(chosen)}</div>`;
+          tableAtk = null;
+          st.textContent = `🏆 БИТО! +150 Σ! Рекорды обновлены.`;
         } else {
-          st.textContent = `⚠️ Карта ${chosen.name} (★${chosen.power} ${chosen.suit}) не бьет ${tableAttack.name} (★${tableAttack.power} ${tableAttack.suit})!`;
+          st.textContent = `⚠️ Карта слабее или не подходит по масти! Козырь стола: ${trump}`;
         }
       }
     }
  
-    document.getElementById('dkBotTurnBtn').onclick = spawnOpponentAttack;
-    document.getElementById('dkTakeBtn').onclick = () => {
-      tableAttack = null;
-      myHand = getPlayerAlbumCards().slice(0, 6);
-      renderHandUI();
-      document.getElementById('dkTableSlot').innerHTML = `<div class="text-xs text-sky-200">Карты обновлены — твой ход!</div>`;
+    document.getElementById('dkAtkBtn').onclick = spawnBot;
+    document.getElementById('dkClearBtn').onclick = () => {
+      tableAtk = null; hand = getPlayerAlbumCards().slice(0, 6); renderH();
+      document.getElementById('dkTable').innerHTML = '<div class="text-xs text-sky-200">Стол сброшен!</div>';
     };
-    document.getElementById('dkSyncRoom').onclick = () => {
-      roomCode = document.getElementById('dkRoomInp').value.trim() || 'VIP-67';
-      localStorage.setItem('gta_room_v31', roomCode);
-      document.getElementById('dkStatusBox').textContent = `🌐 Комната «${roomCode}» активна!`;
-      spawnOpponentAttack();
-    };
- 
-    renderHandUI();
+    renderH();
   }
  
-  // ==================== МАГАЗИН КОСМЕТИКИ GTA VI ====================
-  const SHOP_ITEMS = [
-    { id: 'gta6-vice-bg', name: 'Неоновый закат Vice City', desc: 'Пурпурно-розовая атмосфера GTA VI для всего сайта', price: 300, icon: '🌆' },
-    { id: 'gta6-neon-borders', name: 'Неоновый контур карточек', desc: 'Подсветка всех панелей и карточек команды в стиле клуба', price: 250, icon: '🌴' },
-    { id: 'gta6-vip-badge', name: 'Золотой титул «🌴 BOSS»', desc: 'VIP-префикс рядом с твоим именем в шапке сайта', price: 400, icon: '👑' }
-  ];
+  function mountShop(t, b) {
+    t.textContent = '🛍️ ОБЩИЙ МАГАЗИН GTA VI (КОСМЕТИКА И КАРТЫ)';
+    const items = [
+      { id: 'gta6-vice-bg', name: 'Неоновый закат Vice City', desc: 'Пурпурно-розовая тема GTA VI', price: 300, icon: '🌆' },
+      { id: 'gta6-neon-borders', name: 'Неоновые контуры панелей', desc: 'Светящиеся неоновые рамки сайта', price: 250, icon: '🌴' },
+      { id: 'gta6-vip-badge', name: 'Золотой статус «🌴 BOSS»', desc: 'VIP-префикс в шапке профиля', price: 400, icon: '👑' }
+    ];
+    const owned = JSON.parse(localStorage.getItem('gta6_own_v32') || '{}');
+    const act = JSON.parse(localStorage.getItem('gta6_act_v32') || '{}');
  
-  function syncCosmeticsDOM() {
-    const act = JSON.parse(localStorage.getItem('gta6_act_v31') || '{}');
-    SHOP_ITEMS.forEach(it => {
-      document.documentElement.classList.toggle(it.id, !!act[it.id]);
-    });
-  }
- 
-  function mountGtaShop(title, body) {
-    title.textContent = '🛍️ МАГАЗИН КОСМЕТИКИ GTA VI & КАРТ АЛЬБОМА';
-    const owned = JSON.parse(localStorage.getItem('gta6_own_v31') || '{}');
-    const act = JSON.parse(localStorage.getItem('gta6_act_v31') || '{}');
- 
-    body.innerHTML = `
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        ${SHOP_ITEMS.map(it => `
-          <div class="p-3.5 rounded-2xl bg-black/55 border border-pink-500/45 flex items-center justify-between gap-3">
+    b.innerHTML = `
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-3xl mx-auto w-full">
+        ${items.map(it => `
+          <div class="p-4 rounded-2xl bg-black/60 border border-pink-500/50 flex items-center justify-between gap-3">
             <div class="flex items-center gap-3">
               <span class="text-3xl">${it.icon}</span>
               <div>
                 <div class="font-display font-bold text-xs text-white">${it.name}</div>
-                <div class="text-[10px] text-sky-200/80">${it.desc}</div>
+                <div class="text-[10px] text-sky-200">${it.desc}</div>
               </div>
             </div>
-            <button class="gta-ActionBtn" data-shopid="${it.id}" data-price="${it.price}">
+            <button class="gta-ActionBtn" data-sid="${it.id}" data-pr="${it.price}">
               ${!owned[it.id] ? `Купить ${it.price} Σ` : (act[it.id] ? '✅ Вкл.' : 'Включить')}
             </button>
           </div>
         `).join('')}
  
-        <div class="p-3.5 rounded-2xl bg-gradient-to-r from-pink-500/25 to-amber-500/25 border border-amber-300 flex items-center justify-between gap-3">
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-pink-500/25 to-amber-500/25 border border-amber-300 flex items-center justify-between gap-3">
           <div>
-            <div class="font-display font-bold text-xs text-amber-300">🎴 Кейс карты участника в Альбом</div>
-            <div class="text-[10px] text-white/90">Выбивает нового персонажа команды с редкостью для Дурака и Блэкджека</div>
+            <div class="font-display font-bold text-xs text-amber-300">🎴 Пакет карты в Альбом (150 Σ)</div>
+            <div class="text-[10px] text-white">Выбивай бойцов для Дурака и Блэкджека</div>
           </div>
-          <button id="shopBuyCardBtn" class="gta-ActionBtn">150 Σ</button>
+          <button id="shopCardBtn" class="gta-ActionBtn">Купить</button>
         </div>
       </div>
-      <div id="shopNotice" class="text-center font-display font-bold text-xs text-amber-300 mt-2"></div>
+      <div id="shopMsg" class="text-center font-display font-bold text-xs text-amber-300 mt-2"></div>
     `;
  
-    body.querySelectorAll('[data-shopid]').forEach(btn => {
+    b.querySelectorAll('[data-sid]').forEach(btn => {
       btn.onclick = () => {
-        const id = btn.dataset.shopid;
-        const pr = parseInt(btn.dataset.price, 10);
+        const id = btn.dataset.sid; const pr = parseInt(btn.dataset.pr, 10);
         if (!owned[id]) {
-          if (getBal() < pr) {
-            document.getElementById('shopNotice').textContent = '❌ Недостаточно Σ!';
-            return;
-          }
-          setBal(getBal() - pr);
-          owned[id] = true;
-          act[id] = true;
-        } else {
-          act[id] = !act[id];
-        }
-        localStorage.setItem('gta6_own_v31', JSON.stringify(owned));
-        localStorage.setItem('gta6_act_v31', JSON.stringify(act));
-        syncCosmeticsDOM();
-        mountGtaShop(title, body);
+          if (getBal() < pr) { document.getElementById('shopMsg').textContent = '❌ Не хватает Σ!'; return; }
+          setBal(getBal() - pr); owned[id] = true; act[id] = true;
+        } else { act[id] = !act[id]; }
+        localStorage.setItem('gta6_own_v32', JSON.stringify(owned));
+        localStorage.setItem('gta6_act_v32', JSON.stringify(act));
+        document.documentElement.classList.toggle(id, !!act[id]);
+        mountShop(t, b);
       };
     });
  
-    document.getElementById('shopBuyCardBtn').onclick = () => {
-      if (getBal() < 150) {
-        document.getElementById('shopNotice').textContent = '❌ Нужно 150 Σ!';
-        return;
-      }
+    document.getElementById('shopCardBtn').onclick = () => {
+      if (getBal() < 150) { document.getElementById('shopMsg').textContent = '❌ Нужно 150 Σ!'; return; }
       setBal(getBal() - 150);
-      const c = addRandomAlbumCard();
-      document.getElementById('shopNotice').textContent = `🎉 В твой альбом добавлена карта: [${c.rarLabel}] ${c.name} (★${c.power} ${c.suit})!`;
+      const c = addRandomCard();
+      document.getElementById('shopMsg').textContent = `🎉 В альбом добавлена карта: [${c.rarLabel}] ${c.name} (★${c.power})!`;
     };
   }
  
-  function startGtaModule() {
-    hideOriginalChickSectionOnMain();
-    injectNightclubPoster();
-    syncCosmeticsDOM();
+  function run() {
+    hideOriginalChickens();
+    injectPoster();
+    const act = JSON.parse(localStorage.getItem('gta6_act_v32') || '{}');
+    Object.keys(act).forEach(id => { if (act[id]) document.documentElement.classList.add(id); });
   }
  
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startGtaModule);
+    document.addEventListener('DOMContentLoaded', run);
   } else {
-    startGtaModule();
+    run();
   }
 })();
 </script>
