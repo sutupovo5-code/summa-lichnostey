@@ -5891,4 +5891,119 @@ async function rcReset(){if(rcBusy)return;const err=$('rcErr');err.textContent='
   const last=+sxGet('summa_rc_nag',0);if(Date.now()-last<864e5)return;const h=await rcHas(digits);if(h){sxPut('summa_rc_ok',digits);return}if(h===false){sxPut('summa_rc_nag',Date.now());setTimeout(()=>toast('🔑 Получите код восстановления пароля: Профиль → «Код восстановления»'),4000)}})};
  if(window.SXF)go();else addEventListener('sxfb',go,{once:true})})();
 </script>
+<style id="pack41">
+/* ===== pack41: больше «GTA 6»: заставка, коллаж-обложка, открытка «Привет из Липецк-Сити», розыск, деньги, подсказки ===== */
+
+/* --- 1. заставка-загрузка --- */
+#gtaIntro{position:fixed;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:14px;padding:0 22px calc(env(safe-area-inset-bottom) + 34px);overflow:hidden;
+ background:linear-gradient(180deg,#120a26 0%,#2a1446 38%,#6a2a58 62%,#c4605c 82%,#f2a364 100%);color:#fff;cursor:pointer;transition:opacity .45s ease}
+#gtaIntro.out{opacity:0;pointer-events:none}
+#gtaIntro .sun{position:absolute;left:50%;top:18%;width:min(86vw,460px);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;
+ background:linear-gradient(180deg,#ffd780,#f59a5c 50%,#ec6f9b);mask:linear-gradient(#000 0 50%,transparent 50%),repeating-linear-gradient(180deg,#000 0 12px,transparent 12px 19px);-webkit-mask:linear-gradient(#000 0 50%,transparent 50%),repeating-linear-gradient(180deg,#000 0 12px,transparent 12px 19px)}
+#gtaIntro svg{position:absolute;bottom:0;fill:#0e0719;height:58vh;max-height:520px}
+#gtaIntro svg.l{left:-14vw}#gtaIntro svg.r{right:-16vw;transform:scaleX(-1);height:46vh}
+#gtaIntro .t{position:relative;z-index:2;text-align:center;line-height:.9}
+#gtaIntro .t b{display:block;font:700 clamp(54px,18vw,96px)/.95 'Oswald',sans-serif;letter-spacing:.01em;text-shadow:4px 4px 0 #c2410c,8px 8px 0 #0e0719}
+#gtaIntro .t s{display:inline-block;font:700 clamp(26px,8vw,44px)/1 'Oswald',sans-serif;color:rgba(255,255,255,.75);text-decoration:none;position:relative;margin-top:6px}
+#gtaIntro .t s::after{content:'';position:absolute;left:-6%;right:-6%;top:50%;height:.16em;background:#e5484d;transform:rotate(-5deg);border-radius:4px}
+#gtaIntro .t i{display:block;font:400 clamp(38px,12vw,64px)/1 'Pacifico',cursive;font-style:normal;color:#ffb3c9;transform:rotate(-7deg);margin-top:-4px;text-shadow:3px 3px 0 #c2410c,6px 6px 0 #0e0719}
+#gtaIntro .city{position:relative;z-index:2;font:700 13px/1 'Oswald',sans-serif;letter-spacing:.4em;color:#ffe2c4}
+#gtaIntro .tip{position:relative;z-index:2;width:min(100%,440px);padding:12px 14px;border-radius:6px;background:rgba(10,6,16,.82);border-left:4px solid var(--g-pink,#ec6f9b);font:600 13.5px/1.45 Inter,sans-serif;color:#f4ecf8}
+#gtaIntro .bar{position:relative;z-index:2;width:min(100%,440px);height:6px;border-radius:9px;background:rgba(10,6,16,.6);overflow:hidden}
+#gtaIntro .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--g-pink,#ec6f9b),var(--g-orange,#f2a061));animation:gtaLoad 1.9s cubic-bezier(.4,0,.2,1) forwards}
+#gtaIntro small{position:relative;z-index:2;font:600 11px Inter,sans-serif;color:rgba(255,236,224,.7)}
+@keyframes gtaLoad{to{width:100%}}
+
+/* --- 2. шапка-коллаж как обложка игры --- */
+html:not([data-th]) .hero-tile{border-radius:3px!important;border:3px solid #0e0719!important;background:#2a1446!important;box-shadow:4px 4px 0 #0e0719,0 10px 22px rgba(0,0,0,.45)!important}
+html:not([data-th]) .hero-tile img{-webkit-mask-image:none!important;mask-image:none!important;filter:saturate(1.08) contrast(1.05)}
+html:not([data-th]) .hero-tile::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(236,111,155,.0) 40%,rgba(236,111,155,.28) 75%,rgba(242,160,97,.38));mix-blend-mode:soft-light}
+html:not([data-th]) #heroGrid{gap:4px!important}
+
+/* --- 3. открытка «Привет из Липецк-Сити» --- */
+.gta-pc{position:relative;overflow:hidden;border-radius:6px;padding:14px 12px 16px;background:linear-gradient(180deg,#2a1446,#6a2a58 60%,#c4605c);border:3px solid #fff2e4;box-shadow:0 0 0 3px #0e0719,0 14px 30px -12px rgba(0,0,0,.7);transform:rotate(-1.2deg)}
+.gta-pc::before{content:'';position:absolute;inset:6px;border:1.5px dashed rgba(255,242,228,.45);border-radius:3px;pointer-events:none}
+.gta-pc .hi{position:relative;z-index:2;font:400 clamp(24px,7.4vw,36px)/1 'Pacifico',cursive;color:#fff2e4;text-shadow:2px 2px 0 #c2410c,4px 4px 0 #0e0719;margin:0 0 2px 6px;transform:rotate(-6deg);display:inline-block}
+.gta-pc .word{position:relative;z-index:2;display:flex;justify-content:center;gap:1px}
+.gta-pc .word span{font:700 clamp(58px,19vw,104px)/.95 'Oswald',sans-serif;color:transparent;-webkit-background-clip:text;background-clip:text;background-size:cover;background-position:center 22%;-webkit-text-stroke:2px #0e0719;filter:drop-shadow(3px 3px 0 #0e0719)}
+.gta-pc .city{position:relative;z-index:2;display:block;text-align:right;margin:-8px 8px 0 0;font:400 clamp(26px,8vw,40px)/1 'Pacifico',cursive;color:#ffb3c9;transform:rotate(-6deg);text-shadow:2px 2px 0 #c2410c,4px 4px 0 #0e0719}
+.gta-pc .stamp{position:absolute;right:12px;top:12px;z-index:2;width:54px;height:62px;display:grid;place-items:center;background:#fff2e4;color:#c2410c;font:700 14px/1.05 'Oswald',sans-serif;text-align:center;
+ -webkit-mask:radial-gradient(circle 3px at 3px 3px,transparent 98%,#000) -3px -3px/7px 7px;mask:radial-gradient(circle 3px at 3px 3px,transparent 98%,#000) -3px -3px/7px 7px;transform:rotate(6deg)}
+.gta-pc svg{position:absolute;bottom:-6px;z-index:1;fill:#0e0719;opacity:.55;height:120px}
+.gta-pc svg.l{left:-14px}.gta-pc svg.r{right:-18px;transform:scaleX(-1);height:96px}
+
+/* --- 4. уровень розыска --- */
+#gtaWanted{position:fixed;top:calc(var(--hdrH,56px) + 8px);right:10px;z-index:44;display:flex;gap:2px;padding:4px 7px;border-radius:4px;background:rgba(10,6,16,.72);pointer-events:none;opacity:0;transform:translateY(-6px);transition:opacity .3s,transform .3s}
+#gtaWanted.on{opacity:1;transform:none}
+#gtaWanted i{font-style:normal;font-size:17px;line-height:1;color:rgba(255,255,255,.22);-webkit-text-stroke:1px rgba(0,0,0,.6)}
+#gtaWanted i.f{color:#f3d36b}
+#gtaWanted.blink i.f{animation:gtaStar .45s steps(2) 6}
+@keyframes gtaStar{50%{color:#fff;opacity:.35}}
+
+/* --- 5. всплывающие деньги --- */
+.gta-cash{position:fixed;z-index:620;pointer-events:none;font:700 20px/1 'Oswald',sans-serif;letter-spacing:.02em;-webkit-text-stroke:1.5px #0a0410;paint-order:stroke fill;white-space:nowrap;animation:gtaCash 1.6s cubic-bezier(.22,1,.36,1) forwards}
+.gta-cash.up{color:#7ee08a}.gta-cash.dn{color:#ff6b6b}
+@keyframes gtaCash{0%{opacity:0;transform:translateY(6px)}15%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0;transform:translateY(-26px)}}
+
+/* --- 6. подсказки в игровом стиле (вверху слева, чёрная плашка) --- */
+.x-toast{left:10px!important;right:auto!important;top:calc(var(--hdrH,56px) + 10px)!important;bottom:auto!important;transform:translateX(-14px)!important;max-width:min(80vw,380px)!important;border-radius:4px!important;
+ background:rgba(10,6,16,.9)!important;border:0!important;border-left:4px solid var(--g-pink,#ec6f9b)!important;padding:10px 14px!important;font:600 14px/1.4 Inter,sans-serif!important;text-align:left!important;color:#f4ecf8!important;box-shadow:0 8px 24px rgba(0,0,0,.45);z-index:610!important}
+.x-toast.show{transform:none!important}
+
+/* --- 7. рукописные подзаголовки разделов --- */
+.gta-kick{display:block;text-transform:none;letter-spacing:0;background:none;-webkit-text-fill-color:#ffb3c9;font:400 15px/1 'Pacifico',cursive;color:#ffb3c9;transform:rotate(-4deg);transform-origin:left;margin:0 0 2px 2px;text-shadow:1px 1px 0 #0e0719;white-space:nowrap}
+html.sx-lite #gtaIntro .bar i{animation-duration:.9s}
+</style>
+<script id="pack41js">
+/* ===== pack41: больше «GTA 6» ===== */
+const GTA_PALM='<svg viewBox="0 0 200 420" aria-hidden="true"><path d="M104 420c-6-90-2-180 14-262l8 2c-14 84-18 172-12 260z"/><path d="M122 160c-30-40-80-52-118-40 40-2 76 14 108 46zM122 160c-6-48-36-90-80-108 34 22 58 60 70 108zM122 160c18-46 58-78 104-84-40 14-72 46-94 88zM122 160c40-20 92-14 128 14-38-12-84-12-120 2zM122 160c26 10 54 40 64 80-16-30-42-54-70-66zM122 160c-24 4-58 30-70 66 16-28 40-50 68-58z"/></svg>';
+const gtaPalm=c=>GTA_PALM.replace('<svg','<svg class="'+c+'"');
+
+/* --- 1. заставка-загрузка (один раз за сессию) --- */
+const GTA_TIPS=['Совет: фаворит в куриных бегах приходит первым чаще, но и платят за него меньше.','Совет: крутка 1x — бесплатная. Нет Σ — крутите рулетку.',
+ 'Совет: получите код восстановления в профиле — без него забытый пароль не вернуть.','Совет: сайт иногда глючит. Это пасхалки — ловите глитчи и получайте Σ.',
+ 'Совет: собирайте карточки команды — у каждого участника 12 скинов.','Совет: высокий уровень розыска сам падает, если немного не играть.',
+ 'Совет: нажмите на аватарку автора поста — откроется его профиль.','Совет: «Всё или ничего» — шанс 50%, но потом крутки на паузе 7 часов.'];
+(function(){let seen=false;try{seen=sessionStorage.getItem('gta_intro')==='1';sessionStorage.setItem('gta_intro','1')}catch(e){}
+ if(seen||sxStill())return;const o=document.createElement('div');o.id='gtaIntro';o.setAttribute('role','dialog');o.setAttribute('aria-label','Загрузка');
+ o.innerHTML=`<div class="sun"></div>${gtaPalm('l')}${gtaPalm('r')}<div class="t"><b>СУММА</b><s>ЛИЧНОСТЕЙ</s><i>лудоманов</i></div><div class="city">ЛИПЕЦК-СИТИ • 2026</div>
+ <div class="tip">${GTA_TIPS[Math.floor(Math.random()*GTA_TIPS.length)]}</div><div class="bar"><i></i></div><small>Нажмите, чтобы пропустить</small>`;
+ document.body.appendChild(o);document.body.style.overflow='hidden';
+ let gone=false;const close=()=>{if(gone)return;gone=true;o.classList.add('out');document.body.style.overflow='';setTimeout(()=>o.remove(),500)};
+ o.addEventListener('click',close);setTimeout(close,document.documentElement.classList.contains('sx-lite')?1100:2200)})();
+
+/* --- 3. открытка «Привет из Липецк-Сити» --- */
+(function(){const hero=$('sec-hero');if(!hero||$('gtaPc'))return;const word='ЛИПЕЦК',ms=TEAM_MEMBERS.slice().sort(()=>Math.random()-.5);
+ const sec=document.createElement('section');sec.id='gtaPc';sec.setAttribute('aria-label','Привет из Липецк-Сити');
+ sec.innerHTML=`<div class="gta-pc">${gtaPalm('l')}${gtaPalm('r')}<span class="stamp">ДЦ<br>2026</span><span class="hi">Привет из</span>
+ <div class="word">${[...word].map((ch,i)=>`<span data-i="${i}">${ch}</span>`).join('')}</div><span class="city">Сити</span></div>`;
+ hero.after(sec);
+ /* буквы заполнены лицами команды; фото подставляем, когда секция видна */
+ const fill=()=>sec.querySelectorAll('.word span').forEach((s,i)=>{const m=ms[i%ms.length];s.style.backgroundImage=`url("${avatarSrc(m)}")`});
+ if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){fill();io.disconnect()}},{rootMargin:'200px'});io.observe(sec)}else fill()})();
+
+/* --- 4. уровень розыска: растёт от ставок в куриных бегах, падает со временем --- */
+const GTA_W_KEY='summa_wanted',GTA_W_DECAY=3*60*1000;
+function gtaWGet(){const w=sxGet(GTA_W_KEY,{s:0,t:0});const drop=Math.floor((Date.now()-(+w.t||0))/GTA_W_DECAY);return Math.max(0,Math.min(5,(+w.s||0)-drop))}
+function gtaWSet(s){sxPut(GTA_W_KEY,{s:Math.max(0,Math.min(5,s)),t:Date.now()})}
+function gtaWRender(blink){let el=$('gtaWanted');if(!el){el=document.createElement('div');el.id='gtaWanted';el.setAttribute('aria-label','Уровень розыска');document.body.appendChild(el)}
+ const n=gtaWGet();el.innerHTML=Array.from({length:5},(_,i)=>`<i class="${i<n?'f':''}">★</i>`).join('');el.classList.toggle('on',n>0);
+ if(blink&&n>0&&!sxStill()){el.classList.remove('blink');void el.offsetWidth;el.classList.add('blink')}}
+gtaWRender(false);setInterval(()=>gtaWRender(false),30000);
+(function(){const _s=ckStart;ckStart=function(){const was=ck.busy;_s.apply(this,arguments);if(was||!ck.busy)return;
+ const before=gtaWGet(),add=ck.bet>=10000?2:1,now=Math.min(5,before+add);gtaWSet(now);gtaWRender(true);
+ if(now>before)setTimeout(()=>toast(now>=5?'★★★★★ Тебя ищет вся полиция Липецка 🚓':'Уровень розыска повышен ★'),600)}})();
+
+/* --- 5. всплывающие деньги у баланса --- */
+let gtaLastSp=Math.floor(+state.synergyPoints||0);
+(function(){const _u=updateAllCountersUI;updateAllCountersUI=function(){_u.apply(this,arguments);const v=Math.floor(+state.synergyPoints||0),d=v-gtaLastSp;gtaLastSp=v;
+ if(!d||sxStill())return;const pill=$('headerSynergyStat');if(!pill)return;const r=(pill.closest('.sh-pill')||pill).getBoundingClientRect();if(!r.width)return;
+ const c=document.createElement('div');c.className='gta-cash '+(d>0?'up':'dn');c.textContent=(d>0?'+':'−')+shFmt(Math.abs(d))+' Σ';
+ c.style.left=Math.max(6,Math.min(innerWidth-150,r.left))+'px';c.style.top=(r.bottom+6)+'px';document.body.appendChild(c);setTimeout(()=>c.remove(),1700)}})();
+
+/* --- 7. рукописные подзаголовки разделов --- */
+(function(){const K={'sec-news':'свежак с улиц','sec-roulette':'казино у ДК','sec-chick':'тотализатор','sec-cards':'коллекция банды','sec-team':'наша банда'};
+ for(const id in K){const s=$(id);if(!s)continue;const h=s.querySelector('h2');if(!h||h.querySelector('.gta-kick'))continue;
+  h.insertAdjacentHTML('afterbegin',`<span class="gta-kick">${K[id]}</span>`)}})();
+</script>
 </body>
