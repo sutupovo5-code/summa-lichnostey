@@ -6930,8 +6930,50 @@ let gtaLastSp=Math.floor(+state.synergyPoints||0);
       </div>
       <div id="gtaShopStatus" class="text-center font-display font-bold text-xs text-amber-300"></div>
     `;
-
-    body.querySelectorAll('[data-cid]').forEach(btn => {
+body.querySelectorAll('[data-cid]').forEach(btn => {
       btn.onclick = () => {
-        const
-
+        const cid = btn.dataset.cid;
+        const price = parseInt(btn.dataset.price, 10);
+        if (!owned[cid]) {
+          if (getBal() < price) {
+            document.getElementById('gtaShopStatus').textContent = '❌ Не хватает Σ!';
+            return;
+          }
+          setBal(getBal() - price);
+          owned[cid] = true;
+          active[cid] = true;
+        } else {
+          active[cid] = !active[cid];
+        }
+        localStorage.setItem('gta6_cosmetics_owned', JSON.stringify(owned));
+        localStorage.setItem('gta6_cosmetics_active', JSON.stringify(active));
+        applyOwnedCosmetics();
+        renderGtaShop(title, body);
+      };
+    });
+ 
+    document.getElementById('buyAlbumCardBtn').onclick = () => {
+      if (getBal() < 150) {
+        document.getElementById('gtaShopStatus').textContent = '❌ Нужно 150 Σ!';
+        return;
+      }
+      setBal(getBal() - 150);
+      const c = giveRandomCard();
+      document.getElementById('gtaShopStatus').textContent = '🎉 В альбом добавлена карта: ' + c.name + '!';
+    };
+  }
+ 
+  function boot() {
+    patchHeroBanner();
+    injectNightclubSection();
+    applyOwnedCosmetics();
+  }
+ 
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+ 
