@@ -5262,7 +5262,7 @@ function acEye(id,b){const i=$(id);if(!i)return;i.type=i.type==='password'?'text
 setInterval(()=>{if(acIsAcct())acUpload(false)},6000);
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&acIsAcct())acUpload(false)});
 /* при запуске: если в аккаунте есть более свежие данные (с другого телефона) — подтянуть */
-(function(){const go=()=>{const {A,F,db,auth}=SXF;let done=false;A.onAuthStateChanged(auth,async u=>{if(done||!u||u.isAnonymous)return;done=true;
+(function(){const go=()=>{const {A,F,db,auth}=SXF;let done=false;A.onAuthStateChanged(auth,async u=>{if(done||!u||u.isAnonymous||window.rcHold)return;done=true;
   if(!(state.registeredUser&&state.registeredUser.acct)){/* вошли, но профиль на телефоне потерялся — восстановить */try{const s=await F.getDoc(F.doc(db,'users',u.uid));if(s.exists()){acApply(s.data());location.reload()}}catch(e){}return}
   try{const s=await F.getDoc(F.doc(db,'users',u.uid));if(!s.exists()){acUpload(true);return}const d=s.data(),cloudT=+d.updatedAt||0,localT=+sxGet(AC_SYNC_KEY,0);
    if(cloudT>localT+1000){acApply(d);location.reload()}else{acLast=JSON.stringify(acCollect());if(cloudT<localT)acUpload(true)}}catch(e){console.warn('[acct] load',e.code)}})};
@@ -5587,5 +5587,308 @@ const xIsOwner=uid=>!!(XHOLD&&uid&&XHOLD.uid===uid);
 /* рейтинг перерисовываем, когда узнали владельца X */
 (function(){const go=()=>{SXF.F.onSnapshot(SXF.F.doc(SXF.db,'meta','firstX'),()=>setTimeout(()=>{try{sxLBRender()}catch(e){}},50),()=>{})};if(window.SXF)go();else addEventListener('sxfb',go,{once:true})})();
 try{sxLBRender()}catch(e){}
+</script>
+<style id="pack40">
+/* ===== pack40: оформление «закат над Липецк-Сити» (в духе GTA 6), «Сумма Лудоманов», куриные бега, сброс пароля ===== */
+:root{--g-pink:#ec6f9b;--g-orange:#f2a061;--g-teal:#4fc1b5;--g-plum:#2a1640;--g-ink:#140a24;--g-gold:#f3c969}
+
+/* --- 1. фон: небо на закате, солнце в полоску, пальмы (только когда не выбрана тема из магазина) --- */
+#gtaSky{position:fixed;inset:0;z-index:0;pointer-events:none;display:none;overflow:hidden;
+ background:linear-gradient(180deg,#120a26 0%,#1d1036 38%,#33184a 62%,#5e2753 80%,#94405a 93%,#c0605c 100%)}
+html:not([data-th]) #gtaSky{display:block}
+#gtaSky .sun{position:absolute;left:50%;bottom:9vh;width:min(78vw,520px);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;
+ background:linear-gradient(180deg,#ffd27a 0%,#f7a35f 45%,#ec6f9b 100%);opacity:.3;
+ -webkit-mask:repeating-linear-gradient(180deg,#000 0 14px,transparent 14px 20px),linear-gradient(#000 0 55%,transparent 55%);-webkit-mask-composite:source-over;
+ mask:linear-gradient(#000 0 52%,transparent 52%),repeating-linear-gradient(180deg,#000 0 13px,transparent 13px 20px)}
+#gtaSky .sea{position:absolute;left:0;right:0;bottom:0;height:12vh;background:linear-gradient(180deg,rgba(40,24,70,.0),rgba(28,16,52,.85) 30%,#160c2c)}
+#gtaSky svg{position:absolute;bottom:0;height:46vh;max-height:430px;fill:#0e0719;opacity:.75}
+#gtaSky svg.l{left:-6vw}
+#gtaSky svg.r{right:-8vw;transform:scaleX(-1);height:38vh}
+
+/* --- 2. панели, шапка, меню, окна --- */
+html:not([data-th]) body{background:#1a0e30}
+html:not([data-th]) .glass-panel{background:linear-gradient(160deg,rgba(54,26,78,.93),rgba(24,13,44,.95))!important;border-color:rgba(236,111,155,.38)!important}
+html:not([data-th]) header.sticky{background:rgba(18,9,34,.96)!important;border-bottom:0!important;box-shadow:0 2px 0 0 rgba(236,111,155,.55),0 3px 0 0 rgba(242,160,97,.35)}
+html:not([data-th]) nav.fixed{background:rgba(18,9,34,.97)!important;border-top:0!important;box-shadow:0 -2px 0 0 rgba(236,111,155,.5)}
+html:not([data-th]) .pe-box,html:not([data-th]) .tl-box{background:linear-gradient(180deg,#2c1745,#140b28)!important;border-color:rgba(236,111,155,.6)!important}
+html:not([data-th]) .sx-ov{background:rgba(14,7,28,.94)!important}
+html:not([data-th]) :is(#fullPostModal,#composerModal,#phoneAuthModal,#resultModal){background:rgba(14,7,28,.93)!important}
+html:not([data-th]) #tvCard.sp-tv{background:linear-gradient(180deg,rgba(64,32,86,.88),rgba(26,14,46,.96))!important}
+html:not([data-th]) .text-neon-light{color:#ffb3c9!important}
+html:not([data-th]) .from-neon-pink{--tw-gradient-from:var(--g-pink) var(--tw-gradient-from-position)!important;--tw-gradient-to:rgb(236 111 155 / 0) var(--tw-gradient-to-position)!important}
+html:not([data-th]) .to-blue-600{--tw-gradient-to:var(--g-orange) var(--tw-gradient-to-position)!important}
+html:not([data-th]) .pe-btn.main{background:linear-gradient(90deg,var(--g-pink),var(--g-orange))!important;color:#1d0d1e!important}
+html:not([data-th]) :is(#xInk,.nav-pill){background:linear-gradient(90deg,var(--g-pink),var(--g-orange))!important}
+html:not([data-th]) .x-act.like.on{color:var(--g-pink)!important}
+html:not([data-th]) .x-act.like.on svg{fill:var(--g-pink)!important}
+/* заголовки разделов — плотный узкий шрифт, как на постерах */
+main h2.font-display,.sx-head h3,.ck-head h2{font-family:'Oswald','Unbounded',sans-serif!important;font-weight:700!important;letter-spacing:.01em!important;text-transform:uppercase}
+main h2.font-display{font-size:22px!important;line-height:1.1!important;color:#fff!important;text-shadow:2px 2px 0 #c2410c,4px 4px 0 rgba(10,4,20,.85)}
+
+/* --- 3. шапка сайта: «СУММА ЛИЧНОСТЕЙ» → «СУММА ~ЛИЧНОСТЕЙ~ лудоманов» --- */
+#sec-hero{background:linear-gradient(180deg,rgba(36,18,63,.55),rgba(139,58,92,.45) 70%,rgba(240,160,102,.4))!important}
+.summa-logo-text{text-shadow:3px 3px 0 #f0835f,6px 6px 0 rgba(16,6,28,.95),0 0 18px rgba(236,111,155,.45)!important}
+.gta-struck{display:table!important;margin:2px auto 0;position:relative}
+.gta-struck::after{content:'';position:absolute;left:-7%;right:-7%;top:48%;height:.17em;border-radius:6px;background:#e5484d;transform:rotate(-5deg);box-shadow:0 2px 0 rgba(16,6,28,.7);pointer-events:none}
+.gta-struck::before{content:'';position:absolute;left:-4%;right:-4%;top:60%;height:.1em;border-radius:6px;background:#e5484d;transform:rotate(3deg);opacity:.9;pointer-events:none}
+.gta-ludo{position:absolute;right:-4%;bottom:-.6em;font:400 clamp(28px,8.6vw,46px)/1 'Pacifico',cursive;color:#ffb3c9;transform:rotate(-9deg);white-space:nowrap;
+ text-shadow:2px 2px 0 #c2410c,4px 4px 0 rgba(16,6,28,.95);pointer-events:none;z-index:3}
+.gta-ludo::after{content:'';position:absolute;left:4%;right:6%;bottom:-.05em;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,#f2a061 20%,#f2a061 80%,transparent)}
+#sec-hero .poster-nameplate-border{margin-top:34px!important}
+.gta-hs{position:relative;display:inline-block;color:rgba(255,255,255,.75)}
+.gta-hs::after{content:'';position:absolute;left:-3%;right:-3%;top:50%;height:2px;background:#e5484d;transform:rotate(-6deg)}
+.gta-hl{font:400 13px/1 'Pacifico',cursive;color:#ffb3c9;margin-left:4px;text-shadow:1px 1px 0 rgba(16,6,28,.9);white-space:nowrap}
+
+/* --- 4. куриные бега --- */
+.ck{position:relative;display:grid;gap:12px;padding:14px;border-radius:24px;background:linear-gradient(165deg,rgba(64,30,88,.95),rgba(22,12,42,.97));border:1.5px solid rgba(242,160,97,.5);box-shadow:0 18px 40px -18px rgba(0,0,0,.7)}
+.ck-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ck-head h2{margin:0;font-size:24px!important;line-height:1;color:#fff;text-shadow:2px 2px 0 #c2410c,4px 4px 0 rgba(16,6,28,.9)}
+.ck-head small{display:block;margin-top:4px;font-size:12px;color:rgba(255,226,236,.78)}
+.ck-bal{flex-shrink:0;padding:7px 12px;border-radius:99px;background:rgba(10,4,20,.6);border:1px solid rgba(243,201,105,.5);font:800 13px/1 Unbounded,sans-serif;color:var(--g-gold);font-variant-numeric:tabular-nums}
+.ck-track{position:relative;border-radius:18px;overflow:hidden;padding:6px 0;background:
+ repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 22px,transparent 22px 44px),
+ linear-gradient(180deg,#5a8f4a,#4a7a3d);box-shadow:inset 0 0 0 2px rgba(255,255,255,.12),inset 0 10px 24px rgba(0,0,0,.25)}
+.ck-track::after{content:'';position:absolute;top:0;bottom:0;right:28px;width:12px;background:repeating-conic-gradient(#fff 0 25%,#141414 0 50%) 0 0/12px 12px;opacity:.9}
+.ck-lane{position:relative;height:54px;border-bottom:2px dashed rgba(255,255,255,.22)}
+.ck-lane:last-child{border-bottom:0}
+.ck-lane>i{position:absolute;left:6px;top:50%;transform:translateY(-50%);font:800 11px/1 Unbounded,sans-serif;color:rgba(255,255,255,.55);font-style:normal;z-index:1}
+.ck-lane.win{background:linear-gradient(90deg,rgba(243,201,105,.0),rgba(243,201,105,.35))}
+.ck-lane.mine>i{color:#ffd6e4}
+.ck-lane.mine::before{content:'';position:absolute;inset:0;background:rgba(236,111,155,.16);pointer-events:none}
+.ck-ch{position:absolute;left:16px;top:1px;width:62px;height:52px;will-change:transform;z-index:2}
+.ck-ch svg{position:absolute;left:0;bottom:0;width:46px;height:42px;overflow:visible}
+.ck-ch .face{position:absolute;right:0;top:0;width:28px;height:28px;border-radius:50%;object-fit:cover;object-position:center 20%;border:2.5px solid #fff7ec;background:#a35;z-index:2;box-shadow:0 2px 4px rgba(0,0,0,.35)}
+.ck-ch svg.comb{position:absolute;left:auto;bottom:auto;right:6px;top:-6px;width:16px;height:10px;z-index:3}
+.ck-ch .beak{position:absolute;right:-8px;top:11px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:10px solid #f2a33a;z-index:3}
+.ck-ch .crown{position:absolute;right:4px;top:-20px;font-size:18px;z-index:4;display:none}
+.ck-lane.win .ck-ch .crown{display:block;animation:ckPop .5s cubic-bezier(.34,1.56,.64,1) both}
+.ck-run .ck-ch>svg{animation:ckBob .28s ease-in-out infinite alternate}
+.ck-run .ck-ch .leg{transform-box:fill-box;transform-origin:top center;animation:ckLeg .18s linear infinite alternate}
+.ck-run .ck-ch .leg.b{animation-delay:-.09s}
+@keyframes ckBob{to{transform:translateY(-3px) rotate(-3deg)}}
+@keyframes ckLeg{from{transform:rotate(28deg)}to{transform:rotate(-28deg)}}
+@keyframes ckPop{from{transform:scale(0) rotate(-30deg)}to{transform:none}}
+.ck-pick{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.ck-p{position:relative;display:grid;justify-items:center;gap:3px;padding:7px 2px 6px;border-radius:14px;background:rgba(10,4,20,.45);border:1.5px solid rgba(255,255,255,.1);color:#fff;min-width:0;transition:border-color .2s,background-color .2s}
+.ck-p img{width:38px;height:38px;border-radius:50%;object-fit:cover;object-position:center 20%;border:2px solid rgba(255,255,255,.3)}
+.ck-p b{font-size:10.5px;font-weight:800;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ck-p em{font:800 12px/1 Unbounded,sans-serif;font-style:normal;color:var(--g-gold);font-variant-numeric:tabular-nums}
+.ck-p.on{border-color:var(--g-pink);background:rgba(236,111,155,.22)}
+.ck-p.on img{border-color:var(--g-pink)}
+.ck-p .fav{position:absolute;top:-7px;left:50%;transform:translateX(-50%);padding:2px 6px;border-radius:99px;background:var(--g-teal);color:#06231f;font:800 8.5px/1.2 Inter,sans-serif;white-space:nowrap}
+.ck-amt{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+.ck-amt button{padding:9px 0;border-radius:12px;border:1.5px solid rgba(255,255,255,.14);background:rgba(10,4,20,.4);color:#fff;font:800 11.5px/1 Inter,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ck-amt button.on{border-color:var(--g-orange);background:rgba(242,160,97,.25)}
+.ck-amt button:disabled{opacity:.35}
+.ck-go{width:100%;min-height:52px;padding:12px 14px;border-radius:16px;border:0;background:linear-gradient(90deg,var(--g-pink),var(--g-orange));color:#1d0d1e;font:900 14px/1.25 Unbounded,sans-serif;box-shadow:0 10px 24px -10px rgba(236,111,155,.8)}
+.ck-go:disabled{opacity:.55}
+.ck-note{font-size:11.5px;color:rgba(255,226,236,.7);text-align:center;line-height:1.4}
+.ck-stat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ck-stat div{padding:7px 4px;border-radius:12px;background:rgba(10,4,20,.4);text-align:center}
+.ck-stat b{display:block;font:800 14px Unbounded,sans-serif;color:#fff;font-variant-numeric:tabular-nums}
+.ck-stat small{font-size:10px;color:rgba(255,226,236,.7)}
+.ck-open{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;padding:11px;border-radius:14px;border:1.5px dashed rgba(242,160,97,.6);background:rgba(242,160,97,.1);color:#ffd9b8;font:800 12.5px/1.2 Unbounded,sans-serif}
+/* итог в духе GTA */
+.gta-banner{position:fixed;left:0;right:0;top:38%;z-index:700;pointer-events:none;display:grid;justify-items:center;gap:6px;padding:18px 10px;background:linear-gradient(90deg,transparent,rgba(8,3,14,.82) 15%,rgba(8,3,14,.82) 85%,transparent);animation:gtaIn .45s cubic-bezier(.22,1,.36,1) both}
+.gta-banner b{font:700 clamp(34px,11vw,64px)/1 'Oswald',sans-serif;letter-spacing:.02em;text-transform:uppercase;-webkit-text-stroke:2px #0a0410;paint-order:stroke fill}
+.gta-banner.win b{color:var(--g-gold)}
+.gta-banner.lose b{color:#d23b3b}
+.gta-banner span{font:800 15px/1.2 Inter,sans-serif;color:#fff;text-shadow:0 2px 6px #000}
+.gta-banner.out{animation:gtaOut .4s ease both}
+.gta-wasted{position:fixed;inset:0;z-index:690;pointer-events:none;background:rgba(40,40,40,.35);-webkit-backdrop-filter:grayscale(1);backdrop-filter:grayscale(1);animation:gtaFade .5s both}
+@keyframes gtaIn{from{opacity:0;transform:scale(1.25)}to{opacity:1;transform:none}}
+@keyframes gtaOut{to{opacity:0;transform:scale(.96)}}
+@keyframes gtaFade{from{opacity:0}}
+html.sx-lite .gta-wasted{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(30,30,30,.45)}
+
+/* --- 5. сброс пароля --- */
+.ac-forgot{background:none;border:0;padding:6px;color:#ffb3c9;font:700 13px/1.2 Inter,sans-serif;text-decoration:underline;text-underline-offset:3px;justify-self:center}
+.rc-code{display:block;padding:14px 10px;border-radius:16px;background:#fff7ec;color:#1d0d1e;text-align:center;font:900 clamp(20px,6.4vw,28px)/1 ui-monospace,Consolas,monospace;letter-spacing:.08em;user-select:all;-webkit-user-select:all;word-break:break-all}
+.rc-warn{padding:10px 12px;border-radius:14px;background:rgba(229,72,77,.14);border:1px solid rgba(229,72,77,.5);font-size:12.5px;line-height:1.45;color:#ffd7d7}
+.rc-ok{padding:10px 12px;border-radius:14px;background:rgba(79,193,181,.13);border:1px solid rgba(79,193,181,.5);font-size:12.5px;line-height:1.45;color:#c8f3ee}
+.rc-in{width:100%;padding:11px 12px;border-radius:14px;background:rgba(4,11,26,.8);border:1.5px solid rgba(255,255,255,.2);color:#fff;font:700 16px ui-monospace,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase;outline:none}
+.rc-in:focus{border-color:var(--g-pink)}
+
+.pe-btn:disabled{opacity:.45;filter:grayscale(.4)}
+</style>
+<script id="pack40js">
+/* ===== pack40: «закат над Липецк-Сити», «Сумма Лудоманов», куриные бега, сброс пароля по коду восстановления ===== */
+
+/* =====================================================================
+   1. ОФОРМЛЕНИЕ: шрифты, небо с солнцем и пальмами, «лудоманов»
+   ===================================================================== */
+(function(){const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Pacifico&display=swap';document.head.appendChild(l)})();
+(function(){const palm='<svg viewBox="0 0 200 420" aria-hidden="true"><path d="M104 420c-6-90-2-180 14-262l8 2c-14 84-18 172-12 260z"/><path d="M122 160c-30-40-80-52-118-40 40-2 76 14 108 46zM122 160c-6-48-36-90-80-108 34 22 58 60 70 108zM122 160c18-46 58-78 104-84-40 14-72 46-94 88zM122 160c40-20 92-14 128 14-38-12-84-12-120 2zM122 160c26 10 54 40 64 80-16-30-42-54-70-66zM122 160c-24 4-58 30-70 66 16-28 40-50 68-58z"/></svg>';
+ const s=document.createElement('div');s.id='gtaSky';s.innerHTML=`<div class="sun"></div><div class="sea"></div>${palm.replace('<svg','<svg class="l"')}${palm.replace('<svg','<svg class="r"')}`;document.body.prepend(s)})();
+function gtaTitle(){const t=document.querySelectorAll('.summa-logo-text');if(t.length<2)return;const second=t[1];
+ if(!second.classList.contains('gta-struck')){second.classList.add('gta-struck');const box=second.parentElement;if(box&&!box.querySelector('.gta-ludo')){box.style.position='relative';box.insertAdjacentHTML('beforeend','<div class="gta-ludo">лудоманов</div>')}}
+ const h=[...document.querySelectorAll('header span')].find(e=>e.children.length===0&&/^\s*СУММА ЛИЧНОСТЕЙ\s*$/.test(e.textContent));
+ if(h)h.innerHTML='СУММА <span class="gta-hs">ЛИЧНОСТЕЙ</span><span class="gta-hl">лудоманов</span>'}
+gtaTitle();
+function gtaBanner(kind,title,sub){document.querySelectorAll('.gta-banner,.gta-wasted').forEach(e=>e.remove());
+ if(kind==='lose'&&!sxStill()){const w=document.createElement('div');w.className='gta-wasted';document.body.appendChild(w);setTimeout(()=>w.remove(),2600)}
+ const b=document.createElement('div');b.className='gta-banner '+kind;b.innerHTML=`<b>${title}</b>${sub?`<span>${sub}</span>`:''}`;document.body.appendChild(b);
+ setTimeout(()=>b.classList.add('out'),2300);setTimeout(()=>b.remove(),2750)}
+
+/* =====================================================================
+   2. КУРИНЫЕ БЕГА: ставки Σ на курицу из нашей команды
+   ===================================================================== */
+const CK_N=5,CK_EDGE=0.92,CK_AMTS=[100,500,1000,5000,10000,'all'];
+if(!sh.ck||typeof sh.ck!=='object')sh.ck={r:0,w:0,won:0,bet:0};
+let ck={round:null,sel:-1,amt:500,busy:false};
+const ckFmtX=x=>'x'+String(x.toFixed(1)).replace('.',',');
+function ckBody(){return`<svg viewBox="0 0 46 42"><path d="M3 14c4-8 10-10 14-6-2-6 2-10 7-8-4 4-3 8 0 11z" fill="#fff7ec" stroke="#3a2416" stroke-width="1.4"/>
+ <line class="leg a" x1="20" y1="33" x2="18" y2="42" stroke="#f2a33a" stroke-width="3" stroke-linecap="round"/><line class="leg b" x1="28" y1="33" x2="30" y2="42" stroke="#f2a33a" stroke-width="3" stroke-linecap="round"/>
+ <ellipse cx="25" cy="24" rx="20" ry="13" fill="#fff7ec" stroke="#3a2416" stroke-width="1.5"/><path d="M14 22c4 8 14 9 19 3-5 1-12 0-19-3z" fill="#f1dcc4" stroke="#3a2416" stroke-width="1.2"/></svg>
+ <svg class="comb" viewBox="0 0 16 10"><path d="M1 10c0-5 2-8 4-8 1 0 2 3 2 3 0-4 2-5 3-5 2 0 3 3 3 5 1-1 3-1 3 1 0 2-1 4-1 4z" fill="#e5484d" stroke="#7a1d1d" stroke-width=".8"/></svg><span class="beak"></span><span class="crown">👑</span>`}
+function ckNewRound(){const pool=TEAM_MEMBERS.slice().sort(()=>Math.random()-.5).slice(0,CK_N);
+ const w=pool.map(()=>.55+Math.random()*1.5),sum=w.reduce((a,b)=>a+b,0),p=w.map(x=>x/sum);
+ const odds=p.map(x=>Math.max(1.2,Math.floor(CK_EDGE/x*10)/10));const fav=p.indexOf(Math.max(...p));
+ ck.round={m:pool,p,odds,fav,winner:-1,done:false};ck.sel=-1;ckRender()}
+function ckAmtVal(){const bal=Math.floor(+state.synergyPoints||0);return ck.amt==='all'?bal:Math.min(ck.amt,bal)}
+function ckRender(){const r=ck.round;if(!r||!$('ckTrack'))return;const bal=Math.floor(+state.synergyPoints||0);
+ $('ckBal').textContent=shFmt(bal)+' Σ';
+ $('ckTrack').innerHTML=r.m.map((m,i)=>`<div class="ck-lane ${ck.sel===i?'mine':''} ${r.done&&r.winner===i?'win':''}" data-i="${i}"><i>${i+1}</i><div class="ck-ch" style="transform:translate3d(${r.done?ckX(r.winner===i?1:r.endF[i]):0}px,0,0)">${ckBody()}<img class="face" src="${avatarSrc(m)}" alt=""></div></div>`).join('');
+ $('ckPick').innerHTML=r.m.map((m,i)=>`<button class="ck-p ${ck.sel===i?'on':''}" ${ck.busy?'disabled':''} onclick="ckPick(${i})">${r.fav===i?'<span class="fav">фаворит</span>':''}<img src="${avatarSrc(m)}" alt=""><b>${esc(m.shortName||m.name)}</b><em>${ckFmtX(r.odds[i])}</em></button>`).join('');
+ $('ckAmt').innerHTML=CK_AMTS.map(a=>`<button class="${ck.amt===a?'on':''}" ${ck.busy||(a!=='all'&&a>bal)||bal<=0?'disabled':''} onclick="ckSetAmt(${a==='all'?"'all'":a})">${a==='all'?'Всё':a>=1000?(a/1000)+'к':a}</button>`).join('');
+ const go=$('ckGo'),v=ckAmtVal();
+ if(ck.busy){go.disabled=true;go.textContent='🐔 Забег идёт…'}
+ else if(r.done){go.disabled=false;go.textContent='🔁 Новый забег'}
+ else if(bal<=0){go.disabled=true;go.textContent='Нет Σ — крутите рулетку (1x бесплатно)'}
+ else if(ck.sel<0){go.disabled=true;go.textContent='Выберите курицу 👆'}
+ else{go.disabled=v<=0;go.textContent=`🏁 Старт · ${shFmt(v)} Σ на ${r.m[ck.sel].shortName||r.m[ck.sel].name} → ${shFmt(Math.round(v*r.odds[ck.sel]))} Σ`}
+ const st=sh.ck;$('ckStat').innerHTML=`<div><b>${shFmt(st.r)}</b><small>забегов</small></div><div><b>${shFmt(st.w)}</b><small>побед</small></div><div><b style="color:${st.won>=st.bet?'#9be7c4':'#ffb0b0'}">${st.won>=st.bet?'+':'−'}${shFmt(Math.abs(st.won-st.bet))}</b><small>итог Σ</small></div>`}
+function ckPick(i){if(ck.busy||!ck.round||ck.round.done)return;ck.sel=i;ckRender()}
+function ckSetAmt(a){if(ck.busy)return;ck.amt=a;ckRender()}
+function ckTrackW(){const t=$('ckTrack');return t?Math.max(80,t.clientWidth-16-62-40):200}
+function ckX(f){return Math.round(ckTrackW()*Math.max(0,Math.min(1,f)))}
+function ckGoBtn(){const r=ck.round;if(!r||ck.busy)return;if(r.done){ckNewRound();return}ckStart()}
+function ckStart(){const r=ck.round,i=ck.sel,amt=ckAmtVal();if(i<0||amt<=0||amt>state.synergyPoints)return;
+ if(amt>=50000&&!ck.ok){sxConfirm({title:'Крупная ставка',text:`Ставите <b style="color:#f3c969">${shFmt(amt)} Σ</b> на ${esc(r.m[i].name)}. Проиграете — Σ пропадут.`,ok:'Ставлю!'},()=>{ck.ok=true;ckStart();ck.ok=false});return}
+ /* исход решается сразу и честно: шанс курицы = p (коэффициент ≈ 0,92 / p) */
+ let x=Math.random(),win=0;for(let k=0;k<r.p.length;k++){x-=r.p[k];if(x<=0){win=k;break}win=k}
+ const pay=win===i?Math.round(amt*r.odds[i]):0;
+ state.synergyPoints=Math.max(0,state.synergyPoints-amt);saveState();if(pay)sxPut('summa_ck_pend',pay);
+ sh.ck.r++;sh.ck.bet+=amt;if(pay){sh.ck.w++;sh.ck.won+=pay}shSave();
+ r.winner=win;ck.busy=true;ck.pay=pay;ck.bet=amt;updateAllCountersUI();
+ const lite=sxStill()||document.documentElement.classList.contains('sx-lite'),T0=lite?2600:5200;
+ r.T=r.m.map((_,k)=>k===win?T0:T0+220+Math.random()*1400);
+ r.endF=r.m.map((_,k)=>k===win?1:Math.min(.97,.78+Math.random()*.17));
+ r.wp=r.m.map((_,k)=>{const pts=[0];for(let j=1;j<8;j++)pts.push(Math.min(.98,Math.max(pts[j-1]+.02,j/8+(Math.random()-.5)*.12)));pts.push(1);return pts});
+ ckRender();const tr=$('ckTrack');tr.classList.add('ck-run');try{tr.scrollIntoView({block:'nearest',behavior:'smooth'})}catch(e){}
+ const chs=[...tr.querySelectorAll('.ck-ch')],W=ckTrackW(),t0=performance.now(),Tw=r.T[win];
+ const pos=(k,t)=>{const T=r.T[k],u=Math.min(1,t/T),seg=u*8,j=Math.min(7,Math.floor(seg)),f=seg-j,s=f*f*(3-2*f),w=r.wp[k];return w[j]+(w[j+1]-w[j])*s};
+ const frame=now=>{const t=now-t0;chs.forEach((c,k)=>{const f=k===win?pos(k,t):Math.min(r.endF[k],pos(k,t));c.style.transform=`translate3d(${Math.round(W*f)}px,0,0)`});
+  if(t<Tw)requestAnimationFrame(frame);else ckFinish()};
+ requestAnimationFrame(frame)}
+function ckFinish(){const r=ck.round;r.done=true;ck.busy=false;if(ck.pay&&+sxGet('summa_ck_pend',0)){state.synergyPoints+=ck.pay;saveState();try{localStorage.removeItem('summa_ck_pend')}catch(e){}}const tr=$('ckTrack');if(tr)tr.classList.remove('ck-run');
+ updateAllCountersUI();ckRender();const m=r.m[r.winner];
+ if(ck.pay){gtaBanner('win','Миссия выполнена',`Победила ${esc(m.shortName||m.name)} · +${shFmt(ck.pay)} Σ · уважение +`);launchConfetti(90);try{navigator.vibrate&&navigator.vibrate([60,40,120])}catch(e){}}
+ else gtaBanner('lose','Потрачено',`Первой пришла ${esc(m.shortName||m.name)} · −${shFmt(ck.bet)} Σ`);
+ try{sxPushStats()}catch(e){}}
+(function(){const after=$('sec-roulette');if(!after)return;const s=document.createElement('section');s.id='sec-chick';s.className='scroll-mt-14';
+ s.innerHTML=`<div class="ck"><div class="ck-head"><div><h2>🐔 Куриные бега</h2><small>Курицы — это мы. Ставь Σ и болей!</small></div><span class="ck-bal" id="ckBal"></span></div>
+ <div class="ck-track" id="ckTrack"></div><div class="ck-pick" id="ckPick"></div><div class="ck-amt" id="ckAmt"></div>
+ <button class="ck-go" id="ckGo" onclick="ckGoBtn()"></button>
+ <div class="ck-note">Выигрыш = ставка × коэффициент. У фаворита шанс выше, но платят меньше. Играем только на Σ — это не настоящие деньги.</div>
+ <div class="ck-stat" id="ckStat"></div></div>`;after.after(s);
+ const g=after.querySelector('.glass-panel');if(g)g.insertAdjacentHTML('beforeend','<button class="ck-open" onclick="document.getElementById(\'sec-chick\').scrollIntoView({behavior:\'smooth\'})">🐔 Куриные бега — ставки на нас ↓</button>');
+ ckNewRound()})();
+/* закрыли страницу посреди выигрышного забега — выигрыш не пропадает */
+(function(){const p=+sxGet('summa_ck_pend',0);if(p>0){state.synergyPoints+=p;saveState();try{localStorage.removeItem('summa_ck_pend')}catch(e){}setTimeout(()=>{updateAllCountersUI();toast(`🐔 Выигрыш прошлого забега зачислен: +${shFmt(p)} Σ`)},1500)}})();
+(function(){const _u=updateAllCountersUI;updateAllCountersUI=function(){_u.apply(this,arguments);if(!ck.busy)ckRender()}})();
+addEventListener('resize',()=>{if(!ck.busy)ckRender()},{passive:true});
+
+/* =====================================================================
+   3. СБРОС ПАРОЛЯ ПО КОДУ ВОССТАНОВЛЕНИЯ
+   Почты и SMS нет, поэтому при регистрации выдаётся код XXXX-XXXX-XXXX.
+   В базе (recover/{номер}) лежит пароль, зашифрованный этим кодом (AES-GCM, ключ из кода через PBKDF2).
+   Без кода расшифровать нельзя; записывать может только владелец аккаунта этого номера.
+   ===================================================================== */
+const RC_ABC='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',RC_ITER=150000;
+const rcB64=u=>btoa(String.fromCharCode(...new Uint8Array(u))),rcUnB64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const rcNorm=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+function rcGen(){const r=crypto.getRandomValues(new Uint8Array(12));const s=[...r].map(b=>RC_ABC[b&31]).join('');return s.slice(0,4)+'-'+s.slice(4,8)+'-'+s.slice(8)}
+async function rcKey(code,salt){const k=await crypto.subtle.importKey('raw',new TextEncoder().encode('summa:'+rcNorm(code)),'PBKDF2',false,['deriveKey']);
+ return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:RC_ITER,hash:'SHA-256'},k,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function rcSeal(code,pass){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),key=await rcKey(code,salt);
+ const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new TextEncoder().encode(pass));return{salt:rcB64(salt),iv:rcB64(iv),ct:rcB64(ct),at:Date.now(),v:1}}
+async function rcOpenBox(code,d){const key=await rcKey(code,rcUnB64(d.salt));const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:rcUnB64(d.iv)},key,rcUnB64(d.ct));return new TextDecoder().decode(pt)}
+const rcRef=digits=>SXF.F.doc(SXF.db,'recover',digits);
+async function rcHas(digits){try{const s=await SXF.F.getDoc(rcRef(digits));return s.exists()}catch(e){return null}}
+async function rcSave(code,pass){const u=SXF.auth.currentUser;if(!u||u.isAnonymous)throw new Error('noacct');const digits=String(u.email||'').split('@')[0];
+ await SXF.F.setDoc(rcRef(digits),await rcSeal(code,pass));sxPut('summa_rc_ok',digits)}
+/* окно с новым кодом */
+function rcShow(code){const old=$('rcOv');if(old)old.remove();const ov=document.createElement('div');ov.className='sx-ov';ov.id='rcOv';
+ ov.innerHTML=`<div class="pe-box"><div class="sx-head"><h3>🔑 Код восстановления</h3></div>
+ <p class="sx-note">Если забудете пароль — по этому коду и номеру телефона можно поставить новый. Код показывается <b style="color:#fff">один раз</b>.</p>
+ <span class="rc-code" id="rcCodeTxt">${code}</span>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="pe-btn" onclick="rcCopy()">📋 Скопировать</button><button class="pe-btn" onclick="rcShot()">🖼 Сохранить картинкой</button></div>
+ <div class="rc-warn">📝 Запишите код или сохраните картинку. Никому его не показывайте: с ним можно сменить пароль от вашего аккаунта.</div>
+ <label class="sx-row" style="cursor:pointer"><span>Я сохранил(а) код</span><span class="sx-sw"><input type="checkbox" id="rcDone" onchange="$('rcClose').disabled=!this.checked"><i></i></span></label>
+ <button class="pe-btn main" id="rcClose" disabled onclick="sxCloseOv($('rcOv'))">Готово</button></div>`;
+ document.body.appendChild(ov);document.body.style.overflow='hidden'}
+function rcCopy(){const t=$('rcCodeTxt').textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('📋 Код скопирован'),()=>toast('Выделите код и скопируйте вручную'))}
+function rcShot(){const t=$('rcCodeTxt').textContent,u=state.registeredUser||{},c=document.createElement('canvas');c.width=720;c.height=420;const x=c.getContext('2d');
+ const g=x.createLinearGradient(0,0,0,420);g.addColorStop(0,'#2c1745');g.addColorStop(1,'#8b3a5c');x.fillStyle=g;x.fillRect(0,0,720,420);
+ x.fillStyle='#fff';x.textAlign='center';x.font='800 30px Inter, Arial, sans-serif';x.fillText('Сумма Личностей — код восстановления',360,70);
+ x.fillStyle='#ffd6e4';x.font='600 24px Inter, Arial, sans-serif';x.fillText('Номер: '+(u.phone||''),360,118);
+ x.fillStyle='#fff7ec';x.beginPath();x.roundRect?x.roundRect(70,160,580,110,24):x.rect(70,160,580,110);x.fill();
+ x.fillStyle='#1d0d1e';x.font='900 54px Consolas, monospace';x.fillText(t,360,234);
+ x.fillStyle='#ffd7d7';x.font='600 20px Inter, Arial, sans-serif';x.fillText('Никому не показывайте. Нужен, если забудете пароль.',360,330);
+ const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='Код-восстановления-Сумма.png';document.body.appendChild(a);a.click();a.remove();toast('🖼 Картинка с кодом сохранена')}
+async function rcIssue(pass){const code=rcGen();try{await rcSave(code,pass);rcShow(code);return true}
+ catch(e){console.warn('[rc] save',e.code||e.message);toast(e.code==='permission-denied'?'⚠️ База не приняла код — обновите правила Firebase (блок recover)':'⚠️ Не удалось сохранить код восстановления');return false}}
+/* после регистрации — сразу выдать код */
+(function(){const _r=acRegister;acRegister=async function(){const p=$('ac_p1')&&$('ac_p1').value;await _r.apply(this,arguments);if(p&&acIsAcct())setTimeout(()=>rcIssue(p),350)}})();
+/* новый код для уже существующего аккаунта: нужен текущий пароль */
+async function rcNewFromProfile(){const i=$('rc_pass'),err=$('rcPErr'),pass=i?i.value:'';err.textContent='';if(!pass){err.textContent='Введите текущий пароль';sxShake(i);return}
+ const {A,auth}=SXF,u=auth.currentUser;if(!u||u.isAnonymous)return;const b=$('rcPGo');b.disabled=true;b.textContent='Проверяем…';
+ try{await A.reauthenticateWithCredential(u,A.EmailAuthProvider.credential(u.email,pass))}catch(e){b.disabled=false;b.textContent='🔑 Получить код';err.textContent=acErr(e);sxShake(i);return}
+ const ok=await rcIssue(pass);b.disabled=false;b.textContent='🔑 Получить новый код';if(ok){const st=$('rcPState');if(st)st.innerHTML='<div class="rc-ok">✅ Код восстановления создан. Старый код (если был) больше не работает.</div>';i.value=''}}
+(function(){const _os=openSettings;openSettings=function(){_os();const box=document.querySelector('#sxOv .pe-box');if(!box)return;const u=state.registeredUser;
+ /* вход: ссылка «Забыли пароль?» */
+ if(!u&&acTab==='login'){const go=$('acGo');if(go&&!$('acForgot'))go.insertAdjacentHTML('afterend','<button type="button" class="ac-forgot" id="acForgot" onclick="rcOpen()">Забыли пароль?</button>')}
+ /* аккаунт: раздел «код восстановления» */
+ if(u&&u.acct&&window.SXF&&SXF.auth.currentUser&&!SXF.auth.currentUser.isAnonymous){const secs=[...box.querySelectorAll(':scope>.pe-sec')],at=secs[1]||secs[0];if(!at||$('rcPSec'))return;
+  at.insertAdjacentHTML('afterend',`<div class="pe-sec" id="rcPSec"><b>🔑 КОД ВОССТАНОВЛЕНИЯ ПАРОЛЯ</b><div id="rcPState"><p class="sx-note">Проверяем…</p></div>
+  <div><label>ТЕКУЩИЙ ПАРОЛЬ</label><input type="password" id="rc_pass" autocomplete="current-password" maxlength="64"></div><div class="sx-err" id="rcPErr"></div>
+  <button class="pe-btn" id="rcPGo" onclick="rcNewFromProfile()">🔑 Получить код</button></div>`);
+  const digits=String(SXF.auth.currentUser.email||'').split('@')[0];rcHas(digits).then(h=>{const st=$('rcPState');if(!st)return;
+   st.innerHTML=h?'<div class="rc-ok">✅ Код создан. Если потеряли его — получите новый (старый перестанет работать).</div>':h===false?'<div class="rc-warn">⚠️ Кода нет: если забудете пароль, восстановить аккаунт будет нельзя. Получите код сейчас.</div>':'<p class="sx-note">Не удалось проверить — нет связи с базой.</p>';
+   const b=$('rcPGo');if(b)b.textContent=h?'🔑 Получить новый код':'🔑 Получить код'})}}})();
+/* окно «Забыли пароль» */
+function rcOpen(){const old=$('rcFOv');if(old)old.remove();const ov=document.createElement('div');ov.className='sx-ov';ov.id='rcFOv';
+ const ph=$('ac_lphone')?$('ac_lphone').value:'';
+ ov.innerHTML=`<div class="pe-box"><div class="sx-head"><h3>🔑 Сброс пароля</h3><button class="sx-x" onclick="sxCloseOv($('rcFOv'))" aria-label="Закрыть">✕</button></div>
+ <p class="sx-note">Нужен код восстановления — его выдавали при регистрации (вида <b style="color:#fff">ABCD-EF23-GH45</b>).</p>
+ <div><label>НОМЕР ТЕЛЕФОНА</label><input type="tel" id="rc_phone" oninput="formatRussianPhoneInput(this)" placeholder="+7 (999) 000-00-00" autocomplete="username" value="${esc(ph)}"></div>
+ <div><label>КОД ВОССТАНОВЛЕНИЯ</label><input class="rc-in" id="rc_code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="XXXX-XXXX-XXXX"></div>
+ <div><label>НОВЫЙ ПАРОЛЬ (минимум 6 символов)</label><div class="ac-eye"><input type="password" id="rc_n1" autocomplete="new-password" maxlength="64"><button type="button" onclick="acEye('rc_n1',this)" aria-label="Показать пароль">👁</button></div></div>
+ <div><label>ПОВТОРИТЕ НОВЫЙ ПАРОЛЬ</label><input type="password" id="rc_n2" autocomplete="new-password" maxlength="64"></div>
+ <div class="sx-err" id="rcErr"></div><button class="pe-btn main" id="rcGo" onclick="rcReset()">Сменить пароль и войти</button>
+ <p class="sx-note" style="font-size:11.5px">Нет кода? Тогда пароль восстановить нельзя — так устроен вход без почты и SMS. Можно создать новый аккаунт на другой номер.</p></div>`;
+ ov.addEventListener('click',e=>{if(e.target===ov)sxCloseOv(ov)});ov.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();rcReset()}});
+ document.body.appendChild(ov);document.body.style.overflow='hidden';setTimeout(()=>{const i=ph?$('rc_code'):$('rc_phone');if(i)i.focus()},120)}
+let rcBusy=false;
+async function rcReset(){if(rcBusy)return;const err=$('rcErr');err.textContent='';const d=acDigits($('rc_phone').value),code=$('rc_code').value,n1=$('rc_n1').value,n2=$('rc_n2').value;
+ if(d.length!==11||d[0]!=='7'){err.textContent='Введите номер полностью: +7 (XXX) XXX-XX-XX';sxShake($('rc_phone'));return}
+ if(rcNorm(code).length!==12){err.textContent='Код — 12 букв и цифр, например ABCD-EF23-GH45';sxShake($('rc_code'));return}
+ if(n1.length<6){err.textContent='Новый пароль — минимум 6 символов';sxShake($('rc_n1'));return}
+ if(n1!==n2){err.textContent='Пароли не совпадают';sxShake($('rc_n2'));return}
+ if(!window.SXF){err.textContent='Нет связи с базой — попробуйте позже';return}
+ rcBusy=true;const b=$('rcGo'),fin=m=>{rcBusy=false;b.disabled=false;b.textContent='Сменить пароль и войти';if(m)err.textContent=m};b.disabled=true;b.textContent='Проверяем код…';
+ const {A,F,auth,db}=SXF;let box;
+ try{const s=await F.getDoc(rcRef(d));if(!s.exists())return fin('Для этого номера код восстановления не создавался — восстановить пароль нельзя');box=s.data()}catch(e){return fin(acErr(e))}
+ let oldPass;try{oldPass=await rcOpenBox(code,box)}catch(e){sxShake($('rc_code'));return fin('Неверный код восстановления')}
+ b.textContent='Меняем пароль…';window.rcHold=true;const fin2=m=>{window.rcHold=false;fin(m)};
+ try{await A.signInWithEmailAndPassword(auth,acDigits(d)+'@'+AC_DOMAIN,oldPass)}catch(e){return fin2(e&&/credential|password|not-found/.test(e.code||'')?'Код устарел: пароль менялся после его выдачи':acErr(e))}
+ try{const box2=await rcSeal(code,n1);await A.updatePassword(auth.currentUser,n1);await SXF.F.setDoc(rcRef(d),box2)}catch(e){return fin2(acErr(e))}
+ try{const snap=await F.getDoc(F.doc(db,'users',auth.currentUser.uid));if(snap.exists())acApply(snap.data())}catch(e){}
+ toast('✅ Пароль изменён — вы вошли. Код восстановления тот же');setTimeout(()=>location.reload(),900)}
+/* напоминание тем, у кого аккаунт есть, а кода нет (раз в день) */
+(function(){const go=()=>{SXF.A.onAuthStateChanged(SXF.auth,async u=>{if(!u||u.isAnonymous)return;const digits=String(u.email||'').split('@')[0];if(sxGet('summa_rc_ok','')===digits)return;
+  const last=+sxGet('summa_rc_nag',0);if(Date.now()-last<864e5)return;const h=await rcHas(digits);if(h){sxPut('summa_rc_ok',digits);return}if(h===false){sxPut('summa_rc_nag',Date.now());setTimeout(()=>toast('🔑 Получите код восстановления пароля: Профиль → «Код восстановления»'),4000)}})};
+ if(window.SXF)go();else addEventListener('sxfb',go,{once:true})})();
 </script>
 </body>

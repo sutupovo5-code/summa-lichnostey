@@ -54,6 +54,19 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly(['profile', 'st', 'shop', 'cards', 'eggs', 'v', 'updatedAt']);
       allow delete: if false;
     }
+    // Сброс пароля (pack40): пароль, зашифрованный кодом восстановления. Без кода прочитать нельзя.
+    // Открыть можно один документ по номеру (get), перечислять все — нельзя (list).
+    // Записывать может только владелец аккаунта этого номера (логин = номер@summa-lich.app).
+    match /recover/{phone} {
+      allow get: if true;
+      allow list: if false;
+      allow create, update: if request.auth != null
+        && request.auth.token.email == phone + '@summa-lich.app'
+        && request.resource.data.keys().hasOnly(['salt', 'iv', 'ct', 'at', 'v'])
+        && request.resource.data.ct is string && request.resource.data.ct.size() < 400
+        && request.resource.data.salt is string && request.resource.data.iv is string;
+      allow delete: if false;
+    }
     // Рейтинг джекпотов и профили: каждый пишет только свою строку.
     // look — купленный в магазине вид профиля (рамка, значок, цвет имени, карточка).
     match /players/{uid} {
