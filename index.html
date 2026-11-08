@@ -2214,7 +2214,7 @@ main.sx-quake{animation:sxQuake .65s both}
                 document.getElementById('comboStatusBadge').textContent =
                     outcome.type === 'jackpot'
                         ? `👑 ДЖЕКПОТ 1%! 3× ${outcome.member.shortName}!`
-                        : (outcome.type === 'pair' ? '⚡ Дуэт (+450 Σ)' : '🤝 Трио (+120 Σ)');
+                        : (outcome.type === 'pair' ? `⚡ Дуэт (+${outcome.reward} Σ)` : `🤝 Трио (+${outcome.reward} Σ)`);
 
                 if (outcome.type === 'jackpot') launchConfetti(140);
                 else if (outcome.type === 'pair') launchConfetti(35);
@@ -3123,7 +3123,7 @@ function allInSpin(){if(state.isSpinning)return;if(sxLocked()){sxLockNudge();ret
   if(state.isSpinning)return;
   sxPut(SX_LOCK,Date.now()+SX_LOCK_MS);
   const orig=rollThreeReelsOutcome;
-  rollThreeReelsOutcome=function(){if(Math.random()<SX_ALLIN_CHANCE){const c=TEAM_MEMBERS[Math.floor(Math.random()*TEAM_MEMBERS.length)];return{reels:[c,c,c],type:'jackpot',reward:10000,member:c,allIn:true}}
+  rollThreeReelsOutcome=function(){if(Math.random()<SX_ALLIN_CHANCE){const c=TEAM_MEMBERS[Math.floor(Math.random()*TEAM_MEMBERS.length)];return starOutcome({reels:[c,c,c],type:'jackpot',reward:10000,member:c,allIn:true})}
    let o;do{o=orig()}while(o.type==='jackpot');o.reward=0;o.allIn=true;return o};
   let out=null;const keep=state.lastThreeSlots;
   try{_sxSpin()}finally{rollThreeReelsOutcome=orig}
@@ -5768,7 +5768,7 @@ function ckStart(){const r=ck.round,i=ck.sel,amt=ckAmtVal();if(i<0||amt<=0||amt>
  if(amt>=50000&&!ck.ok){sxConfirm({title:'Крупная ставка',text:`Ставите <b style="color:#f3c969">${shFmt(amt)} Σ</b> на ${esc(r.m[i].name)}. Проиграете — Σ пропадут.`,ok:'Ставлю!'},()=>{ck.ok=true;ckStart();ck.ok=false});return}
  /* исход решается сразу и честно: шанс курицы = p (коэффициент ≈ 0,92 / p) */
  let x=Math.random(),win=0;for(let k=0;k<r.p.length;k++){x-=r.p[k];if(x<=0){win=k;break}win=k}
- const pay=win===i?Math.round(amt*r.odds[i]):0;
+ ck.betStars=gtaWGet();const pay=starWin(ck.betStars,amt,win===i?Math.round(amt*r.odds[i]):0);
  state.synergyPoints=Math.max(0,state.synergyPoints-amt);saveState();if(pay)sxPut('summa_ck_pend',pay);
  sh.ck.r++;sh.ck.bet+=amt;if(pay){sh.ck.w++;sh.ck.won+=pay}shSave();
  r.winner=win;ck.busy=true;ck.pay=pay;ck.bet=amt;updateAllCountersUI();
@@ -5991,10 +5991,6 @@ function gtaWRender(blink){if(!(shOwn('d:gtaWanted')||(typeof evGtaAccess==='fun
  const n=gtaWGet();el.innerHTML=Array.from({length:5},(_,i)=>`<i class="${i<n?'f':''}">★</i>`).join('');el.classList.toggle('on',n>0);
  if(blink&&n>0&&!sxStill()){el.classList.remove('blink');void el.offsetWidth;el.classList.add('blink')}}
 gtaWRender(false);setInterval(()=>gtaWRender(false),30000);
-(function(){const _s=ckStart;ckStart=function(){const was=ck.busy;_s.apply(this,arguments);if(was||!ck.busy)return;
- const before=gtaWGet(),add=ck.bet>=10000?2:1,now=Math.min(5,before+add);gtaWSet(now);gtaWRender(true);
- if(now>before)setTimeout(()=>toast(now>=5?'★★★★★ Тебя ищет вся полиция Липецка 🚓':'Уровень розыска повышен ★'),600)}})();
-
 /* --- 5. всплывающие деньги у баланса --- */
 let gtaLastSp=Math.floor(+state.synergyPoints||0);
 (function(){const _u=updateAllCountersUI;updateAllCountersUI=function(){_u.apply(this,arguments);const v=Math.floor(+state.synergyPoints||0),d=v-gtaLastSp;gtaLastSp=v;
@@ -6239,7 +6235,7 @@ function bjRender(newP,newD){if(CL.g!=='bj')return;const P=$('bjP'),D=$('bjD');
  else c.innerHTML='<div class="cl-row"><button class="cl-btn alt" disabled>Ход крупье…</button></div>'}
 function bjSetAmt(a){if(bj.ph==='bet'||bj.ph==='done'){bj.amt=a;bjRender()}}
 async function bjDeal(){const v=clAmt(bj.amt);if(v<=0||bj.ph==='play'||bj.ph==='dealer')return;const tok=CL.tok;
- clMoney(-v);bj.bet=v;bj.deck=clDeck(2);bj.P=[];bj.D=[];bj.ph='dealer';bj.msg='Раздаём…';bj.cls='';CL.busy=true;bjRender();
+ bj.betStars=gtaWGet();clMoney(-v);bj.bet=v;bj.deck=clDeck(2);bj.P=[];bj.D=[];bj.ph='dealer';bj.msg='Раздаём…';bj.cls='';CL.busy=true;bjRender();
  for(const [who,hide] of [['P',0],['D',0],['P',0],['D',1]]){await clWait(260);if(tok!==CL.tok)return;const c=bj.deck.pop();if(hide)c.hide=true;bj[who].push(c);bjRender(who==='P'?1:0,who==='D'?1:0)}
  const hole=bj.D[1],dReal=bjVal([bj.D[0],{r:hole.r,s:hole.s}]);
  if(dReal===21){hole.hide=false;bjRender();return bjEnd(bjIsBJ(bj.P)?'push':'lose',bjIsBJ(bj.P)?'Блэкджек у обоих — ничья':'У крупье блэкджек')}
@@ -6254,7 +6250,7 @@ async function bjStand(){if(bj.ph!=='play')return;const tok=CL.tok;bj.ph='dealer
  bj.D[1].hide=false;bjRender();while(bjVal(bj.D)<17){await clWait(480);if(tok!==CL.tok)return;bj.D.push(bj.deck.pop());bjRender(0,1)}
  const p=bjVal(bj.P),d=bjVal(bj.D);await clWait(250);if(tok!==CL.tok)return;
  if(d>21)bjEnd('win',`У крупье перебор: ${d}`);else if(p>d)bjEnd('win',`${p} против ${d}`);else if(p===d)bjEnd('push',`Ничья: ${p}`);else bjEnd('lose',`${p} против ${d}`)}
-function bjEnd(kind,txt){const bet=bj.bet,pay=kind==='bj'?Math.floor(bet*2.5):kind==='win'?bet*2:kind==='push'?bet:0;
+function bjEnd(kind,txt){if(bj.ph==='done')return;const bet=bj.bet,pay=starWin(bj.betStars||0,bet,kind==='bj'?Math.floor(bet*2.5):kind==='win'?bet*2:kind==='push'?bet:0);
  if(pay)clMoney(pay);clStat('bj',bet,pay);bj.ph='done';CL.busy=false;
  bj.msg=kind==='lose'?`${txt} · −${shFmt(bet)} Σ`:kind==='push'?`${txt} · ставка вернулась`:`${txt} · +${shFmt(pay-bet)} Σ`;bj.cls=kind==='lose'?'lose':kind==='push'?'':'win';
  if(kind==='bj'||(kind==='win'&&bet>=5000))launchConfetti(70);if(CL.g==='bj'){bjRender();const s=document.querySelector('#clBody .cl-stat');if(s)s.outerHTML=clStatHTML('bj')}}
@@ -6274,7 +6270,7 @@ function rkMount(b){b.innerHTML=`<div class="cl-wrap"><div class="rk-hist" id="r
  rk.active=false;rkPaint(0);rkCtl();rkHist()}
 function rkHist(){const h=$('rkHist');if(!h)return;h.innerHTML=rk.hist.length?rk.hist.map(x=>`<span class="${x>=10?'y':x>=2?'g':''}">${rkFmt(x)}</span>`).join(''):'<span class="g">История взлётов появится здесь</span>'}
 function rkCtl(){const c=$('rkCtl');if(!c)return;const m=$('rkMsg');m.textContent=rk.msg;m.className='cl-msg '+rk.cls;
- if(rk.active){c.innerHTML=`<button class="cl-btn go" id="rkTake" onclick="rkTake()">Забрать ${shFmt(Math.floor(rk.bet*rk.m))} Σ</button>`;return}
+ if(rk.active){c.innerHTML=`<button class="cl-btn go" id="rkTake" onclick="rkTake()">Забрать ${shFmt(starWin(rk.betStars||0,rk.bet,Math.floor(rk.bet*rk.m)))} Σ</button>`;return}
  const v=clAmt(rk.amt);c.innerHTML=`<div class="cl-box" style="display:grid;gap:10px"><div class="cl-lbl">СТАВКА</div>${clChipsHTML(rk.amt,'rkSetAmt')}
  <div class="cl-lbl">АВТОЗАБОР</div><div class="cl-chips">${RK_AUTO.map(a=>`<button class="${rk.auto===a?'on':''}" onclick="rkSetAuto(${a})">${a?rkFmt(a).replace(',00',''):'Выкл'}</button>`).join('')}</div>
  <button class="cl-btn" ${v<=0?'disabled':''} onclick="rkGo()">${v>0?`🚀 Запуск · ${shFmt(v)} Σ`:'Нет Σ — крутите рулетку'}</button></div>`}
@@ -6285,21 +6281,21 @@ function rkPaint(t){const box=$('rkBox');if(!box)return;const W=box.clientWidth,
  let d='';const n=36;for(let i=0;i<=n;i++){const tt=t*i/n;d+=(i?'L':'M')+X(tt).toFixed(2)+' '+Y(rkM(tt)).toFixed(2)}
  $('rkPath').setAttribute('d',t>0?d:'');const px=X(t)/100*W,py=Y(m)/100*H,dt=Math.max(.05,t*.04),ang=Math.atan2(-(Y(rkM(t))-Y(rkM(Math.max(0,t-dt))))/100*H,(X(t)-X(Math.max(0,t-dt)))/100*W);
  $('rkR').style.transform=`translate3d(${px-15}px,${py-18}px,0) rotate(${(45-ang*180/Math.PI).toFixed(1)}deg)`}
-function rkGo(){const v=clAmt(rk.amt);if(rk.active||v<=0)return;clMoney(-v);rk.bet=v;
+function rkGo(){const v=clAmt(rk.amt);if(rk.active||v<=0)return;rk.betStars=gtaWGet();clMoney(-v);rk.bet=v;
  const U=Math.random();rk.crash=U<0.05?1:Math.min(1000,Math.max(1,Math.floor(0.95/(1-U)*100)/100));
  rk.active=true;CL.busy=true;rk.m=1;rk.msg='Летим! Забери, пока не взорвалась';rk.cls='';const mEl=$('rkM');mEl.className='rk-m';$('rkR').textContent='🚀';rkCtl();
  const tok=CL.tok,t0=performance.now();let lastBtn=0;
  const step=now=>{if(!rk.active||tok!==CL.tok)return;const t=(now-t0)/1000;let m=rkM(t);
   if(rk.auto&&rk.auto<=rk.crash&&m>=rk.auto){rk.m=rk.auto;rkPaint(Math.log(rk.auto)/RK_K);mEl.textContent=rkFmt(rk.auto);return rkTake()}
   if(m>=rk.crash){rk.m=rk.crash;rkPaint(Math.log(Math.max(1.0001,rk.crash))/RK_K);return rkBoom()}
-  rk.m=m;mEl.textContent=rkFmt(m);rkPaint(t);if(now-lastBtn>120){lastBtn=now;const b=$('rkTake');if(b)b.textContent=`Забрать ${shFmt(Math.floor(rk.bet*m))} Σ`}requestAnimationFrame(step)};
+  rk.m=m;mEl.textContent=rkFmt(m);rkPaint(t);if(now-lastBtn>120){lastBtn=now;const b=$('rkTake');if(b)b.textContent=`Забрать ${shFmt(starWin(rk.betStars||0,rk.bet,Math.floor(rk.bet*m)))} Σ`}requestAnimationFrame(step)};
  if(rk.crash<=1){setTimeout(()=>{if(rk.active&&tok===CL.tok)rkBoom()},350);return}
  requestAnimationFrame(step)}
 function rkPush(x){rk.hist.unshift(x);rk.hist=rk.hist.slice(0,14);sxPut('summa_rk_hist',rk.hist);rkHist()}
-function rkTake(){if(!rk.active)return;rk.active=false;CL.busy=false;const pay=Math.floor(rk.bet*rk.m);clMoney(pay);clStat('rk',rk.bet,pay);
+function rkTake(){if(!rk.active)return;rk.active=false;CL.busy=false;const pay=starWin(rk.betStars||0,rk.bet,Math.floor(rk.bet*rk.m));clMoney(pay);clStat('rk',rk.bet,pay);
  const m=$('rkM');if(m){m.textContent=rkFmt(rk.m);m.className='rk-m won'}rk.msg=`Забрали на ${rkFmt(rk.m)} · +${shFmt(pay-rk.bet)} Σ (ракета взорвалась бы на ${rkFmt(rk.crash)})`;rk.cls='win';
  if(rk.m>=5)launchConfetti(80);rkPush(rk.crash);rkCtl();const s=document.querySelector('#clBody .cl-stat');if(s)s.outerHTML=clStatHTML('rk')}
-function rkBoom(){rk.active=false;CL.busy=false;clStat('rk',rk.bet,0);const m=$('rkM');if(m){m.textContent=rkFmt(rk.crash);m.className='rk-m boom'}const r=$('rkR');if(r)r.textContent='💥';
+function rkBoom(){if(!rk.active)return;rk.active=false;CL.busy=false;clStat('rk',rk.bet,0);const m=$('rkM');if(m){m.textContent=rkFmt(rk.crash);m.className='rk-m boom'}const r=$('rkR');if(r)r.textContent='💥';
  rk.msg=`Взрыв на ${rkFmt(rk.crash)} · −${shFmt(rk.bet)} Σ`;rk.cls='lose';try{navigator.vibrate&&navigator.vibrate(120)}catch(e){}rkPush(rk.crash);rkCtl();const s=document.querySelector('#clBody .cl-stat');if(s)s.outerHTML=clStatHTML('rk')}
 
 /* =====================================================================
@@ -6338,7 +6334,7 @@ function dkPlayable(c){if(!dkMyTurn())return false;
   /* без «беру» неотбитых карт не может быть больше, чем карт у бота */
   return dk.took||dk.table.filter(p=>!p.d).length<dk.B.length}
  const o=dkOpen();return!!o&&dkBeats(o.a,c)}
-function dkStart(){const v=clAmt(dk.amt);if(v<=0||dk.ph==='play')return;clMoney(-v);dk.stake=v;CL.busy=true;
+function dkStart(){const v=clAmt(dk.amt);if(v<=0||dk.ph==='play')return;dk.betStars=gtaWGet();clMoney(-v);dk.stake=v;CL.busy=true;
  dk.deck=clDeck(6);dk.trumpCard=dk.deck[0];dk.trump=dk.trumpCard.s;dk.P=[];dk.B=[];for(let i=0;i<6;i++){dk.P.push(dk.deck.pop());dk.B.push(dk.deck.pop())}
  const lowT=h=>Math.min(...h.filter(c=>c.s===dk.trump).map(c=>c.r),99);dk.att=lowT(dk.B)<lowT(dk.P)?'b':'p';dk.ph='play';
  dk.msg=dk.att==='p'?'У вас младший козырь — ваш ход':'У бота младший козырь — он ходит';dk.cls='';dkRound()}
@@ -6367,10 +6363,10 @@ function dkTake(){if(dk.att!=='b'||!dkOpen()||dk.ph!=='play')return;dk.took=true
  dkBot(()=>{const r=dkRanks();let add;while(dkCanAdd()&&dk.table.length<dk.limit&&(add=dkSort(dk.B.filter(x=>r.has(x.r)&&(dk.deck.length===0||(x.s!==dk.trump&&x.r<=11))))[0])){dk.B.splice(dk.B.indexOf(add),1);dk.table.push({a:add})}
   dk.P.push(...dk.table.flatMap(p=>p.d?[p.a,p.d]:[p.a]));dkRefill(dk.B,dk.P);dk.msg='Вы взяли карты. Бот ходит снова';if(!dkEnd()){dk.att='b';dkRound()}},700)}
 function dkGive(){if(dk.att!=='p'||dk.ph!=='play')return;dk.B.push(...dk.table.flatMap(p=>p.d?[p.a,p.d]:[p.a]));dkRefill(dk.P,dk.B);dk.msg='Бот забрал карты. Ваш ход';if(!dkEnd()){dk.att='p';dkRound()}}
-function dkEnd(){if(dk.deck.length)return false;const pE=!dk.P.length,bE=!dk.B.length;if(!pE&&!bE)return false;
+function dkEnd(){if(dk.ph==='over')return true;if(dk.deck.length)return false;const pE=!dk.P.length,bE=!dk.B.length;if(!pE&&!bE)return false;
  dk.ph='over';CL.busy=false;let pay=0;
  if(pE&&bE){pay=dk.stake;dk.msg='Ничья — ставка вернулась';dk.cls=''}
- else if(pE){pay=Math.floor(dk.stake*1.9);dk.msg=`Победа! Бот остался в дураках · +${shFmt(pay-dk.stake)} Σ`;dk.cls='win';launchConfetti(90)}
+ else if(pE){pay=starWin(dk.betStars||0,dk.stake,Math.floor(dk.stake*1.9));dk.msg=`Победа! Бот остался в дураках · +${shFmt(pay-dk.stake)} Σ`;dk.cls='win';launchConfetti(90)}
  else{dk.msg=`Вы в дураках 🤡 · −${shFmt(dk.stake)} Σ`;dk.cls='lose'}
  if(pay)clMoney(pay);clStat('dk',dk.stake,pay);dk.table=[];dkRender();const s=document.querySelector('#clBody .cl-stat');if(s)s.outerHTML=clStatHTML('dk');return true}
 </script>
@@ -6528,9 +6524,9 @@ function dkoApply(s,me,mv){if(s.st!=='play')return'Игра уже законч�
  s.mv=(+s.mv||0)+1;s.at=Date.now();dkoEnd(s);return null}
 /* деньги и статистика — каждый игрок сам за себя, один раз на стол */
 function dkoMoney(s){const role=dkoRole(s);if(!role||!s.code)return;const paid=sxGet('summa_dko_paid',{}),p=paid[s.code]||{};
- if((s.st==='play'||s.st==='over')&&s.g&&!p.in){p.in=1;clMoney(-s.stake)}
- if(s.st==='over'&&p.in&&!p.out){p.out=1;const pay=s.win==='draw'?s.stake:s.win===role?s.stake*2:0;if(pay)clMoney(pay);clStat('dko',s.stake,pay);if(s.win===role)evAdd('dk',3);else evAdd('dk',0);
-  {const sb=document.querySelector('#clBody .cl-stat');if(sb&&dkMode==='online')sb.outerHTML=clStatHTML('dko')}if(s.win===role){launchConfetti(90);gtaBanner('win','Миссия выполнена',`Соперник в дураках · +${shFmt(s.stake)} Σ`)}else if(s.win!=='draw')gtaBanner('lose','Потрачено',`Вы в дураках · −${shFmt(s.stake)} Σ`)}
+ if((s.st==='play'||s.st==='over')&&s.g&&!p.in){p.in=1;p.betStars=gtaWGet();clMoney(-s.stake)}
+ if(s.st==='over'&&p.in&&!p.out){p.out=1;const pay=starWin(p.betStars||0,s.stake,s.win==='draw'?s.stake:s.win===role?s.stake*2:0);if(pay)clMoney(pay);clStat('dko',s.stake,pay);if(s.win===role)evAdd('dk',3);else evAdd('dk',0);
+  {const sb=document.querySelector('#clBody .cl-stat');if(sb&&dkMode==='online')sb.outerHTML=clStatHTML('dko')}if(s.win===role){launchConfetti(90);gtaBanner('win','Миссия выполнена',`Соперник в дураках · +${shFmt(pay-s.stake)} Σ`)}else if(s.win!=='draw')gtaBanner('lose','Потрачено',`Вы в дураках · −${shFmt(s.stake)} Σ`)}
  paid[s.code]=p;const keys=Object.keys(paid);if(keys.length>40)delete paid[keys[0]];sxPut('summa_dko_paid',paid)}
 async function dkoMove(mv){if(dko.sending||!dko.code)return;dko.sending=true;const code=dko.code;
  try{await SXF.F.runTransaction(SXF.db,async tx=>{const r=dkoRef(code),snap=await tx.get(r);if(!snap.exists())throw new Error('Стол не найден');const s=snap.data(),role=dkoRole(s);
@@ -6967,6 +6963,37 @@ dkFit=function(){const h=$('dkHand');if(!h||!h.isConnected)return;const cards=h.
 };
 const dkoRender51=dkoRender;dkoRender=function(){dkoRender51();if(CL.g==='dk'&&dkMode==='online')dkFit()};
 addEventListener('orientationchange',()=>requestAnimationFrame(()=>dkFit()),{passive:true});
+</script>
+
+<style id="pack52">
+.star-box{margin:8px 0 12px;padding:13px 14px;border:1px solid #e4b26166;border-radius:16px;background:linear-gradient(115deg,#61432155,#241e42);display:grid;gap:7px}.star-line{display:flex;justify-content:space-between;gap:10px;align-items:center}.star-icons{color:#ffcf79;letter-spacing:3px;font-size:22px}.star-boost{font-size:13px;font-weight:900;color:#ffe4ad}.star-info{font-size:11px;line-height:1.5;color:#ccd3e4}.star-game-note{font-size:12px;text-align:center;color:#ffe0a7;padding:8px;border-radius:10px;background:#dab07714}.tx-inbox{display:grid;gap:10px;margin-bottom:14px;border:1px solid #edb98280;background:linear-gradient(135deg,#342344,#15233f);padding:13px;border-radius:18px}.tx-inbox[hidden]{display:none!important}.tx-inbox h3{font-size:15px;font-weight:900;color:#ffe5b8}.tx-inbox-row{border:1px solid #ffffff20;border-radius:14px;padding:10px;display:grid;gap:9px}.tx-inbox-row .tx-card-pv{max-width:105px}.tx-inbox-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.tx-inbox-actions button{min-height:44px;font-size:12px}.tx-inbox .tx-side h4{font-size:11px}
+</style>
+<script id="pack52js">
+/* Activity stars: +5% to positive winnings, calculated at the start, never to a returned stake. */
+if(!sh.starBoost){const old=sxGet(GTA_W_KEY,{s:0,t:Date.now()});sh.starBoost={s:Math.max(0,Math.min(5,+old.s||0)),t:+old.t||Date.now(),spins:0};shSave()}
+gtaWGet=function(){const w=sh.starBoost||{};return Math.max(0,Math.min(5,Math.floor(+w.s||0))-Math.floor(Math.max(0,Date.now()-(+w.t||0))/GTA_W_DECAY))};
+gtaWSet=function(s){sh.starBoost={...(sh.starBoost||{}),s:Math.max(0,Math.min(5,Math.floor(s))),t:Date.now()};shSave();sxPut(GTA_W_KEY,{s:sh.starBoost.s,t:sh.starBoost.t})};
+function starWin(level,bet,payout){return payout+Math.floor(Math.max(0,payout-bet)*Math.max(0,Math.min(5,level))*5/100)}
+function starGain(n){if(n>0)gtaWSet(gtaWGet()+n);starUI()}
+function starUI(){const level=gtaWGet(),icons='★'.repeat(level)+'☆'.repeat(5-level),progress=Number(sh.starBoost?.spins||0)%10;let box=$('starSystem');const roulette=$('sec-roulette');if(roulette&&!box){box=document.createElement('div');box.id='starSystem';box.className='star-box';roulette.prepend(box)}if(box){box.innerHTML=`<div class="star-line"><span class="star-icons" aria-label="Звёзд: ${level} из 5">${icons}</span><span class="star-boost">+${level*5}% к выигрышам</span></div><p class="star-info">Завершённая ставка: +1★, от 10 000 Σ: +2★. Каждые 10 круток: +1★ (${progress}/10). Одна звезда гаснет за 3 минуты.<br>Бонус действует на прибыль со ставки и награды крутки. Уровень фиксируется перед началом игры.</p>`}
+ const wrap=document.querySelector('#clBody .cl-wrap');if(wrap){let note=wrap.querySelector('.star-game-note');if(!note){note=document.createElement('div');note.className='star-game-note';wrap.prepend(note)}note.textContent=icons+' · +'+level*5+'% к прибыли следующей ставки'}
+ const wanted=$('gtaWanted');if(wanted)wanted.setAttribute('aria-label','Звёзд '+level+', бонус '+level*5+'%');gtaWRender(false)
+}
+const starClStat=clStat;clStat=function(g,bet,payout){starClStat(g,bet,payout);if(bet>0)starGain(bet>=10000?2:1)};
+const starCkFinish=ckFinish;ckFinish=function(){if(!ck.busy||ck.round?.done)return;starCkFinish.apply(this,arguments);if(ck.bet>0)starGain(ck.bet>=10000?2:1)};
+function starOutcome(o){if(o.starLevel===undefined){o.starLevel=gtaWGet();o.baseReward=o.reward;o.reward=starWin(o.starLevel,0,o.reward)}return o}
+const starRoll=rollThreeReelsOutcome;rollThreeReelsOutcome=function(){return starOutcome(starRoll.apply(this,arguments))};
+const starApply=applySlotOutcomes;applySlotOutcomes=function(outcomes){outcomes.forEach(starOutcome);starApply(outcomes);const progress=(Number(sh.starBoost?.spins)||0)+outcomes.length;sh.starBoost={...(sh.starBoost||{}),spins:progress%10};shSave();starGain(Math.floor(progress/10))};
+const starClOpen=clOpen;clOpen=function(g){starClOpen(g);starUI()};
+starUI();setInterval(()=>{if(!document.hidden&&!CL.g)starUI()},30000);
+/* Inbox lives directly above the posts and listens only to the signed-in recipient. */
+let inboxUid=null,inboxStop=null,inboxRows=[],inboxNameCache=new Map();
+function inboxBox(){let box=$('txInbox');const feed=$('newsFeedContainer');if(!box&&feed){box=document.createElement('section');box.id='txInbox';box.className='tx-inbox';box.hidden=true;box.setAttribute('aria-label','Входящие предложения обмена');feed.before(box)}return box}
+function inboxPaint(){const box=inboxBox();if(!box)return;box.hidden=!inboxRows.length;if(!inboxRows.length){box.replaceChildren();return}box.innerHTML=`<h3>🤝 Вам предложили обмен · ${inboxRows.length}</h3>`+inboxRows.slice(0,3).map(x=>`<div class="tx-inbox-row"><b>${esc(inboxNameCache.get(x.from)||'Игрок '+x.from.slice(0,8))}</b>${txSides(x,false)}<div class="tx-inbox-actions"><button class="pe-btn main" data-accept="${x.id}">Проверить и принять</button><button class="pe-btn" data-reject="${x.id}">Отказаться</button></div></div>`).join('')+(inboxRows.length>3?'<button class="pe-btn" id="txInboxAll">Открыть все предложения</button>':'');box.querySelectorAll('[data-accept]').forEach(b=>b.onclick=()=>txAct(b.dataset.accept,'accept',b));box.querySelectorAll('[data-reject]').forEach(b=>b.onclick=()=>txDecline(b.dataset.reject,b));const all=$('txInboxAll');if(all)all.onclick=()=>txOpen()}
+function inboxConnect(){const uid=window.SXF?.auth.currentUser&&!SXF.auth.currentUser.isAnonymous?SXF.auth.currentUser.uid:null;if(uid===inboxUid)return;inboxStop?.();inboxStop=null;inboxUid=uid;inboxRows=[];inboxPaint();if(!uid)return;const {F,db}=SXF;inboxStop=F.onSnapshot(F.query(F.collection(db,'exchanges'),F.where('to','==',uid)),{includeMetadataChanges:true},snap=>{if(inboxUid!==uid||snap.metadata?.hasPendingWrites)return;const old=new Set(inboxRows.map(x=>x.id));inboxRows=[];snap.forEach(d=>{const x=d.data();if(x.status==='pending'&&x.fromAgreed===true&&/^[A-Za-z0-9_-]+$/.test(d.id))inboxRows.push({id:d.id,...x})});inboxRows.sort((a,b)=>b.at-a.at);inboxPaint();if(inboxRows.some(x=>!old.has(x.id)))toast('🤝 Новое предложение обмена — над лентой постов');for(const x of inboxRows.slice(0,3)){if(inboxNameCache.has(x.from))continue;inboxNameCache.set(x.from,'Игрок '+x.from.slice(0,8));F.getDoc(F.doc(db,'players',x.from)).then(s=>{if(s.exists())inboxNameCache.set(x.from,String(s.data().name||'Игрок').slice(0,60));inboxPaint()}).catch(()=>{})}},e=>{console.warn('[exchange inbox]',e.code);inboxRows=[];inboxPaint()})}
+function inboxInit(){if(!window.SXF)return;SXF.A.onAuthStateChanged(SXF.auth,inboxConnect);inboxConnect()}
+if(window.SXF)inboxInit();else addEventListener('sxfb',inboxInit,{once:true});
+const inboxRender=renderNewsFeed;renderNewsFeed=function(){inboxRender();inboxPaint()};
 </script>
 
 </body>
