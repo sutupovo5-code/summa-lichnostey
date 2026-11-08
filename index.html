@@ -6882,7 +6882,7 @@ addEventListener('sxfb',fwWatchUpdate);fwFeed();
 <script id="pack49js">
 const richKnown=new Set(),richJobs=new Map();
 function richBadge(){const e=document.createElement('span');e.className='rich-title';e.textContent='💰 Богач';return e}
-async function richHas(uid){if(!uid||!window.SXF)return false;if(richKnown.has(uid))return true;const {F,db}=SXF;try{const s=await F.getDocs(F.query(F.collection(db,'richTitles',uid,'funds'),F.limit(1)));if(!s.empty){richKnown.add(uid);return true}}catch(e){}return false}
+async function richHas(uid){if(!uid||!window.SXF)return false;if(richKnown.has(uid))return true;const {F,db}=SXF;try{const s=await F.getDocs(F.query(F.collection(db,'richTitles',uid,'funds'),F.limit(1)));if(!s.empty){richKnown.add(uid);return true}const closed=await F.getDocs(F.query(F.collection(db,'fundraisers'),F.where('closed','==',true)));for(const f of closed.docs){const fund=f.data();if(!fund.leaderTotal)continue;const donor=await F.getDoc(F.doc(db,'fundraisers',f.id,'contributors',uid));if(donor.exists()&&donor.data().total===fund.leaderTotal){richKnown.add(uid);richAward(f.id);return true}}}catch(e){}return false}
 async function richAward(id){if(!acIsAcct())return;if(richJobs.has(id))return richJobs.get(id);const job=(async()=>{const {F,db}=SXF;const s=await F.getDoc(txRef('fundraisers',id));if(!s.exists())return;const fund=s.data();if(!fund.closed||!fund.leaderTotal)return;
  const donors=await F.getDocs(F.query(F.collection(db,'fundraisers',id,'contributors'),F.where('total','==',fund.leaderTotal)));
  for(const donor of donors.docs){const r=F.doc(db,'richTitles',donor.id,'funds',id);await F.runTransaction(db,async t=>{const old=await t.get(r);if(!old.exists())t.set(r,{title:'Богач',amount:fund.leaderTotal,at:F.serverTimestamp()})});richKnown.add(donor.id)}
@@ -6898,7 +6898,7 @@ async function fwCloseFund(p,btn){if(btn.disabled)return;btn.disabled=true;
   else t.set(ref,{owner:txUID(),goal:Number(ps.data().post.fundGoal),raised:0,paid:0,lastBy:txUID(),lastAmount:0,nonce:crypto.randomUUID(),closed:true,closedAt:F.serverTimestamp(),leaderTotal:0,leaderUid:''});
  });break}catch(e){if(e.message==='fund-changed'&&attempt<2)continue;throw e}
  }await richAward(p.id);toast('Сбор закрыт. Новые взносы отключены.');
- }catch(e){txError(e)}finally{btn.disabled=false}}
+ }catch(e){if(e.message==='fund-changed')e.message='Кто-то только что сделал взнос. Попробуйте закрыть сбор ещё раз.';txError(e)}finally{btn.disabled=false}}
 const fwPaint49=fwPaint;fwPaint=function(id){fwPaint49(id);const p=fwPost(id);if(!p)return;const fund=FW.data.get(id)||{},owner=spOwnerOf(p)===SXC.uid,rows=FW.people.get(id)||[],winners=fund.closed?rows.filter(x=>x.total===fund.leaderTotal):[];
  for(const box of FW.cards.values()){if(box.dataset.fund!==id)continue;let close=box.querySelector('.fw-close');if(!close){close=document.createElement('button');close.className='fw-close';close.textContent='Закрыть сбор';close.onclick=()=>sxConfirm({title:'Закрыть сбор?',text:'Новые взносы прекратятся. Лидеры по общей сумме получат титул «Богач». Открыть сбор заново нельзя.',ok:'Закрыть сбор'},()=>fwCloseFund(p,close));box.querySelector('.fw-collect').after(close)}close.hidden=!owner||!!fund.closed;
   if(fund.closed){box.querySelector('.fw-form').hidden=true;box.querySelector('.fw-tag').textContent='✓ Сбор закрыт';box.querySelector('.fw-note').textContent='Новые взносы не принимаются. Автор может забрать оставшиеся Σ.'}else box.querySelector('.fw-tag').textContent='✦ Вместе к цели';
