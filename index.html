@@ -6930,6 +6930,45 @@ const txOpen50=txOpen;txOpen=function(to){txOpen50(to);if(!$('txOv'))return;cons
 txList=async function(){const el=$('txList');if(!el)return;try{const {F,db}=SXF,lists=await Promise.all(['from','to'].map(k=>F.getDocs(F.query(F.collection(db,'exchanges'),F.where(k,'==',txUID())))));const rows=[];for(const list of lists)list.forEach(s=>{if(/^[A-Za-z0-9_-]+$/.test(s.id))rows.push({id:s.id,...s.data()})});rows.sort((a,b)=>b.at-a.at);el.innerHTML=rows.map(x=>{const mine=x.from===txUID(),status={pending:'Ожидает согласия получателя',accepted:'Обе стороны согласились',cancelled:'Отменено',rejected:'Получатель отказался'}[x.status]||'Неизвестное состояние';let actions='';if(x.status==='pending'){actions=mine?`<button class="pe-btn" onclick="txAct('${x.id}','cancel',this)">Отменить и вернуть резерв</button>`:x.fromAgreed===true?`<button class="pe-btn main" onclick="txAct('${x.id}','accept',this)">Проверить и согласиться</button><button class="pe-btn" onclick="txDecline('${x.id}',this)">Отказаться</button>`:'<p class="tx-terms-note">Старое предложение: попросите отправителя отменить его и создать новое.</p>'}else if(mine&&!x.claimed&&['accepted','rejected'].includes(x.status)){actions=`<button class="pe-btn main" onclick="txAct('${x.id}','${x.status==='rejected'?'refund':'claim'}',this)">${x.status==='rejected'?'Вернуть резерв':'Забрать полученное'}</button>`}return `<div class="tx-item"><b>${mine?'Исходящее':'Входящее'} · ${status}</b>${txSides(x,mine)}<div class="tx-consents"><span>${x.fromAgreed===true?'✓':'—'} Отправитель согласен</span><span>${x.toAgreed===true?'✓':'—'} Получатель согласен</span></div><div class="tx-actions">${actions}</div></div>`}).join('')||'Предложений пока нет'}catch(e){el.textContent=e.code==='permission-denied'?'Нужно обновить правила Firebase для обменов':'Не удалось загрузить предложения'}};
 </script>
 
+<style id="pack51">
+/* Constrain grid tracks before measuring cards: their intrinsic widths must not widen the scene. */
+#clStage .cl-top{flex-shrink:0}
+#clStage .cl-body{width:100%;min-width:0;min-height:0}
+#clStage .cl-wrap{width:100%;max-width:520px;min-width:0;grid-template-columns:minmax(0,1fr)}
+#clStage .cl-wrap>*,#dkoBox{min-width:0}
+#clStage .dk-tbl{width:100%;min-width:0;max-width:100%;grid-template-columns:minmax(0,1fr)}
+#clStage .dk-bot{min-width:0;align-items:flex-start}
+#clStage .dk-bot>div:first-child{min-width:0;flex:1}
+#clStage .dk-bot .nm{overflow-wrap:anywhere}
+#clStage .dk-bot .hand{max-width:100%;overflow:hidden;padding:3px 0 6px}
+#clStage .dk-deck{flex:0 0 auto;max-width:48%;padding-top:4px}
+#clStage .dk-deck small{white-space:normal;overflow-wrap:anywhere}
+#clStage .dk-play{min-width:0;gap:8px;min-height:110px}
+#clStage .dk-pair{flex:0 0 66px;width:66px;height:90px}
+#clStage .dk-pair .cl-c{--cw:48px}
+#clStage .dk-pair .cl-c.d{left:10px;transform:rotate(6deg)}
+#clStage .dk-hand{width:100%;max-width:100%;min-width:0;display:flex;flex-wrap:nowrap;gap:4px;justify-content:flex-start;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;scroll-snap-type:x proximity;scroll-padding-inline:4px;padding:16px 4px 10px;min-height:100px;scrollbar-width:thin;scrollbar-color:#f2a06166 transparent}
+#clStage .dk-hand[data-scrollable="false"]{justify-content:center}
+#clStage .dk-hand>.cl-c{--cw:var(--hand-cw,54px);flex:0 0 var(--cw);margin-left:0!important;scroll-snap-align:start}
+.dk-hand-note{font-size:11px;line-height:1.4;text-align:center;color:#c6e1df;padding:0 4px 4px}
+.dk-hand-note[hidden]{display:none!important}
+@media(max-width:360px){#clStage .dk-hand{gap:3px}#clStage .cl-top{padding-left:8px;padding-right:8px;gap:6px}#clStage .cl-top h3{font-size:16px}#clStage .cl-bal{font-size:12px;padding:6px 8px}#clStage .cl-body{padding-left:8px;padding-right:8px}.dk-mode button{font-size:12px}}
+</style>
+<script id="pack51js">
+let dkHandObserved51=null,dkHandFrame51=0;
+const dkHandResize51='ResizeObserver'in window?new ResizeObserver(()=>{cancelAnimationFrame(dkHandFrame51);dkHandFrame51=requestAnimationFrame(()=>dkFit())}):null;
+dkFit=function(){const h=$('dkHand');if(!h||!h.isConnected)return;const cards=h.querySelectorAll(':scope>.cl-c'),n=cards.length;if(!n)return;
+ // A normal hand fits when possible; a large hand scrolls without pushing the table off-screen.
+ const gap=parseFloat(getComputedStyle(h).columnGap)||4,space=Math.max(0,h.clientWidth-8),cw=n<=6?Math.max(44,Math.min(60,(space-Math.max(0,n-1)*gap)/n)):54;
+ const size=cw.toFixed(2)+'px';if(h.style.getPropertyValue('--hand-cw')!==size)h.style.setProperty('--hand-cw',size);
+ h.style.setProperty('--ov','0px');const scrolling=h.scrollWidth>h.clientWidth+1;h.dataset.scrollable=String(scrolling);h.setAttribute('role','group');h.setAttribute('aria-label','Ваши карты'+(scrolling?' — листайте влево и вправо':''));h.tabIndex=scrolling?0:-1;
+ let note=h.nextElementSibling;if(!note?.classList.contains('dk-hand-note')){note=document.createElement('div');note.className='dk-hand-note';h.after(note)}note.hidden=!scrolling;note.textContent='В руке '+n+' карт · листайте влево и вправо ↔';
+ if(dkHandResize51&&dkHandObserved51!==h){if(dkHandObserved51)dkHandResize51.unobserve(dkHandObserved51);dkHandObserved51=h;dkHandResize51.observe(h)}
+};
+const dkoRender51=dkoRender;dkoRender=function(){dkoRender51();if(CL.g==='dk'&&dkMode==='online')dkFit()};
+addEventListener('orientationchange',()=>requestAnimationFrame(()=>dkFit()),{passive:true});
+</script>
+
 </body>
 
  
