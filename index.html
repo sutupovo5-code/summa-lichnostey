@@ -5725,7 +5725,7 @@ function gtaTitle(){const t=document.querySelectorAll('.summa-logo-text');if(t.l
  const h=[...document.querySelectorAll('header span')].find(e=>e.children.length===0&&/^\s*СУММА ЛИЧНОСТЕЙ\s*$/.test(e.textContent));
  if(h)h.innerHTML='СУММА <span class="gta-hs">ЛИЧНОСТЕЙ</span><span class="gta-hl">лудоманов</span>'}
 gtaTitle();
-function gtaBanner(kind,title,sub){if(!shOwn('d:gtaBanner')||sh.deco.gtaBanner===false)return;document.querySelectorAll('.gta-banner,.gta-wasted').forEach(e=>e.remove());
+function gtaBanner(kind,title,sub){if(!(shOwn('d:gtaBanner')||(typeof evGtaAccess==='function'&&evGtaAccess('d:gtaBanner')))||(sh.deco.gtaBanner===false&&!(typeof evGtaAccess==='function'&&evGtaAccess('d:gtaBanner'))))return;document.querySelectorAll('.gta-banner,.gta-wasted').forEach(e=>e.remove());
  if(kind==='lose'&&!sxStill()){const w=document.createElement('div');w.className='gta-wasted';document.body.appendChild(w);setTimeout(()=>w.remove(),2600)}
  const b=document.createElement('div');b.className='gta-banner '+kind;b.innerHTML=`<b>${title}</b>${sub?`<span>${sub}</span>`:''}`;document.body.appendChild(b);
  setTimeout(()=>b.classList.add('out'),2300);setTimeout(()=>b.remove(),2750)}
@@ -5964,7 +5964,8 @@ const GTA_TIPS=['Совет: фаворит в куриных бегах при�
  'Совет: собирайте карточки команды — у каждого участника 12 скинов.','Совет: высокий уровень розыска сам падает, если немного не играть.',
  'Совет: нажмите на аватарку автора поста — откроется его профиль.','Совет: «Всё или ничего» — шанс 50%, но потом крутки на паузе 7 часов.'];
 (function(){let seen=false;try{seen=sessionStorage.getItem('gta_intro')==='1';sessionStorage.setItem('gta_intro','1')}catch(e){}
- if(seen||sxStill()||!shOwn('d:gtaIntro')||sh.deco.gtaIntro===false)return;const o=document.createElement('div');o.id='gtaIntro';o.setAttribute('role','dialog');o.setAttribute('aria-label','Загрузка');
+ const tempIntro=Date.now()>=1794085200000&&Date.now()<1795294800000&&!(sh.evGta?.id==='ev1'&&(sh.evGta.removed||[]).includes('d:gtaIntro'));
+ if(seen||sxStill()||(!tempIntro&&(!shOwn('d:gtaIntro')||sh.deco.gtaIntro===false)))return;const o=document.createElement('div');o.id='gtaIntro';o.setAttribute('role','dialog');o.setAttribute('aria-label','Загрузка');
  o.innerHTML=`<div class="sun"></div>${gtaPalm('l')}${gtaPalm('r')}<div class="t"><b>СУММА</b><s>ЛИЧНОСТЕЙ</s><i>лудоманов</i></div><div class="city">ЛИПЕЦК-СИТИ • 2026</div>
  <div class="tip">${GTA_TIPS[Math.floor(Math.random()*GTA_TIPS.length)]}</div><div class="bar"><i></i></div><small>Нажмите, чтобы пропустить</small>`;
  document.body.appendChild(o);document.body.style.overflow='hidden';
@@ -5985,7 +5986,7 @@ const GTA_TIPS=['Совет: фаворит в куриных бегах при�
 const GTA_W_KEY='summa_wanted',GTA_W_DECAY=3*60*1000;
 function gtaWGet(){const w=sxGet(GTA_W_KEY,{s:0,t:0});const drop=Math.floor((Date.now()-(+w.t||0))/GTA_W_DECAY);return Math.max(0,Math.min(5,(+w.s||0)-drop))}
 function gtaWSet(s){sxPut(GTA_W_KEY,{s:Math.max(0,Math.min(5,s)),t:Date.now()})}
-function gtaWRender(blink){if(!shOwn('d:gtaWanted')||sh.deco.gtaWanted===false)return;let el=$('gtaWanted');if(!el){el=document.createElement('div');el.id='gtaWanted';el.setAttribute('aria-label','Уровень розыска');document.body.appendChild(el)}
+function gtaWRender(blink){if(!(shOwn('d:gtaWanted')||(typeof evGtaAccess==='function'&&evGtaAccess('d:gtaWanted')))||(sh.deco.gtaWanted===false&&!(typeof evGtaAccess==='function'&&evGtaAccess('d:gtaWanted'))))return;let el=$('gtaWanted');if(!el){el=document.createElement('div');el.id='gtaWanted';el.setAttribute('aria-label','Уровень розыска');document.body.appendChild(el)}
  const n=gtaWGet();el.innerHTML=Array.from({length:5},(_,i)=>`<i class="${i<n?'f':''}">★</i>`).join('');el.classList.toggle('on',n>0);
  if(blink&&n>0&&!sxStill()){el.classList.remove('blink');void el.offsetWidth;el.classList.add('blink')}}
 gtaWRender(false);setInterval(()=>gtaWRender(false),30000);
@@ -5996,7 +5997,7 @@ gtaWRender(false);setInterval(()=>gtaWRender(false),30000);
 /* --- 5. всплывающие деньги у баланса --- */
 let gtaLastSp=Math.floor(+state.synergyPoints||0);
 (function(){const _u=updateAllCountersUI;updateAllCountersUI=function(){_u.apply(this,arguments);const v=Math.floor(+state.synergyPoints||0),d=v-gtaLastSp;gtaLastSp=v;
- if(!d||sxStill()||!shOwn('d:gtaCash')||sh.deco.gtaCash===false)return;const pill=$('headerSynergyStat');if(!pill)return;const r=(pill.closest('.sh-pill')||pill).getBoundingClientRect();if(!r.width)return;
+ if(!d||sxStill()||!(shOwn('d:gtaCash')||(typeof evGtaAccess==='function'&&evGtaAccess('d:gtaCash')))||(sh.deco.gtaCash===false&&!(typeof evGtaAccess==='function'&&evGtaAccess('d:gtaCash'))))return;const pill=$('headerSynergyStat');if(!pill)return;const r=(pill.closest('.sh-pill')||pill).getBoundingClientRect();if(!r.width)return;
  const c=document.createElement('div');c.className='gta-cash '+(d>0?'up':'dn');c.textContent=(d>0?'+':'−')+shFmt(Math.abs(d))+' Σ';
  c.style.left=Math.max(6,Math.min(innerWidth-150,r.left))+'px';c.style.top=(r.bottom+6)+'px';document.body.appendChild(c);setTimeout(()=>c.remove(),1700)}})();
 
@@ -6712,6 +6713,75 @@ dkoMove=async function(mv){
  }catch(e){if(epoch===dkoEpoch){dko.s=dkoConfirmed||before;toast('⚠️ '+(e.code==='permission-denied'?'База не приняла ход':e.message||'Ход не прошёл'))}}
  finally{if(epoch===dkoEpoch){dko.sending=false;CL.busy=dko.s?.st==='play';dkoRender()}}
 };
+</script>
+
+<style id="pack46">
+/* Animation must never be required for the team photos to become visible. */
+#heroGrid .hero-tile{opacity:1}
+html.sx-lite #heroGrid .hero-tile,html.sx-still #heroGrid .hero-tile{animation:none!important;opacity:1;transform:rotate(var(--r,0deg))}
+@media(prefers-reduced-motion:reduce){#heroGrid .hero-tile{animation:none!important;opacity:1}}
+@supports(-webkit-touch-callout:none){
+ #heroGrid .hero-tile{animation:none!important;opacity:1;transform:rotate(var(--r,0deg));backface-visibility:visible;will-change:auto}
+}
+#heroGrid .hero-tile img{opacity:1}
+.ev-cos-note{padding:10px 12px;font-size:12px;line-height:1.5;color:#ffe2c4}
+.ev-cos-actions{display:grid;gap:6px}
+</style>
+<script id="pack46js">
+/* Persist with the existing account shop, so the bonus is not given on each entry. */
+SX_CODES['2248']=()=>{
+ if((sh.redeemedCodes||[]).includes('2248'))return '✅ Код 2248 уже использован';
+ sh.redeemedCodes=[...(sh.redeemedCodes||[]),'2248'];
+ state.synergyPoints=(+state.synergyPoints||0)+100000;
+ shSave();saveState();updateAllCountersUI();shRender();
+ return '🎁 Код принят! +100 000 Σ на баланс';
+};
+const EV_GTA_IDS=['t:lipetsk',...SH_DECO.filter(d=>d.id.startsWith('gta')).map(d=>'d:'+d.id)];
+function evGtaRemoved(){return sh.evGta?.id===EV_ID?sh.evGta.removed||[]:[]}
+function evGtaAccess(id){return evLive()&&EV_GTA_IDS.includes(id)&&!evGtaRemoved().includes(id)}
+function evGtaRemove(id){
+ if(!EV_GTA_IDS.includes(id))return;
+ sh.evGta={id:EV_ID,removed:[...new Set([...evGtaRemoved(),id])]};
+ if(id==='t:lipetsk'&&sh.theme==='lipetsk')sh.theme='neon';
+ if(id.startsWith('d:'))sh.deco[id.slice(2)]=false;
+ shSave();shApply();shRender();toast('Оформление снято');
+}
+/* Temporary entitlements are used only while computing appearance. Never save them as purchases. */
+const evGtaApplyBase=shApply;
+shApply=function(){
+ const owned=sh.owned,theme=sh.theme,deco=sh.deco;
+ try{
+  if(evLive()){
+   sh.owned=[...new Set([...owned,...EV_GTA_IDS.filter(evGtaAccess)])];
+   if(evGtaAccess('t:lipetsk'))sh.theme='lipetsk';
+   sh.deco={...deco};for(const id of EV_GTA_IDS.filter(evGtaAccess))if(id.startsWith('d:'))sh.deco[id.slice(2)]=true;
+  }
+  evGtaApplyBase();
+ }finally{sh.owned=owned;sh.theme=theme;sh.deco=deco}
+};
+const evGtaThemeBase=spThemeSec,evGtaDecoBase=spDecoSec;
+function evGtaActions(id,price){return `<span class="ev-cos-actions"><button class="pe-btn sh-sm" onclick="evGtaRemove('${id}')">Снять</button>${shOwn(id)?'':spBtn(id,price,'Купить навсегда · '+shFmt(price)+' Σ')}</span>`}
+spThemeSec=function(){
+ if(!evLive())return evGtaThemeBase();
+ return SH_THEMES.map(t=>{
+  const id='t:'+t.id,own=!t.price||shOwn(id),temp=evGtaAccess(id),on=temp||(!evGtaAccess('t:lipetsk')&&(sh.theme||'neon')===t.id&&own);
+  return spRow(`<span class="sp-pv" style="background:linear-gradient(135deg,${t.sw[0]},${t.sw[1]})">Aa</span>`,t.name,t.desc+(temp?' · Бесплатно до конца ивента':''),temp?evGtaActions(id,t.price):on?'<button class="pe-btn sh-sm sh-done" disabled>✓ Активна</button>':own?`<button class="pe-btn sh-sm" onclick="shTheme('${t.id}')">Применить</button>`:spBtn(id,t.price),on);
+ }).join('');
+};
+spDecoSec=function(){
+ if(!evLive())return evGtaDecoBase();
+ return SH_DECO.map(d=>{const id='d:'+d.id,own=shOwn(id),temp=evGtaAccess(id),on=temp||(own&&sh.deco[d.id]!==false);
+ return spRow(`<span class="sp-pv">${d.ic}</span>`,d.name,d.desc+(temp?' · На время ивента':''),temp?evGtaActions(id,d.price):own?`<span class="sx-sw"><input type="checkbox" ${on?'checked':''} onchange="shDeco('${d.id}',this.checked)" aria-label="${esc(d.name)}"><i></i></span>`:spBtn(id,d.price),on);
+ }).join('');
+};
+const evGtaThemeSelect=shTheme;
+shTheme=function(id){if(evLive()&&id!=='lipetsk'&&evGtaAccess('t:lipetsk')){sh.evGta={id:EV_ID,removed:[...new Set([...evGtaRemoved(),'t:lipetsk'])]}}evGtaThemeSelect(id)};
+const evGtaHtml=shHTML;
+shHTML=function(){const html=evGtaHtml();return evLive()?html+'<p class="ev-cos-note">🌴 GTA-оформление временно включено до 22 ноября, 00:00 мск. Его можно снять. Покупка сохраняет оформление после ивента.</p>':html};
+let evGtaWasLive=evLive();shApply();
+setInterval(()=>{const live=evLive();if(live!==evGtaWasLive){evGtaWasLive=live;shApply();shRender()}},1000);
+addEventListener('pageshow',()=>shApply());
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)shApply()});
 </script>
 
 </body>
