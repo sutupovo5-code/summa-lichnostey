@@ -6372,6 +6372,232 @@ function dkEnd(){if(dk.deck.length)return false;const pE=!dk.P.length,bE=!dk.B.l
  else{dk.msg=`Вы в дураках 🤡 · −${shFmt(dk.stake)} Σ`;dk.cls='lose'}
  if(pay)clMoney(pay);clStat('dk',dk.stake,pay);dk.table=[];dkRender();const s=document.querySelector('#clBody .cl-stat');if(s)s.outerHTML=clStatHTML('dk');return true}
 </script>
+<style id="pack43">
+/* ===== pack43: рейтинг ивента по каждой игре, титулы победителям, онлайн-дурак ===== */
+.ev-ttl{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font:800 11px/1.2 Inter,sans-serif;color:#1d0d1e;background:linear-gradient(90deg,var(--ec,#f3c969),#fff2e4 60%,var(--ec,#f3c969));background-size:200% 100%;box-shadow:0 0 0 1.5px rgba(0,0,0,.25),0 0 14px -2px var(--ec,#f3c969);white-space:nowrap;animation:evShine 4s linear infinite}
+@keyframes evShine{to{background-position:-200% 0}}
+html.sx-lite .ev-ttl,html.sx-still .ev-ttl{animation:none}
+.ev-ttls{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.lb-row .ev-ttl{font-size:9.5px;padding:2px 7px;margin-top:3px}
+
+/* хаб: полоса ивента */
+.ev-strip{display:grid;gap:8px;padding:11px 12px;border-radius:16px;background:rgba(10,4,20,.55);border:1px dashed rgba(243,201,105,.55)}
+.ev-strip .h{display:flex;justify-content:space-between;align-items:center;gap:8px;font:800 12px/1.3 Inter,sans-serif;color:#ffe2c4}
+.ev-strip .h b{font:700 14px/1 'Oswald',sans-serif;letter-spacing:.04em;color:#f3c969;white-space:nowrap}
+.ev-pz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.ev-pz div{display:grid;gap:2px;padding:7px 8px;border-radius:12px;background:rgba(255,255,255,.05);min-width:0}
+.ev-pz div b{font:800 11.5px/1.25 Inter,sans-serif;color:var(--ec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-pz div small{font-size:10px;line-height:1.3;color:rgba(255,226,236,.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* таблица рейтинга в игре */
+.ev-box{display:grid;gap:8px}
+.ev-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.ev-head b{font:700 16px/1.1 'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.02em}
+.ev-head small{display:block;font-size:11px;color:rgba(255,226,236,.72);margin-top:3px}
+.ev-time{flex-shrink:0;padding:5px 9px;border-radius:99px;background:rgba(243,201,105,.14);color:#f3c969;font:800 11px/1 Inter,sans-serif;white-space:nowrap}
+.ev-list{display:grid;gap:4px}
+.ev-r{display:grid;grid-template-columns:26px minmax(0,1fr) auto;align-items:center;gap:8px;padding:7px 9px;border-radius:12px;background:rgba(10,4,20,.45);font-size:12.5px}
+.ev-r i{font-style:normal;font:800 12px/1 Unbounded,sans-serif;color:rgba(255,255,255,.6);text-align:center}
+.ev-r:nth-child(1) i{color:#f3c969}.ev-r:nth-child(2) i{color:#dbe7ff}.ev-r:nth-child(3) i{color:#e8a07f}
+.ev-r span{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-r em{font-style:normal;font:800 12px/1 Unbounded,sans-serif;color:#f3c969;font-variant-numeric:tabular-nums}
+.ev-r.me{background:rgba(236,111,155,.2);box-shadow:inset 0 0 0 1.5px rgba(236,111,155,.6)}
+.ev-me{font-size:12px;color:#ffe2c4;text-align:center}
+.ev-empty{font-size:12px;color:rgba(255,226,236,.6);text-align:center;padding:8px}
+
+/* дурак: переключатель бот / онлайн */
+.dk-mode{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:16px;background:rgba(10,4,20,.55)}
+.dk-mode button{min-height:42px;border-radius:12px;border:0;background:transparent;color:rgba(255,255,255,.75);font:800 13px/1 Inter,sans-serif}
+.dk-mode button.on{background:linear-gradient(90deg,#ec6f9b,#f2a061);color:#1d0d1e}
+.dko-lobby{display:grid;gap:10px}
+.dko-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(10,4,20,.5);border:1px solid rgba(255,255,255,.1)}
+.dko-row b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dko-row small{font-size:11px;color:rgba(255,226,236,.72)}
+.dko-row button{min-height:40px;padding:0 14px;border-radius:12px;border:0;background:linear-gradient(90deg,#4fc1b5,#7ee08a);color:#06231f;font:900 12px/1 Unbounded,sans-serif}
+.dko-code{display:block;text-align:center;font:900 34px/1 ui-monospace,Consolas,monospace;letter-spacing:.18em;color:#fff2e4;padding:10px;border-radius:14px;background:rgba(255,255,255,.07)}
+.dko-join{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.dko-join input{min-width:0;padding:11px 12px;border-radius:14px;background:rgba(4,11,26,.8);border:1.5px solid rgba(255,255,255,.2);color:#fff;font:800 18px ui-monospace,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;outline:none}
+.dko-join input:focus{border-color:#ec6f9b}
+.dko-join button{padding:0 16px;border-radius:14px;border:0;background:linear-gradient(90deg,#ec6f9b,#f2a061);color:#1d0d1e;font:900 13px/1 Unbounded,sans-serif}
+.dko-turn{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font:800 11px/1 Inter,sans-serif;background:rgba(126,224,138,.18);color:#a9f0b3}
+.dko-turn.wait{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}
+.dko-mini{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.dko-mini button{background:none;border:0;color:#ffb0b0;font:700 12px Inter,sans-serif;text-decoration:underline;text-underline-offset:3px;padding:6px}
+</style>
+<script id="pack43js">
+/* ===== pack43: рейтинг ивента «Ночной клуб» (14 дней), титулы победителям, онлайн-дурак =====
+   Очки ивента: evscore/{uid} = {name, ck:{s,n}, bj:{s,n}, rk:{s,n}, dk:{s,n}, upd}. После EV_END правила базы запрещают запись.
+   Бега и блэкджек — чистый выигрыш Σ, ракета — лучший забранный икс (×100), дурак — очки (бот 1, онлайн 3). */
+const EV_ID='ev1',EV_START=1794085200000,EV_END=1795294800000; /* 08.11.2026 00:00 — 22.11.2026 00:00 по Москве */
+const EV_G={ck:{ic:'🐔',t:'Король курятника',c:'#f3c969',what:'чистый выигрыш в бегах'},bj:{ic:'🃏',t:'Акула блэкджека',c:'#4fc1b5',what:'чистый выигрыш в блэкджеке'},
+ rk:{ic:'🚀',t:'Покоритель космоса',c:'#82b9dc',what:'самый большой забранный икс'},dk:{ic:'🎴',t:'Гроза дураков',c:'#ec6f9b',what:'очки в дураке (бот 1, онлайн 3)'}};
+const evLive=()=>{const n=Date.now();return n>=EV_START&&n<EV_END};
+const evOver=()=>Date.now()>=EV_END;
+function evLeft(){let ms=Math.max(0,EV_END-Date.now());const d=Math.floor(ms/864e5);ms-=d*864e5;const h=Math.floor(ms/36e5);ms-=h*36e5;const m=Math.floor(ms/6e4);return d?`${d} д ${h} ч`:h?`${h} ч ${m} мин`:`${m} мин`}
+function evFmt(g,s){s=+s||0;if(g==='rk')return 'x'+(s/100).toFixed(2).replace('.',',');if(g==='dk')return shFmt(s)+' '+sxPlural(s,'очко','очка','очков');return(s>=0?'+':'−')+shFmt(Math.abs(s))+' Σ'}
+function evTtl(g){const e=EV_G[g];return`<span class="ev-ttl" style="--ec:${e.c}">${e.ic} ${e.t}</span>`}
+if(!sh[EV_ID]||typeof sh[EV_ID]!=='object')sh[EV_ID]={};
+function evMine(g){return sh[EV_ID][g]||{s:g==='rk'?0:0,n:0}}
+/* --- начисление очков --- */
+let evPushT=0;
+function evAdd(g,val,mode){if(!evLive())return;const o=sh[EV_ID][g]||(sh[EV_ID][g]={s:0,n:0});o.n++;
+ if(mode==='max'){if(val>o.s)o.s=Math.round(val)}else o.s=Math.round(o.s+val);shSave();clearTimeout(evPushT);evPushT=setTimeout(evPush,1500)}
+async function evPush(){if(!evLive()||!window.SXF||!SXC.uid)return;const u=state.registeredUser;if(!u)return;const {F,db}=SXF,d={name:String(u.name||'Игрок').slice(0,40),upd:Date.now()};
+ for(const g in EV_G){const o=sh[EV_ID][g];if(o&&o.n)d[g]={s:Math.round(o.s),n:o.n}}
+ try{await F.setDoc(F.doc(db,'evscore',SXC.uid),d)}catch(e){console.warn('[ev] push',e.code||e.message);if(e.code==='permission-denied'&&!evPush.warned){evPush.warned=1;toast('⚠️ Рейтинг ивента не сохранился — обновите правила Firebase (блок evscore)')}}}
+(function(){const _c=clStat;clStat=function(g,bet,pay){_c(g,bet,pay);if(g==='bj')evAdd('bj',pay-bet);else if(g==='rk'){if(pay>0)evAdd('rk',rk.m*100,'max');else evAdd('rk',0,'max')}else if(g==='dk'&&pay>bet)evAdd('dk',1);else if(g==='dk')evAdd('dk',0)}})();
+(function(){const _f=ckFinish;ckFinish=function(){const pay=ck.pay||0,bet=ck.bet||0;_f.apply(this,arguments);evAdd('ck',pay-bet)}})();
+/* после входа в аккаунт/при старте — дослать свои очки */
+addEventListener('sxfb',()=>setTimeout(evPush,4000),{once:true});if(window.SXF)setTimeout(evPush,4000);
+
+/* --- чтение рейтинга --- */
+const evCache={};
+async function evTop(g,n){const k=g+n,c=evCache[k];if(c&&Date.now()-c.t<45000)return c.v;if(!window.SXF)return null;const {F,db}=SXF;
+ const q=F.query(F.collection(db,'evscore'),F.orderBy(g+'.s','desc'),F.limit(n));const snap=await F.getDocs(q);const v=[];snap.forEach(d=>{const x=d.data();if(x&&x[g])v.push({uid:d.id,name:String(x.name||'Игрок'),s:+x[g].s||0})});evCache[k]={t:Date.now(),v};return v}
+async function evMyPlace(g){const my=evMine(g);if(!my.n||!window.SXF)return null;const {F,db}=SXF;
+ try{const q=F.query(F.collection(db,'evscore'),F.where(g+'.s','>',my.s));const c=await F.getCountFromServer(q);return c.data().count+1}catch(e){return null}}
+/* --- победители (после финиша рейтинг заморожен правилами, у всех одинаковый) --- */
+let evWin=sxGet('summa_ev1_win',null);
+async function evWinners(){if(!evOver())return null;if(evWin&&evWin.ok)return evWin;const w={ok:1};
+ for(const g in EV_G){try{const t=await evTop(g,1);const x=t&&t[0];if(x&&(g==='rk'?x.s>100:x.s>0))w[g]={uid:x.uid,name:x.name,s:x.s}}catch(e){return null}}
+ evWin=w;sxPut('summa_ev1_win',w);return w}
+function evTitlesOf(uid){if(!evWin||!uid)return'';return Object.keys(EV_G).filter(g=>evWin[g]&&evWin[g].uid===uid).map(evTtl).join('')}
+if(evOver())evWinners().then(()=>{try{sxLBRender()}catch(e){}evHub()});
+
+/* --- таблица в каждой игре --- */
+function evBoxHTML(g){return`<div class="cl-box ev-box" id="evBox" data-g="${g}"><div class="ev-head"><div><b>🏆 Рейтинг ивента</b><small>${EV_G[g].what}</small></div><span class="ev-time">${evOver()?'финиш':'⏳ '+evLeft()}</span></div>
+ <div>${evOver()?'Титул победителю:':'Первое место получит титул:'} ${evTtl(g)}</div><div class="ev-list" id="evList"><div class="ev-empty">Загружаем…</div></div><div class="ev-me" id="evMe"></div></div>`}
+async function evFill(g){const L=$('evList'),M=$('evMe');if(!L)return;
+ let top;try{top=await evTop(g,10)}catch(e){L.innerHTML='<div class="ev-empty">Нет связи с рейтингом</div>';return}
+ if(!top){L.innerHTML='<div class="ev-empty">Нет связи с рейтингом</div>';return}if(!$('evList')||$('evBox').dataset.g!==g)return;
+ L.innerHTML=top.length?top.map((x,i)=>`<div class="ev-r ${x.uid===SXC.uid?'me':''}"><i>${i+1}</i><span>${esc(x.name)}</span><em>${evFmt(g,x.s)}</em></div>`).join(''):'<div class="ev-empty">Пока никого — стань первым!</div>';
+ const my=evMine(g);if(!state.registeredUser){M.textContent='Войдите в профиль, чтобы попасть в рейтинг';return}
+ if(!my.n){M.textContent=evLive()?'Сыграйте, чтобы попасть в рейтинг':'';return}
+ if(top.some(x=>x.uid===SXC.uid)){M.textContent=`Ваш результат: ${evFmt(g,my.s)}`;return}
+ const p=await evMyPlace(g);if($('evMe'))$('evMe').textContent=`Ваш результат: ${evFmt(g,my.s)}${p?` · ${p}-е место`:''}`}
+function evMount(g){const w=document.querySelector('#clBody .cl-wrap')||$('clBody');if(!w||$('evBox'))return;w.insertAdjacentHTML('beforeend',evBoxHTML(g));evFill(g)}
+(function(){const _o=clOpen;clOpen=function(g){_o(g);if(g==='ck'){const b=$('clBody');b.insertAdjacentHTML('beforeend','<div class="cl-wrap" style="margin-top:12px"></div>')}evMount(g)}})();
+/* после партии обновить таблицу (с небольшой задержкой, чтобы очки успели уйти в базу) */
+(function(){const _c=clStat;clStat=function(g,b,p){_c(g,b,p);const key=g==='dko'?'dk':g;setTimeout(()=>{const e=$('evBox');if(e&&e.dataset.g===key){delete evCache[key+'10'];evFill(key)}},2600)}})();
+(function(){const _f=ckFinish;ckFinish=function(){_f.apply(this,arguments);setTimeout(()=>{const e=$('evBox');if(e&&e.dataset.g==='ck'){delete evCache.ck10;evFill('ck')}},2600)}})();
+
+/* --- полоса ивента в хабе --- */
+async function evHub(){const hub=document.querySelector('#sec-club .cl-hub');if(!hub)return;let el=$('evStrip');if(!el){el=document.createElement('div');el.id='evStrip';el.className='ev-strip';hub.appendChild(el)}
+ const over=evOver();el.innerHTML=`<div class="h"><span>🏆 ${over?'Ивент завершён — победители:':'Ивент 14 дней: первые места получат титулы'}</span><b>${over?'ФИНИШ':'⏳ '+evLeft()}</b></div>
+ <div class="ev-pz">${Object.keys(EV_G).map(g=>`<div style="--ec:${EV_G[g].c}"><b>${EV_G[g].ic} ${EV_G[g].t}</b><small id="evLead_${g}">${over?'…':'лидер: …'}</small></div>`).join('')}</div>`;
+ for(const g in EV_G){try{const t=over?await evWinners():null;const x=over?(t&&t[g]):((await evTop(g,1))||[])[0];const e=$('evLead_'+g);if(e)e.textContent=x?`${over?'🏆 ':'лидер: '}${x.name} · ${evFmt(g,x.s)}`:(over?'никто не играл':'лидер: пока никого')}catch(e){}}}
+setTimeout(evHub,1500);setInterval(()=>{if(!document.hidden)evHub()},60000);
+
+/* --- титулы в профиле и в рейтинге джекпотов --- */
+(function(){const _p=spOpenProfile;spOpenProfile=async function(w){await _p(w);if(!w||w.k!=='u')return;await evWinners();const t=evTitlesOf(w.id);if(!t)return;const h=document.querySelector('#spPfOv .sp-pfh>div:last-child');if(h&&!h.querySelector('.ev-ttls'))h.insertAdjacentHTML('beforeend',`<div class="ev-ttls">${t}</div>`)}})();
+(function(){const _r=sxLBRow;sxLBRow=function(p,i){const h=_r(p,i),t=evTitlesOf(p.id);if(!t)return h;const k=h.lastIndexOf('</small>');return k<0?h:h.slice(0,k)+`<br>${t}`+h.slice(k)}})();
+(function(){const _os=openSettings;openSettings=function(){_os();const t=evTitlesOf(SXC.uid);if(!t)return;const box=document.querySelector('#sxOv .pe-box .sx-head');if(box&&!$('evMyT'))box.insertAdjacentHTML('afterend',`<div class="ev-ttls" id="evMyT">${t}</div>`)}})();
+
+/* =====================================================================
+   ОНЛАЙН-ДУРАК: стол dkr/{КОД}. Оба игрока пишут в один документ транзакциями.
+   Ставку вносят оба при начале игры; победитель забирает обе, ничья — каждому своя.
+   ===================================================================== */
+const DKO_ABC='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',DKO_TO=120000;
+let dko={code:null,s:null,unsub:null,lobby:[],amt:500,sending:false,lobbyT:0,tick:0};
+let dkMode=sxGet('summa_dk_mode','bot');
+const dkoRef=c=>SXF.F.doc(SXF.db,'dkr',c);
+const dkoOpp=r=>r==='h'?'g':'h';
+const dkoRole=s=>s&&s.h&&s.h.uid===SXC.uid?'h':s&&s.g&&s.g.uid===SXC.uid?'g':null;
+const dkoOpen=s=>s.tb.find(p=>!p.d);
+const dkoBeats=(a,d,tr)=>(d.s===a.s&&d.r>a.r)||(d.s===tr&&a.s!==tr);
+const dkoRanks=s=>new Set(s.tb.flatMap(p=>p.d?[p.a.r,p.d.r]:[p.a.r]));
+function dkoActor(s){if(!s||s.st!=='play')return null;return dkoOpen(s)&&!s.took?dkoOpp(s.att):s.att}
+function dkoCanAdd(s){const defH=s[dkoOpp(s.att)+'h'].length,open=s.tb.filter(p=>!p.d).length;return s.tb.length<Math.min(6,s.lim)&&(s.took||open<defH)}
+function dkoPlayable(s,role,c){if(dkoActor(s)!==role)return false;if(role===s.att){if(!s.tb.length)return true;if(dkoOpen(s)&&!s.took)return false;return dkoCanAdd(s)&&dkoRanks(s).has(c.r)}
+ const o=dkoOpen(s);return!!o&&dkoBeats(o.a,c,s.tr)}
+function dkoRefill(s,first){for(const r of [first,dkoOpp(first)]){const h=s[r+'h'];while(h.length<6&&s.deck.length)h.push(s.deck.pop())}}
+function dkoRound(s){s.took=false;s.lim=s[dkoOpp(s.att)+'h'].length}
+function dkoEnd(s){if(s.st!=='play'||s.deck.length||s.tb.length)return;const he=!s.hh.length,ge=!s.gh.length;if(!he&&!ge)return;s.st='over';s.win=he&&ge?'draw':he?'h':'g'}
+const dkoCs=c=>clRank(c.r)+c.s;
+function dkoApply(s,me,mv){if(s.st!=='play')return'Игра уже закончилась';const nm=s[me].name,H=s[me+'h'];
+ if(mv.t==='card'){const i=H.findIndex(c=>c.r===mv.c.r&&c.s===mv.c.s);if(i<0)return'Этой карты у вас нет';const c=H[i];if(!dkoPlayable(s,me,c))return'Так ходить нельзя';H.splice(i,1);
+  if(me===s.att){s.tb.push({a:c,d:null});s.log=`${nm}: ${s.took?'подкидывает':'ходит'} ${dkoCs(c)}`}else{dkoOpen(s).d=c;s.log=`${nm} бьёт ${dkoCs(c)}`}}
+ else if(mv.t==='take'){if(me===s.att||dkoActor(s)!==me)return'Сейчас нельзя';s.took=true;s.log=`${nm} берёт`}
+ else if(mv.t==='bito'){if(me!==s.att||dkoActor(s)!==me||!s.tb.length||dkoOpen(s)||s.took)return'Сейчас нельзя';s.tb=[];dkoRefill(s,s.att);s.att=dkoOpp(s.att);dkoRound(s);s.log='Бито'}
+ else if(mv.t==='give'){if(me!==s.att||!s.took)return'Сейчас нельзя';const def=dkoOpp(s.att);s[def+'h'].push(...s.tb.flatMap(p=>p.d?[p.a,p.d]:[p.a]));s.tb=[];dkoRefill(s,s.att);dkoRound(s);s.log=`${s[def].name} забрал карты`}
+ else if(mv.t==='resign'){s.st='over';s.win=dkoOpp(me);s.log=`${nm} сдался`}
+ else if(mv.t==='claim'){if(dkoActor(s)!==dkoOpp(me)||Date.now()-(+s.at||0)<DKO_TO)return'Соперник ещё может походить';s.st='over';s.win=me;s.log='Соперник не ходил 2 минуты'}
+ else return'Неизвестный ход';
+ s.mv=(+s.mv||0)+1;s.at=Date.now();dkoEnd(s);return null}
+/* деньги и статистика — каждый игрок сам за себя, один раз на стол */
+function dkoMoney(s){const role=dkoRole(s);if(!role||!s.code)return;const paid=sxGet('summa_dko_paid',{}),p=paid[s.code]||{};
+ if((s.st==='play'||s.st==='over')&&s.g&&!p.in){p.in=1;clMoney(-s.stake)}
+ if(s.st==='over'&&p.in&&!p.out){p.out=1;const pay=s.win==='draw'?s.stake:s.win===role?s.stake*2:0;if(pay)clMoney(pay);clStat('dko',s.stake,pay);if(s.win===role)evAdd('dk',3);else evAdd('dk',0);
+  {const sb=document.querySelector('#clBody .cl-stat');if(sb&&dkMode==='online')sb.outerHTML=clStatHTML('dko')}if(s.win===role){launchConfetti(90);gtaBanner('win','Миссия выполнена',`Соперник в дураках · +${shFmt(s.stake)} Σ`)}else if(s.win!=='draw')gtaBanner('lose','Потрачено',`Вы в дураках · −${shFmt(s.stake)} Σ`)}
+ paid[s.code]=p;const keys=Object.keys(paid);if(keys.length>40)delete paid[keys[0]];sxPut('summa_dko_paid',paid)}
+async function dkoMove(mv){if(dko.sending||!dko.code)return;dko.sending=true;const code=dko.code;
+ try{await SXF.F.runTransaction(SXF.db,async tx=>{const r=dkoRef(code),snap=await tx.get(r);if(!snap.exists())throw new Error('Стол не найден');const s=snap.data(),role=dkoRole(s);
+  if(!role)throw new Error('Вы не за этим столом');const err=dkoApply(s,role,mv);if(err)throw new Error(err);tx.set(r,s)})}
+ catch(e){toast('⚠️ '+(e.code==='permission-denied'?'База не приняла ход — обновите правила Firebase (блок dkr)':e.message||'Ход не прошёл'))}finally{dko.sending=false}}
+function dkoWatch(code){dkoStop();dko.code=code;sxPut('summa_dko_cur',code);dko.unsub=SXF.F.onSnapshot(dkoRef(code),snap=>{if(!snap.exists()){dko.s=null;dkoRender();return}const s=snap.data();s.code=code;dko.s=s;dkoMoney(s);CL.busy=s.st==='play'&&!!dkoRole(s);dkoRender()},e=>{console.warn('[dko]',e.code);toast('⚠️ Нет связи со столом')});
+ clearInterval(dko.tick);dko.tick=setInterval(()=>{if(dko.s&&dko.s.st==='play')dkoRender()},5000)}
+function dkoStop(){if(dko.unsub){try{dko.unsub()}catch(e){}}dko.unsub=null;clearInterval(dko.tick);dko.code=null;dko.s=null}
+function dkoLeave(){dkoStop();sxPut('summa_dko_cur',null);CL.busy=false;dkoRender();dkoLobby()}
+async function dkoCreate(){const v=clAmt(dko.amt);if(v<=0)return toast('Нет Σ для ставки');if(!state.registeredUser)return toast('📱 Сначала войдите в профиль');if(!window.SXF||!SXC.uid)return toast('⚠️ Нет связи с базой');
+ const code=Array.from(crypto.getRandomValues(new Uint8Array(5)),b=>DKO_ABC[b&31]).join('');
+ const s={code,st:'wait',stake:v,h:{uid:SXC.uid,name:String(state.registeredUser.name).slice(0,40)},g:null,deck:[],hh:[],gh:[],tc:null,tr:'',tb:[],att:'h',took:false,lim:6,win:'',mv:0,at:Date.now(),log:'Ждём соперника'};
+ try{await SXF.F.setDoc(dkoRef(code),s);dkoWatch(code)}catch(e){toast(e.code==='permission-denied'?'⚠️ База не приняла стол — обновите правила Firebase (блок dkr)':'⚠️ Не удалось создать стол')}}
+async function dkoJoin(code){code=String(code||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length!==5)return toast('Код стола — 5 символов');
+ if(!state.registeredUser)return toast('📱 Сначала войдите в профиль');if(!window.SXF||!SXC.uid)return toast('⚠️ Нет связи с базой');
+ try{await SXF.F.runTransaction(SXF.db,async tx=>{const r=dkoRef(code),snap=await tx.get(r);if(!snap.exists())throw new Error('Стол не найден');const s=snap.data();
+  if(s.h.uid===SXC.uid)return;if(s.g&&s.g.uid===SXC.uid)return;if(s.st!=='wait'||s.g)throw new Error('За этим столом уже играют');if(clBal()<s.stake)throw new Error(`Нужно ${shFmt(s.stake)} Σ`);
+  const deck=clDeck(6),tc=deck[0],hh=[],gh=[];for(let i=0;i<6;i++){hh.push(deck.pop());gh.push(deck.pop())}
+  const lowT=h=>Math.min(...h.filter(c=>c.s===tc.s).map(c=>c.r),99);const att=lowT(gh)<lowT(hh)?'g':'h';
+  const me={uid:SXC.uid,name:String(state.registeredUser.name).slice(0,40)};
+  tx.set(r,{...s,st:'play',g:me,deck,hh,gh,tc,tr:tc.s,tb:[],att,took:false,lim:6,mv:1,at:Date.now(),log:`${att==='h'?s.h.name:me.name} ходит первым (младший козырь)`})});dkoWatch(code)}
+ catch(e){toast('⚠️ '+(e.code==='permission-denied'?'База не приняла — обновите правила Firebase (блок dkr)':e.message||'Не удалось сесть за стол'))}}
+async function dkoCancel(){if(!dko.code||!dko.s||dko.s.st!=='wait')return dkoLeave();try{await SXF.F.setDoc(dkoRef(dko.code),{st:'cancel',at:Date.now()},{merge:true})}catch(e){}dkoLeave()}
+async function dkoLobby(){if(dkMode!=='online'||dko.code||!window.SXF)return;const {F,db}=SXF;
+ try{const snap=await F.getDocs(F.query(F.collection(db,'dkr'),F.where('st','==','wait'),F.limit(25)));const v=[];snap.forEach(d=>{const x=d.data();if(x&&x.h&&Date.now()-(+x.at||0)<15*60000)v.push({...x,code:d.id})});dko.lobby=v.sort((a,b)=>b.at-a.at)}catch(e){dko.lobby=null}
+ dkoRender()}
+function dkoSetAmt(a){dko.amt=a;dkoRender()}
+function dkoRender(){const box=$('dkoBox');if(!box||dkMode!=='online')return;const s=dko.s,role=dkoRole(s);
+ if(!dko.code||!s||s.st==='cancel'){const v=clAmt(dko.amt);
+  box.innerHTML=`<div class="dko-lobby">${!state.registeredUser?'<div class="rc-warn">📱 Для игры онлайн войдите в профиль (Профиль → Вход). Имя увидит соперник.</div>':''}
+  <div class="cl-box" style="display:grid;gap:10px"><div class="cl-lbl">НОВЫЙ СТОЛ · СТАВКА (победитель забирает обе)</div>${clChipsHTML(dko.amt,'dkoSetAmt')}<button class="cl-btn" ${v<=0?'disabled':''} onclick="dkoCreate()">➕ Создать стол · ${shFmt(v)} Σ</button></div>
+  <div class="cl-box" style="display:grid;gap:8px"><div class="cl-lbl">ВОЙТИ ПО КОДУ ДРУГА</div><div class="dko-join"><input id="dkoCode" maxlength="5" placeholder="ABCDE" autocapitalize="characters" autocomplete="off" spellcheck="false"><button onclick="dkoJoin($('dkoCode').value)">Сесть</button></div></div>
+  <div class="cl-box" style="display:grid;gap:8px"><div class="dko-mini"><span class="cl-lbl" style="margin:0">ОТКРЫТЫЕ СТОЛЫ</span><button style="color:#ffe2c4" onclick="dkoLobby()">↻ Обновить</button></div>
+  ${dko.lobby===null?'<div class="ev-empty">Нет связи с базой</div>':!dko.lobby.length?'<div class="ev-empty">Свободных столов нет — создайте свой и позовите друга</div>':dko.lobby.filter(x=>x.h.uid!==SXC.uid).map(x=>`<div class="dko-row"><div><b>${esc(x.h.name)}</b><small>ставка ${shFmt(x.stake)} Σ · стол ${x.code}</small></div><button ${clBal()<x.stake?'disabled':''} onclick="dkoJoin('${x.code}')">Сесть</button></div>`).join('')||'<div class="ev-empty">Свободных столов нет — создайте свой</div>'}</div></div>`;return}
+ if(s.st==='wait'){box.innerHTML=`<div class="cl-box" style="display:grid;gap:10px;text-align:center"><div class="cl-lbl">ВАШ СТОЛ · СТАВКА ${shFmt(s.stake)} Σ</div><span class="dko-code">${s.code}</span>
+  <div class="cl-rules">Скажите этот код другу — он вводит его во вкладке «Онлайн». Или подождите: стол виден в списке открытых.</div>
+  <button class="cl-btn alt" onclick="(navigator.clipboard?navigator.clipboard.writeText('${s.code}').then(()=>toast('📋 Код скопирован')):0)">📋 Скопировать код</button><button class="cl-btn alt" onclick="dkoCancel()">Отменить стол</button></div>`;return}
+ const me=role||'h',op=dkoOpp(me),oh=s[op+'h'],act=dkoActor(s),myTurn=act===me;
+ const idle=Date.now()-(+s.at||0),canClaim=s.st==='play'&&act===op&&idle>=DKO_TO;
+ const hand=(s[me+'h']||[]).slice().sort((a,b)=>((a.s===s.tr?100:0)+a.r)-((b.s===s.tr?100:0)+b.r));
+ let res='';if(s.st==='over'){res=s.win==='draw'?'Ничья — ставки вернулись':s.win===me?`🏆 Победа! +${shFmt(s.stake)} Σ`:`🤡 Вы в дураках · −${shFmt(s.stake)} Σ`}
+ box.innerHTML=`<div class="dk-tbl"><div class="dk-bot"><div><div class="nm">👤 ${esc(s[op].name)} · ${oh.length} ${sxPlural(oh.length,'карта','карты','карт')}</div><div class="hand" style="margin-top:6px">${oh.slice(0,12).map(()=>clCard(null)).join('')}</div></div>
+  <div class="dk-deck"><div class="st">${s.deck.length?clCard(s.tc,'tr'):''}${s.deck.length>1?clCard(null):''}</div><small>${s.deck.length?`колода<br>${s.deck.length}`:'колода<br>пуста'}<br>козырь ${s.tr}</small></div></div>
+  <div class="dk-play">${s.tb.length?s.tb.map(p=>`<div class="dk-pair">${clCard(p.a)}${p.d?clCard(p.d,'d'):''}</div>`).join(''):`<span class="dk-empty">${s.st==='over'?'Игра окончена':myTurn?'Ваш ход — выберите карту':'Ходит соперник…'}</span>`}</div>
+  <div class="dk-hand" id="dkHand">${hand.map(c=>clCard(c,s.st==='play'&&dkoPlayable(s,me,c)?'ok':(myTurn?'no':''),`onclick="dkoMove({t:'card',c:{r:${c.r},s:'${c.s}'}})"`)).join('')}</div></div>
+  <div class="dko-mini"><span class="dko-turn ${myTurn?'':'wait'}">${s.st==='over'?'Игра окончена':myTurn?'● Ваш ход':'○ Ход соперника'}</span><span style="font-size:11.5px;color:rgba(255,226,236,.75)">стол ${s.code} · ставка ${shFmt(s.stake)} Σ</span></div>
+  <div class="cl-msg ${s.st==='over'?(s.win===me?'win':s.win==='draw'?'':'lose'):''}">${esc(res||s.log||'')}</div>
+  <div id="dkoCtl"></div>`;
+ const ctl=$('dkoCtl'),btn=[];
+ if(s.st==='over')btn.push(`<button class="cl-btn" onclick="dkoLeave()">↩ В лобби</button>`);
+ else{if(myTurn&&me===s.att){if(s.took)btn.push(`<button class="cl-btn go" onclick="dkoMove({t:'give'})">Забирай</button>`);else if(s.tb.length&&!dkoOpen(s))btn.push(`<button class="cl-btn go" onclick="dkoMove({t:'bito'})">Бито</button>`)}
+  if(myTurn&&me!==s.att)btn.push(`<button class="cl-btn alt" onclick="dkoMove({t:'take'})">Беру</button>`);
+  if(canClaim)btn.push(`<button class="cl-btn" onclick="dkoMove({t:'claim'})">⏱ Соперник пропал — забрать победу</button>`)}
+ ctl.innerHTML=(btn.length?`<div class="cl-row">${btn.join('')}</div>`:'')+(s.st==='play'?`<div class="dko-mini" style="justify-content:center"><button onclick="sxConfirm({title:'Сдаться?',text:'Соперник получит победу и обе ставки.',ok:'Сдаться'},()=>dkoMove({t:'resign'}))">🏳 Сдаться</button></div>`:'');
+ if(typeof dkFit==='function'){const h=$('dkHand');if(h){const n=hand.length,W=h.clientWidth-8;h.style.setProperty('--ov',(n>1?Math.max(0,(n*60-W)/(n-1)):0).toFixed(1)+'px')}}}
+/* вкладки «С ботом / Онлайн» в столе дурака */
+(function(){const _m=dkMount;dkMount=function(b){_m(b);const w=b.querySelector('.cl-wrap');if(!w)return;
+ w.insertAdjacentHTML('afterbegin',`<div class="dk-mode"><button data-m="bot" onclick="dkSetMode('bot')">🤖 С ботом</button><button data-m="online" onclick="dkSetMode('online')">🌐 Онлайн</button></div><div id="dkoBox"></div>`);
+ dkApplyMode();const cur=sxGet('summa_dko_cur',null);if(dkMode==='online'&&cur&&window.SXF&&!dko.code)dkoWatch(cur);else if(dkMode==='online')dkoLobby()}})();
+function dkApplyMode(){document.querySelectorAll('.dk-mode button').forEach(b=>b.classList.toggle('on',b.dataset.m===dkMode));const on=dkMode==='online';
+ ['dkTbl','dkMsg','dkCtl'].forEach(id=>{const e=$(id);if(e)e.style.display=on?'none':''});
+ const bx=$('dkoBox');if(bx)bx.style.display=on?'':'none';const sb=document.querySelector('#clBody .cl-stat');if(sb)sb.outerHTML=clStatHTML(on?'dko':'dk');if(on)dkoRender()}
+function dkSetMode(m){if(m===dkMode)return;if(m==='bot'&&dko.s&&dko.s.st==='play'&&dkoRole(dko.s))return toast('Сначала закончите онлайн-партию');if(m==='online'&&dk.ph==='play')return toast('Сначала закончите партию с ботом');
+ dkMode=m;sxPut('summa_dk_mode',m);dkApplyMode();if(m==='online'){const cur=sxGet('summa_dko_cur',null);if(cur&&!dko.code&&window.SXF)dkoWatch(cur);else dkoLobby()}else dkoStop()}
+/* выйти из клуба посреди онлайн-партии = сдаться */
+(function(){const _c=clClose;clClose=function(){if(dko.s&&dko.s.st==='play'&&dkoRole(dko.s))dkoMove({t:'resign'});else if(dko.s&&dko.s.st==='wait'&&dkoRole(dko.s)==='h')dkoCancel();dkoStop();_c.apply(this,arguments)}})();
+addEventListener('resize',()=>{if(CL.g==='dk'&&dkMode==='online')dkoRender()},{passive:true});
+setInterval(()=>{if(CL.g==='dk'&&dkMode==='online'&&!dko.code&&!document.hidden)dkoLobby()},10000);
+</script>
 </body>
 
  

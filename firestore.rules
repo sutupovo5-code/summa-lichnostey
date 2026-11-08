@@ -67,6 +67,29 @@ service cloud.firestore {
         && request.resource.data.salt is string && request.resource.data.iv is string;
       allow delete: if false;
     }
+    // Ивент «Ночной клуб» (pack43): очки игрока по каждой игре. Писать — только свою строку и только до финиша
+    // (22.11.2026 00:00 мск = 1795294800000 мс). После финиша рейтинг заморожен — победителей видят все одинаково.
+    match /evscore/{uid} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == uid
+        && request.time < timestamp.value(1795294800000)
+        && request.resource.data.keys().hasOnly(['name', 'upd', 'ck', 'bj', 'rk', 'dk'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 40;
+    }
+    // Онлайн-дурак (pack43): стол dkr/{КОД}. Создаёт хозяин; сесть может любой, пока место свободно;
+    // дальше менять стол могут только двое игроков.
+    match /dkr/{code} {
+      allow get, list: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.h.uid == request.auth.uid
+        && request.resource.data.st == 'wait' && request.resource.data.g == null
+        && request.resource.data.stake is int && request.resource.data.stake > 0;
+      allow update: if request.auth != null && (
+        resource.data.h.uid == request.auth.uid
+        || (resource.data.g != null && resource.data.g.uid == request.auth.uid)
+        || (resource.data.st == 'wait' && resource.data.g == null && request.resource.data.g.uid == request.auth.uid));
+      allow delete: if false;
+    }
     // Рейтинг джекпотов и профили: каждый пишет только свою строку.
     // look — купленный в магазине вид профиля (рамка, значок, цвет имени, карточка).
     match /players/{uid} {
