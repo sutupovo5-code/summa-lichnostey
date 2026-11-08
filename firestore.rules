@@ -158,6 +158,12 @@ service cloud.firestore {
     }
     match /fundraisers/{postId} {
       function post() { return get(/databases/$(database)/documents/posts/$(postId)).data; }
+      function contributionRecorded() {
+        let path = /databases/$(database)/documents/fundraisers/$(postId)/contributors/$(request.auth.uid);
+        let previous = exists(path) ? get(path).data.total : 0;
+        let next = getAfter(path).data;
+        return next.total == previous + request.resource.data.lastAmount && next.nonce == request.resource.data.nonce;
+      }
       function validFund() {
         return request.resource.data.keys().hasOnly(['owner','goal','raised','paid','lastBy','lastAmount','nonce'])
           && request.resource.data.owner == post().ownerUid && request.resource.data.goal == post().post.fundGoal
@@ -172,6 +178,7 @@ service cloud.firestore {
         && request.auth.uid != request.resource.data.owner && request.resource.data.paid == 0
         && request.resource.data.lastBy == request.auth.uid
         && request.resource.data.lastAmount == request.resource.data.raised && request.resource.data.raised > 0
+        && contributionRecorded()
         && assetChange(-request.resource.data.raised, '', '', 'fundraisers/' + postId + ':' + request.resource.data.nonce);
       allow update: if signedPlayer() && validFund()
         && request.resource.data.owner == resource.data.owner && request.resource.data.goal == resource.data.goal
@@ -179,12 +186,31 @@ service cloud.firestore {
           (request.auth.uid != resource.data.owner && post().del != true
             && request.resource.data.paid == resource.data.paid && request.resource.data.lastAmount > 0
             && request.resource.data.raised == resource.data.raised + request.resource.data.lastAmount
+            && contributionRecorded()
             && assetChange(-request.resource.data.lastAmount, '', '', 'fundraisers/' + postId + ':' + request.resource.data.nonce))
           || (request.auth.uid == resource.data.owner && request.resource.data.raised == resource.data.raised
             && request.resource.data.paid == resource.data.raised && resource.data.raised > resource.data.paid
             && request.resource.data.lastAmount == 0
             && assetChange(resource.data.raised-resource.data.paid, '', '', 'fundraisers/' + postId + ':' + request.resource.data.nonce)));
       allow delete: if false;
+      match /contributors/{uid} {
+        function validContribution() {
+          let path = /databases/$(database)/documents/fundraisers/$(postId);
+          let fund = getAfter(path).data;
+          let previous = exists(path) ? get(path).data.get('nonce','') : '';
+          return signedPlayer() && request.auth.uid == uid
+            && request.resource.data.keys().hasOnly(['name','total','nonce','at'])
+            && request.resource.data.name is string && request.resource.data.name.size() <= 60
+            && request.resource.data.name == userAfter().profile.name
+            && validMoney(request.resource.data.total) && request.resource.data.total > 0
+            && request.resource.data.at is int && fund.lastBy == uid && fund.lastAmount > 0
+            && request.resource.data.nonce == fund.nonce && previous != fund.nonce;
+        }
+        allow read: if true;
+        allow create: if validContribution() && request.resource.data.total == getAfter(/databases/$(database)/documents/fundraisers/$(postId)).data.lastAmount;
+        allow update: if validContribution() && request.resource.data.total == resource.data.total + getAfter(/databases/$(database)/documents/fundraisers/$(postId)).data.lastAmount;
+        allow delete: if false;
+      }
     }
 
     // Особая карта X: один раз навсегда — первому, кто собрал все 130 карт.
