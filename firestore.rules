@@ -4,17 +4,33 @@ service cloud.firestore {
     // Общая лента сайта «Сумма Личностей»: читать могут все,
     // писать — только посетители с гостевым входом (Anonymous).
     // Менять текст и удалять пост может только его автор.
+    // Комментарии можно только добавлять, лайк меняется не больше чем на 1.
     match /posts/{postId} {
       allow read: if true;
       allow create: if request.auth != null
         && request.resource.data.keys().hasOnly(['post', 'createdAt', 'ownerUid', 'likesAdd', 'cm', 'pv', 'top', 'del'])
         && (!('ownerUid' in request.resource.data) || request.resource.data.ownerUid == request.auth.uid)
-        && (!('del' in request.resource.data) || request.resource.data.del == false);
+        && (!('del' in request.resource.data) || request.resource.data.del == false)
+        && request.resource.data.get('likesAdd', 0) in [-1, 0, 1]
+        && request.resource.data.get('cm', []).size() <= 1;
       allow update: if request.auth != null
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likesAdd', 'cm', 'pv', 'top', 'del', 'post'])
         && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['post', 'del'])
-            || resource.data.ownerUid == request.auth.uid);
+            || resource.data.ownerUid == request.auth.uid)
+        && request.resource.data.get('cm', []).hasAll(resource.data.get('cm', []))
+        && request.resource.data.get('likesAdd', 0) - resource.data.get('likesAdd', 0) in [-1, 0, 1];
       allow delete: if false;
+    }
+    // Видео к постам: файл режется на куски до 900 КБ (лимит документа Firestore — 1 МБ).
+    // Кусок может записать только его автор, изменить или удалить — никто.
+    match /media/{chunkId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['d', 'o', 'v', 'i'])
+        && request.resource.data.o == request.auth.uid
+        && request.resource.data.d is bytes
+        && request.resource.data.d.size() <= 950000;
+      allow update, delete: if false;
     }
     // Рейтинг джекпотов: каждый пишет только свою строку.
     match /players/{uid} {

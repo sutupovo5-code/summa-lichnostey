@@ -1,0 +1,12 @@
+{
+  "name": "summa-lichnostey",
+  "private": true,
+  "description": "Сайт команды «Сумма Личностей» — ДЦ Липецк 2026",
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind.config.js -i tailwind/input.css -o assets/tailwind.css --minify",
+    "watch:css": "tailwindcss -c tailwind.config.js -i tailwind/input.css -o assets/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17"
+  }
+}
