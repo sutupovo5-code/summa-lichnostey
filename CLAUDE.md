@@ -146,3 +146,5 @@
   + ветка `apk-build`. Ссылка на последнюю: `/releases/latest/download/Summa-Lichnostey.apk`.
 - Подпись: секреты `ANDROID_KEYSTORE_B64` / `ANDROID_KEYSTORE_PASS` (алиас `summa`); без них — временный ключ на каждую сборку.
 - Иконки: сгенерированы Pillow (Σ на солнце в полоску), адаптивная иконка в `mipmap-anydpi-v26`.
+- На сайте (pack44): в профиле блок «📲 ПРИЛОЖЕНИЕ» со ссылкой на APK; скрыт внутри приложения (`SummaApp/` в UA → `html.in-app`) и на iPhone.
+- Сборка падала с 504 при скачивании Gradle — это сбой GitHub, лечится «Re-run jobs».
