@@ -6468,7 +6468,7 @@ if(evOver())evWinners().then(()=>{try{sxLBRender()}catch(e){}evHub()});
 function evBoxHTML(g){return`<div class="cl-box ev-box" id="evBox" data-g="${g}"><div class="ev-head"><div><b>🏆 Рейтинг ивента</b><small>${EV_G[g].what}</small></div><span class="ev-time">${evOver()?'финиш':'⏳ '+evLeft()}</span></div>
  <div>${evOver()?'Титул победителю:':'Первое место получит титул:'} ${evTtl(g)}</div><div class="ev-list" id="evList"><div class="ev-empty">Загружаем…</div></div><div class="ev-me" id="evMe"></div></div>`}
 async function evFill(g){const L=$('evList'),M=$('evMe');if(!L)return;
- let top;try{top=await evTop(g,10)}catch(e){L.innerHTML='<div class="ev-empty">Нет связи с рейтингом</div>';return}
+ let top;try{top=await evTop(g,10)}catch(e){L.innerHTML=`<div class="ev-empty">${e&&e.code==='permission-denied'?'Рейтинг включится, когда обновят правила базы':'Нет связи с рейтингом'}</div>`;return}
  if(!top){L.innerHTML='<div class="ev-empty">Нет связи с рейтингом</div>';return}if(!$('evList')||$('evBox').dataset.g!==g)return;
  L.innerHTML=top.length?top.map((x,i)=>`<div class="ev-r ${x.uid===SXC.uid?'me':''}"><i>${i+1}</i><span>${esc(x.name)}</span><em>${evFmt(g,x.s)}</em></div>`).join(''):'<div class="ev-empty">Пока никого — стань первым!</div>';
  const my=evMine(g);if(!state.registeredUser){M.textContent='Войдите в профиль, чтобы попасть в рейтинг';return}
@@ -6553,7 +6553,7 @@ async function dkoJoin(code){code=String(code||'').toUpperCase().replace(/[^A-Z0
  catch(e){toast('⚠️ '+(e.code==='permission-denied'?'База не приняла — обновите правила Firebase (блок dkr)':e.message||'Не удалось сесть за стол'))}}
 async function dkoCancel(){if(!dko.code||!dko.s||dko.s.st!=='wait')return dkoLeave();try{await SXF.F.setDoc(dkoRef(dko.code),{st:'cancel',at:Date.now()},{merge:true})}catch(e){}dkoLeave()}
 async function dkoLobby(){if(dkMode!=='online'||dko.code||!window.SXF)return;const {F,db}=SXF;
- try{const snap=await F.getDocs(F.query(F.collection(db,'dkr'),F.where('st','==','wait'),F.limit(25)));const v=[];snap.forEach(d=>{const x=d.data();if(x&&x.h&&Date.now()-(+x.at||0)<15*60000)v.push({...x,code:d.id})});dko.lobby=v.sort((a,b)=>b.at-a.at)}catch(e){dko.lobby=null}
+ try{const snap=await F.getDocs(F.query(F.collection(db,'dkr'),F.where('st','==','wait'),F.limit(25)));const v=[];snap.forEach(d=>{const x=d.data();if(x&&x.h&&Date.now()-(+x.at||0)<15*60000)v.push({...x,code:d.id})});dko.lobby=v.sort((a,b)=>b.at-a.at);dko.lerr=''}catch(e){dko.lobby=null;dko.lerr=e&&e.code}
  dkoRender()}
 function dkoSetAmt(a){dko.amt=a;dkoRender()}
 function dkoRender(){const box=$('dkoBox');if(!box||dkMode!=='online')return;const s=dko.s,role=dkoRole(s);
@@ -6562,7 +6562,7 @@ function dkoRender(){const box=$('dkoBox');if(!box||dkMode!=='online')return;con
   <div class="cl-box" style="display:grid;gap:10px"><div class="cl-lbl">НОВЫЙ СТОЛ · СТАВКА (победитель забирает обе)</div>${clChipsHTML(dko.amt,'dkoSetAmt')}<button class="cl-btn" ${v<=0?'disabled':''} onclick="dkoCreate()">➕ Создать стол · ${shFmt(v)} Σ</button></div>
   <div class="cl-box" style="display:grid;gap:8px"><div class="cl-lbl">ВОЙТИ ПО КОДУ ДРУГА</div><div class="dko-join"><input id="dkoCode" maxlength="5" placeholder="ABCDE" autocapitalize="characters" autocomplete="off" spellcheck="false"><button onclick="dkoJoin($('dkoCode').value)">Сесть</button></div></div>
   <div class="cl-box" style="display:grid;gap:8px"><div class="dko-mini"><span class="cl-lbl" style="margin:0">ОТКРЫТЫЕ СТОЛЫ</span><button style="color:#ffe2c4" onclick="dkoLobby()">↻ Обновить</button></div>
-  ${dko.lobby===null?'<div class="ev-empty">Нет связи с базой</div>':!dko.lobby.length?'<div class="ev-empty">Свободных столов нет — создайте свой и позовите друга</div>':dko.lobby.filter(x=>x.h.uid!==SXC.uid).map(x=>`<div class="dko-row"><div><b>${esc(x.h.name)}</b><small>ставка ${shFmt(x.stake)} Σ · стол ${x.code}</small></div><button ${clBal()<x.stake?'disabled':''} onclick="dkoJoin('${x.code}')">Сесть</button></div>`).join('')||'<div class="ev-empty">Свободных столов нет — создайте свой</div>'}</div></div>`;return}
+  ${dko.lobby===null?`<div class="ev-empty">${dko.lerr==='permission-denied'?'Онлайн включится, когда обновят правила базы':'Нет связи с базой'}</div>`:!dko.lobby.length?'<div class="ev-empty">Свободных столов нет — создайте свой и позовите друга</div>':dko.lobby.filter(x=>x.h.uid!==SXC.uid).map(x=>`<div class="dko-row"><div><b>${esc(x.h.name)}</b><small>ставка ${shFmt(x.stake)} Σ · стол ${x.code}</small></div><button ${clBal()<x.stake?'disabled':''} onclick="dkoJoin('${x.code}')">Сесть</button></div>`).join('')||'<div class="ev-empty">Свободных столов нет — создайте свой</div>'}</div></div>`;return}
  if(s.st==='wait'){box.innerHTML=`<div class="cl-box" style="display:grid;gap:10px;text-align:center"><div class="cl-lbl">ВАШ СТОЛ · СТАВКА ${shFmt(s.stake)} Σ</div><span class="dko-code">${s.code}</span>
   <div class="cl-rules">Скажите этот код другу — он вводит его во вкладке «Онлайн». Или подождите: стол виден в списке открытых.</div>
   <button class="cl-btn alt" onclick="(navigator.clipboard?navigator.clipboard.writeText('${s.code}').then(()=>toast('📋 Код скопирован')):0)">📋 Скопировать код</button><button class="cl-btn alt" onclick="dkoCancel()">Отменить стол</button></div>`;return}
