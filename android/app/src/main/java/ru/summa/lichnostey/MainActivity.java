@@ -105,6 +105,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         web.onResume();
+        web.getSettings().setCacheMode(isOnline() ? WebSettings.LOAD_DEFAULT : WebSettings.LOAD_CACHE_ELSE_NETWORK);
     }
 
     /** «Назад»: сначала закрываются окна сайта (они пишут шаг в историю), потом выход. */

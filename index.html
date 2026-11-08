@@ -5595,7 +5595,7 @@ try{sxLBRender()}catch(e){}
 /* --- 1. фон: небо на закате, солнце в полоску, пальмы (только когда не выбрана тема из магазина) --- */
 #gtaSky{position:fixed;inset:0;z-index:0;pointer-events:none;display:none;overflow:hidden;
  background:linear-gradient(180deg,#120a26 0%,#1d1036 38%,#33184a 62%,#5e2753 80%,#94405a 93%,#c0605c 100%)}
-html:not([data-th]) #gtaSky{display:block}
+html[data-th="lipetsk"] #gtaSky{display:block}
 #gtaSky .sun{position:absolute;left:50%;bottom:9vh;width:min(78vw,520px);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;
  background:linear-gradient(180deg,#ffd27a 0%,#f7a35f 45%,#ec6f9b 100%);opacity:.3;
  -webkit-mask:repeating-linear-gradient(180deg,#000 0 14px,transparent 14px 20px),linear-gradient(#000 0 55%,transparent 55%);-webkit-mask-composite:source-over;
@@ -5606,35 +5606,35 @@ html:not([data-th]) #gtaSky{display:block}
 #gtaSky svg.r{right:-8vw;transform:scaleX(-1);height:38vh}
 
 /* --- 2. панели, шапка, меню, окна --- */
-html:not([data-th]) body{background:#1a0e30}
-html:not([data-th]) .glass-panel{background:linear-gradient(160deg,rgba(54,26,78,.93),rgba(24,13,44,.95))!important;border-color:rgba(236,111,155,.38)!important}
-html:not([data-th]) header.sticky{background:rgba(18,9,34,.96)!important;border-bottom:0!important;box-shadow:0 2px 0 0 rgba(236,111,155,.55),0 3px 0 0 rgba(242,160,97,.35)}
-html:not([data-th]) nav.fixed{background:rgba(18,9,34,.97)!important;border-top:0!important;box-shadow:0 -2px 0 0 rgba(236,111,155,.5)}
-html:not([data-th]) .pe-box,html:not([data-th]) .tl-box{background:linear-gradient(180deg,#2c1745,#140b28)!important;border-color:rgba(236,111,155,.6)!important}
-html:not([data-th]) .sx-ov{background:rgba(14,7,28,.94)!important}
-html:not([data-th]) :is(#fullPostModal,#composerModal,#phoneAuthModal,#resultModal){background:rgba(14,7,28,.93)!important}
-html:not([data-th]) #tvCard.sp-tv{background:linear-gradient(180deg,rgba(64,32,86,.88),rgba(26,14,46,.96))!important}
-html:not([data-th]) .text-neon-light{color:#ffb3c9!important}
-html:not([data-th]) .from-neon-pink{--tw-gradient-from:var(--g-pink) var(--tw-gradient-from-position)!important;--tw-gradient-to:rgb(236 111 155 / 0) var(--tw-gradient-to-position)!important}
-html:not([data-th]) .to-blue-600{--tw-gradient-to:var(--g-orange) var(--tw-gradient-to-position)!important}
-html:not([data-th]) .pe-btn.main{background:linear-gradient(90deg,var(--g-pink),var(--g-orange))!important;color:#1d0d1e!important}
-html:not([data-th]) :is(#xInk,.nav-pill){background:linear-gradient(90deg,var(--g-pink),var(--g-orange))!important}
-html:not([data-th]) .x-act.like.on{color:var(--g-pink)!important}
-html:not([data-th]) .x-act.like.on svg{fill:var(--g-pink)!important}
+html[data-th="lipetsk"] body{background:#1a0e30}
+html[data-th="lipetsk"] .glass-panel{background:linear-gradient(160deg,rgba(54,26,78,.93),rgba(24,13,44,.95))!important;border-color:rgba(236,111,155,.38)!important}
+html[data-th="lipetsk"] header.sticky{background:rgba(18,9,34,.96)!important;border-bottom:0!important;box-shadow:0 2px 0 0 rgba(236,111,155,.55),0 3px 0 0 rgba(242,160,97,.35)}
+html[data-th="lipetsk"] nav.fixed{background:rgba(18,9,34,.97)!important;border-top:0!important;box-shadow:0 -2px 0 0 rgba(236,111,155,.5)}
+html[data-th="lipetsk"] .pe-box,html[data-th="lipetsk"] .tl-box{background:linear-gradient(180deg,#2c1745,#140b28)!important;border-color:rgba(236,111,155,.6)!important}
+html[data-th="lipetsk"] .sx-ov{background:rgba(14,7,28,.94)!important}
+html[data-th="lipetsk"] :is(#fullPostModal,#composerModal,#phoneAuthModal,#resultModal){background:rgba(14,7,28,.93)!important}
+html[data-th="lipetsk"] #tvCard.sp-tv{background:linear-gradient(180deg,rgba(64,32,86,.88),rgba(26,14,46,.96))!important}
+html[data-th="lipetsk"] .text-neon-light{color:#ffb3c9!important}
+html[data-th="lipetsk"] .from-neon-pink{--tw-gradient-from:var(--g-pink) var(--tw-gradient-from-position)!important;--tw-gradient-to:rgb(236 111 155 / 0) var(--tw-gradient-to-position)!important}
+html[data-th="lipetsk"] .to-blue-600{--tw-gradient-to:var(--g-orange) var(--tw-gradient-to-position)!important}
+html[data-th="lipetsk"] .pe-btn.main{background:linear-gradient(90deg,var(--g-pink),var(--g-orange))!important;color:#1d0d1e!important}
+html[data-th="lipetsk"] :is(#xInk,.nav-pill){background:linear-gradient(90deg,var(--g-pink),var(--g-orange))!important}
+html[data-th="lipetsk"] .x-act.like.on{color:var(--g-pink)!important}
+html[data-th="lipetsk"] .x-act.like.on svg{fill:var(--g-pink)!important}
 /* заголовки разделов — плотный узкий шрифт, как на постерах */
 main h2.font-display,.sx-head h3,.ck-head h2{font-family:'Oswald','Unbounded',sans-serif!important;font-weight:700!important;letter-spacing:.01em!important;text-transform:uppercase}
 main h2.font-display{font-size:22px!important;line-height:1.1!important;color:#fff!important;text-shadow:2px 2px 0 #c2410c,4px 4px 0 rgba(10,4,20,.85)}
 
 /* --- 3. шапка сайта: «СУММА ЛИЧНОСТЕЙ» → «СУММА ~ЛИЧНОСТЕЙ~ лудоманов» --- */
 #sec-hero{background:linear-gradient(180deg,rgba(36,18,63,.55),rgba(139,58,92,.45) 70%,rgba(240,160,102,.4))!important}
-.summa-logo-text{text-shadow:3px 3px 0 #f0835f,6px 6px 0 rgba(16,6,28,.95),0 0 18px rgba(236,111,155,.45)!important}
+html.dc-gtaTitle .summa-logo-text{text-shadow:3px 3px 0 #f0835f,6px 6px 0 rgba(16,6,28,.95),0 0 18px rgba(236,111,155,.45)!important}
 .gta-struck{display:table!important;margin:2px auto 0;position:relative}
 .gta-struck::after{content:'';position:absolute;left:-7%;right:-7%;top:48%;height:.17em;border-radius:6px;background:#e5484d;transform:rotate(-5deg);box-shadow:0 2px 0 rgba(16,6,28,.7);pointer-events:none}
 .gta-struck::before{content:'';position:absolute;left:-4%;right:-4%;top:60%;height:.1em;border-radius:6px;background:#e5484d;transform:rotate(3deg);opacity:.9;pointer-events:none}
 .gta-ludo{position:absolute;right:-4%;bottom:-.6em;font:400 clamp(28px,8.6vw,46px)/1 'Pacifico',cursive;color:#ffb3c9;transform:rotate(-9deg);white-space:nowrap;
  text-shadow:2px 2px 0 #c2410c,4px 4px 0 rgba(16,6,28,.95);pointer-events:none;z-index:3}
 .gta-ludo::after{content:'';position:absolute;left:4%;right:6%;bottom:-.05em;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,#f2a061 20%,#f2a061 80%,transparent)}
-#sec-hero .poster-nameplate-border{margin-top:34px!important}
+html.dc-gtaTitle #sec-hero .poster-nameplate-border{margin-top:34px!important}
 .gta-hs{position:relative;display:inline-block;color:rgba(255,255,255,.75)}
 .gta-hs::after{content:'';position:absolute;left:-3%;right:-3%;top:50%;height:2px;background:#e5484d;transform:rotate(-6deg)}
 .gta-hl{font:400 13px/1 'Pacifico',cursive;color:#ffb3c9;margin-left:4px;text-shadow:1px 1px 0 rgba(16,6,28,.9);white-space:nowrap}
@@ -5725,7 +5725,7 @@ function gtaTitle(){const t=document.querySelectorAll('.summa-logo-text');if(t.l
  const h=[...document.querySelectorAll('header span')].find(e=>e.children.length===0&&/^\s*СУММА ЛИЧНОСТЕЙ\s*$/.test(e.textContent));
  if(h)h.innerHTML='СУММА <span class="gta-hs">ЛИЧНОСТЕЙ</span><span class="gta-hl">лудоманов</span>'}
 gtaTitle();
-function gtaBanner(kind,title,sub){document.querySelectorAll('.gta-banner,.gta-wasted').forEach(e=>e.remove());
+function gtaBanner(kind,title,sub){if(!shOwn('d:gtaBanner')||sh.deco.gtaBanner===false)return;document.querySelectorAll('.gta-banner,.gta-wasted').forEach(e=>e.remove());
  if(kind==='lose'&&!sxStill()){const w=document.createElement('div');w.className='gta-wasted';document.body.appendChild(w);setTimeout(()=>w.remove(),2600)}
  const b=document.createElement('div');b.className='gta-banner '+kind;b.innerHTML=`<b>${title}</b>${sub?`<span>${sub}</span>`:''}`;document.body.appendChild(b);
  setTimeout(()=>b.classList.add('out'),2300);setTimeout(()=>b.remove(),2750)}
@@ -5915,10 +5915,10 @@ async function rcReset(){if(rcBusy)return;const err=$('rcErr');err.textContent='
 @keyframes gtaLoad{to{width:100%}}
 
 /* --- 2. шапка-коллаж как обложка игры --- */
-html:not([data-th]) .hero-tile{border-radius:3px!important;border:3px solid #0e0719!important;background:#2a1446!important;box-shadow:4px 4px 0 #0e0719,0 10px 22px rgba(0,0,0,.45)!important}
-html:not([data-th]) .hero-tile img{-webkit-mask-image:none!important;mask-image:none!important;filter:saturate(1.08) contrast(1.05)}
-html:not([data-th]) .hero-tile::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(236,111,155,.0) 40%,rgba(236,111,155,.28) 75%,rgba(242,160,97,.38));mix-blend-mode:soft-light}
-html:not([data-th]) #heroGrid{gap:4px!important}
+html[data-th="lipetsk"] .hero-tile{border-radius:3px!important;border:3px solid #0e0719!important;background:#2a1446!important;box-shadow:4px 4px 0 #0e0719,0 10px 22px rgba(0,0,0,.45)!important}
+html[data-th="lipetsk"] .hero-tile img{-webkit-mask-image:none!important;mask-image:none!important;filter:saturate(1.08) contrast(1.05)}
+html[data-th="lipetsk"] .hero-tile::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(236,111,155,.0) 40%,rgba(236,111,155,.28) 75%,rgba(242,160,97,.38));mix-blend-mode:soft-light}
+html[data-th="lipetsk"] #heroGrid{gap:4px!important}
 
 /* --- 3. открытка «Привет из Липецк-Сити» --- */
 .gta-pc{position:relative;overflow:hidden;border-radius:6px;padding:14px 12px 16px;background:linear-gradient(180deg,#2a1446,#6a2a58 60%,#c4605c);border:3px solid #fff2e4;box-shadow:0 0 0 3px #0e0719,0 14px 30px -12px rgba(0,0,0,.7);transform:rotate(-1.2deg)}
@@ -5964,7 +5964,7 @@ const GTA_TIPS=['Совет: фаворит в куриных бегах при�
  'Совет: собирайте карточки команды — у каждого участника 12 скинов.','Совет: высокий уровень розыска сам падает, если немного не играть.',
  'Совет: нажмите на аватарку автора поста — откроется его профиль.','Совет: «Всё или ничего» — шанс 50%, но потом крутки на паузе 7 часов.'];
 (function(){let seen=false;try{seen=sessionStorage.getItem('gta_intro')==='1';sessionStorage.setItem('gta_intro','1')}catch(e){}
- if(seen||sxStill())return;const o=document.createElement('div');o.id='gtaIntro';o.setAttribute('role','dialog');o.setAttribute('aria-label','Загрузка');
+ if(seen||sxStill()||!shOwn('d:gtaIntro')||sh.deco.gtaIntro===false)return;const o=document.createElement('div');o.id='gtaIntro';o.setAttribute('role','dialog');o.setAttribute('aria-label','Загрузка');
  o.innerHTML=`<div class="sun"></div>${gtaPalm('l')}${gtaPalm('r')}<div class="t"><b>СУММА</b><s>ЛИЧНОСТЕЙ</s><i>лудоманов</i></div><div class="city">ЛИПЕЦК-СИТИ • 2026</div>
  <div class="tip">${GTA_TIPS[Math.floor(Math.random()*GTA_TIPS.length)]}</div><div class="bar"><i></i></div><small>Нажмите, чтобы пропустить</small>`;
  document.body.appendChild(o);document.body.style.overflow='hidden';
@@ -5985,7 +5985,7 @@ const GTA_TIPS=['Совет: фаворит в куриных бегах при�
 const GTA_W_KEY='summa_wanted',GTA_W_DECAY=3*60*1000;
 function gtaWGet(){const w=sxGet(GTA_W_KEY,{s:0,t:0});const drop=Math.floor((Date.now()-(+w.t||0))/GTA_W_DECAY);return Math.max(0,Math.min(5,(+w.s||0)-drop))}
 function gtaWSet(s){sxPut(GTA_W_KEY,{s:Math.max(0,Math.min(5,s)),t:Date.now()})}
-function gtaWRender(blink){let el=$('gtaWanted');if(!el){el=document.createElement('div');el.id='gtaWanted';el.setAttribute('aria-label','Уровень розыска');document.body.appendChild(el)}
+function gtaWRender(blink){if(!shOwn('d:gtaWanted')||sh.deco.gtaWanted===false)return;let el=$('gtaWanted');if(!el){el=document.createElement('div');el.id='gtaWanted';el.setAttribute('aria-label','Уровень розыска');document.body.appendChild(el)}
  const n=gtaWGet();el.innerHTML=Array.from({length:5},(_,i)=>`<i class="${i<n?'f':''}">★</i>`).join('');el.classList.toggle('on',n>0);
  if(blink&&n>0&&!sxStill()){el.classList.remove('blink');void el.offsetWidth;el.classList.add('blink')}}
 gtaWRender(false);setInterval(()=>gtaWRender(false),30000);
@@ -5996,7 +5996,7 @@ gtaWRender(false);setInterval(()=>gtaWRender(false),30000);
 /* --- 5. всплывающие деньги у баланса --- */
 let gtaLastSp=Math.floor(+state.synergyPoints||0);
 (function(){const _u=updateAllCountersUI;updateAllCountersUI=function(){_u.apply(this,arguments);const v=Math.floor(+state.synergyPoints||0),d=v-gtaLastSp;gtaLastSp=v;
- if(!d||sxStill())return;const pill=$('headerSynergyStat');if(!pill)return;const r=(pill.closest('.sh-pill')||pill).getBoundingClientRect();if(!r.width)return;
+ if(!d||sxStill()||!shOwn('d:gtaCash')||sh.deco.gtaCash===false)return;const pill=$('headerSynergyStat');if(!pill)return;const r=(pill.closest('.sh-pill')||pill).getBoundingClientRect();if(!r.width)return;
  const c=document.createElement('div');c.className='gta-cash '+(d>0?'up':'dn');c.textContent=(d>0?'+':'−')+shFmt(Math.abs(d))+' Σ';
  c.style.left=Math.max(6,Math.min(innerWidth-150,r.left))+'px';c.style.top=(r.bottom+6)+'px';document.body.appendChild(c);setTimeout(()=>c.remove(),1700)}})();
 
@@ -6186,7 +6186,7 @@ const CL_GAMES=[{id:'ck',t:'Куриные бега',s:'Тотализатор: 
 function clHubStats(){CL_GAMES.forEach(g=>{const e=document.querySelector(`.cl-t[data-g="${g.id}"] .tx i`);if(!e)return;const n=g.id==='ck'?(sh.ck&&sh.ck.r||0):((sh.club[g.id]||{}).n||0);e.textContent=n?`Сыграно: ${shFmt(n)}`:'Ещё не играли'})}
 (function(){const old=$('sec-gta-club');if(old)old.remove();
  const at=$('gtaPc')||$('sec-hero');if(!at||$('sec-club'))return;const sec=document.createElement('section');sec.id='sec-club';sec.className='scroll-mt-14';
- sec.innerHTML=`<div class="cl-hub"><div class="cl-hh"><div><span class="k">ивент недели</span><h2>🌴 Ночной клуб</h2><small>Четыре игры на Σ. Выбирай стол!</small></div><button class="cl-shop" onclick="openShop()">🛍 Магазин</button></div>
+ sec.innerHTML=`<div class="cl-hub"><div class="cl-hh"><div><span class="k">ивент недели</span><h2>🌴 Ночной клуб</h2><small>Четыре игры на Σ. Выбирай стол!</small></div></div>
  <div class="cl-grid">${CL_GAMES.map((g,i)=>`<button class="cl-t" data-g="${g.id}" onclick="clOpen('${g.id}')">${clArt(g.id)}<span class="no">СТОЛ ${i+1}</span><span class="tx"><b>${g.t}</b><small>${g.s}</small><i></i></span></button>`).join('')}</div></div>`;
  at.after(sec);clHubStats()})();
 /* куриные бега живут только в клубе: на главной прячем, кнопку в крутке ведём в клуб */
@@ -6535,7 +6535,7 @@ async function dkoMove(mv){if(dko.sending||!dko.code)return;dko.sending=true;con
   if(!role)throw new Error('Вы не за этим столом');const err=dkoApply(s,role,mv);if(err)throw new Error(err);tx.set(r,s)})}
  catch(e){toast('⚠️ '+(e.code==='permission-denied'?'База не приняла ход — обновите правила Firebase (блок dkr)':e.message||'Ход не прошёл'))}finally{dko.sending=false}}
 function dkoWatch(code){dkoStop();dko.code=code;sxPut('summa_dko_cur',code);dko.unsub=SXF.F.onSnapshot(dkoRef(code),snap=>{if(!snap.exists()){dko.s=null;dkoRender();return}const s=snap.data();s.code=code;dko.s=s;dkoMoney(s);CL.busy=s.st==='play'&&!!dkoRole(s);dkoRender()},e=>{console.warn('[dko]',e.code);toast('⚠️ Нет связи со столом')});
- clearInterval(dko.tick);dko.tick=setInterval(()=>{if(dko.s&&dko.s.st==='play')dkoRender()},5000)}
+ clearInterval(dko.tick);dko.tick=0}
 function dkoStop(){if(dko.unsub){try{dko.unsub()}catch(e){}}dko.unsub=null;clearInterval(dko.tick);dko.code=null;dko.s=null}
 function dkoLeave(){dkoStop();sxPut('summa_dko_cur',null);CL.busy=false;dkoRender();dkoLobby()}
 async function dkoCreate(){const v=clAmt(dko.amt);if(v<=0)return toast('Нет Σ для ставки');if(!state.registeredUser)return toast('📱 Сначала войдите в профиль');if(!window.SXF||!SXC.uid)return toast('⚠️ Нет связи с базой');
@@ -6608,7 +6608,7 @@ setInterval(()=>{if(CL.g==='dk'&&dkMode==='online'&&!dko.code&&!document.hidden)
 </style>
 <script id="pack44js">
 /* ===== pack44: кнопка «Приложение для Android» в профиле (внутри приложения не показывается) ===== */
-const APP_URL='https://github.com/sutupovo5-code/summa-lichnostey/releases/latest/download/Summa-Lichnostey.apk';
+const APP_URL='https://github.com/tolstikovn739-dotcom/summa-lichnostey/releases/latest/download/Summa-Lichnostey.apk';
 const inApp=()=>/SummaApp\//.test(navigator.userAgent)||!!window.SummaApp;
 const isIOS=()=>/iPhone|iPad|iPod/.test(navigator.userAgent);
 if(inApp())document.documentElement.classList.add('in-app');
@@ -6616,6 +6616,104 @@ if(inApp())document.documentElement.classList.add('in-app');
  const secs=[...box.querySelectorAll(':scope>.pe-sec')],at=secs[secs.length-1];const html=`<div class="pe-sec" id="appDl"><b>📲 ПРИЛОЖЕНИЕ</b><a class="app-dl" href="${APP_URL}" rel="noopener"><img src="data:image/png;base64,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" alt=""><span><b>Сумма Личностей для Android</b><small>Скачайте APK и откройте файл. Если телефон спросит — разрешите установку из этого источника.</small></span><i>⬇</i></a></div>`;
  if(at)at.insertAdjacentHTML('beforebegin',html);else box.insertAdjacentHTML('beforeend',html)}})();
 </script>
+<style id="pack45">
+/* Paid cosmetics and mobile layout. Chickens remain available inside the club. */
+.ck-open{display:none!important}
+#sec-chick{display:none!important}
+#clBody #sec-chick{display:block!important}
+html:not(.dc-gtaTitle) :is(.gta-ludo,.gta-hl,.gta-kick){display:none!important}
+html:not(.dc-gtaTitle) :is(.gta-struck,.gta-hs)::before,html:not(.dc-gtaTitle) :is(.gta-struck,.gta-hs)::after{display:none!important}
+html:not(.dc-gtaTitle) .gta-hs{text-decoration:none!important}
+html:not(.dc-gtaPostcard) #gtaPc,html:not(.dc-gtaWanted) #gtaWanted{display:none!important}
+html:not(.dc-gtaIntro) #gtaIntro{display:none!important}
+html:not(.dc-gtaCash) .gta-cash{display:none!important}
+html:not(.dc-gtaBanner) :is(.gta-banner,.gta-wasted){display:none!important}
+#dkoBox[data-pending="true"] :is(.dk-hand,.cl-row){pointer-events:none;opacity:.7}
+#dkoBox[data-pending="true"] .dko-turn::after{content:' · отправляем…';font-size:11px}
+#clStage{height:100dvh}
+#clStage .cl-body{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+@media(max-width:600px){
+ .cl-hh>div,.sp-it>div,.dko-row>div{min-width:0;overflow-wrap:anywhere}
+ .cl-wrap,.dk-tbl,#dkoBox,.cl-box{min-width:0;max-width:100%}
+ .sp-tabs{overscroll-behavior-x:contain}
+ .dko-join input{min-width:0;width:100%;font-size:16px}
+ .dko-join{grid-template-columns:minmax(0,1fr) auto}
+ .dko-row b,.dk-bot .nm{overflow-wrap:anywhere}
+ .dko-mini{flex-wrap:wrap;gap:8px}
+ .cl-btn,.cl-back,.dk-mode button,.sp-tabs button{min-height:44px}
+ .dk-play{min-height:140px}
+ #clStage :is(.cl-bg,.dk-tbl){backdrop-filter:none;-webkit-backdrop-filter:none}
+ html.sx-lite :is(.hero-tile,.cc,.cl-t){animation:none!important}
+}
+@media(prefers-reduced-motion:reduce){.gta-cash,.gta-banner{animation:none!important}}
+</style>
+<script id="pack45js">
+/* All cosmetics use the existing shop/account persistence and Σ purchase checks. */
+SH_THEMES.push({id:'lipetsk',name:'GTA · Липецк-Сити',desc:'Закат, пальмы, коллаж и розово-оранжевые панели',price:6000,h:0,sw:['#ec6f9b','#f2a061']});
+SH_DECO.push(
+ {id:'gtaTitle',ic:'✍️',name:'Надписи Липецк-Сити',desc:'Лудоманов и уличные подписи разделов',price:1500},
+ {id:'gtaPostcard',ic:'🌴',name:'Открытка Липецк-Сити',desc:'Привет из города с лицами команды',price:2000},
+ {id:'gtaWanted',ic:'⭐',name:'Звёзды розыска',desc:'Растут после куриных забегов',price:1800},
+ {id:'gtaCash',ic:'💵',name:'Летящие суммы',desc:'Анимация изменения баланса Σ',price:1200},
+ {id:'gtaBanner',ic:'🎬',name:'Миссия выполнена',desc:'Киношные баннеры побед и поражений',price:2500},
+ {id:'gtaIntro',ic:'🌅',name:'Заставка Липецк-Сити',desc:'Заставка при следующем запуске сайта',price:1500});
+// shApply is also called when the account is restored from the cloud.
+const shopApply45=shApply;shApply=function(){shopApply45();gtaWRender(false)};
+shApply();
+document.querySelectorAll('.ck-open').forEach(e=>e.remove());
+
+/* Render only changed game state; keep the hand stable while waiting. */
+const dkoRenderBase=dkoRender;
+let dkoRenderKey='',dkoRenderBox=null,dkoEpoch=0,dkoConfirmed=null;
+dkoRender=function(){
+ const box=$('dkoBox');if(!box||dkMode!=='online')return;
+ const s=dko.s,claim=!!(s&&s.st==='play'&&Date.now()-(+s.at||0)>=DKO_TO);
+ const key=JSON.stringify([s,dko.code,dko.amt,dko.lobby,dko.lerr,claim]);
+ box.dataset.pending=String(dko.sending);
+ if(box===dkoRenderBox&&key===dkoRenderKey)return;
+ dkoRenderBox=box;dkoRenderKey=key;dkoRenderBase();
+};
+const dkoStopBase=dkoStop;
+dkoStop=function(){++dkoEpoch;dkoStopBase();dkoConfirmed=null;dko.sending=false;dkoRenderKey=''};
+dkoWatch=function(code){
+ dkoStop();const epoch=dkoEpoch;dko.code=code;sxPut('summa_dko_cur',code);
+ dko.unsub=SXF.F.onSnapshot(dkoRef(code),snap=>{
+  if(epoch!==dkoEpoch)return;
+  if(!snap.exists()){dko.s=null;dkoRender();return}
+  // Never pay out from a speculative local write.
+  if(snap.metadata.hasPendingWrites)return;
+  const s=snap.data();s.code=code;dkoConfirmed=s;
+  if(!dko.sending||!dko.s||s.mv>=dko.s.mv)dko.s=s;
+  dkoMoney(s);CL.busy=s.st==='play'&&!!dkoRole(s);dkoRender();
+ },e=>{if(epoch===dkoEpoch){console.warn('[dko]',e.code);toast('⚠️ Нет связи со столом')}});
+ // Only refresh when the claim button becomes available, not every five seconds.
+ dko.tick=setInterval(()=>{if(!document.hidden&&dko.s&&dko.s.st==='play')dkoRender()},1000);
+};
+dkoMove=async function(mv){
+ if(dko.sending||!dko.code||!dko.s)return;
+ const code=dko.code,epoch=dkoEpoch,before=dko.s;
+ const predicted=JSON.parse(JSON.stringify(before)),role=dkoRole(predicted);
+ if(!role)return;
+ const err=dkoApply(predicted,role,mv);if(err)return toast(err);
+ dko.sending=true;dko.s=predicted;dkoRender();
+ try{
+  let committed;
+  await SXF.F.runTransaction(SXF.db,async tx=>{
+   const ref=dkoRef(code),snap=await tx.get(ref);
+   if(!snap.exists())throw new Error('Стол не найден');
+   const s=snap.data(),me=dkoRole(s);if(!me)throw new Error('Вы не за этим столом');
+   const error=dkoApply(s,me,mv);if(error)throw new Error(error);
+   tx.set(ref,s);committed={...s,code};
+  });
+  if(epoch===dkoEpoch){
+   if(!dkoConfirmed||committed.mv>=dkoConfirmed.mv)dkoConfirmed=committed;
+   dko.s=dkoConfirmed;dkoMoney(dko.s);
+  }
+ }catch(e){if(epoch===dkoEpoch){dko.s=dkoConfirmed||before;toast('⚠️ '+(e.code==='permission-denied'?'База не приняла ход':e.message||'Ход не прошёл'))}}
+ finally{if(epoch===dkoEpoch){dko.sending=false;CL.busy=dko.s?.st==='play';dkoRender()}}
+};
+</script>
+
 </body>
 
  
