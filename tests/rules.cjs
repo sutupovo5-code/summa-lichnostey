@@ -5,12 +5,12 @@ const fs=require('fs');
 const initial={profile:{name:'Tester'},st:{sp:1000,ts:0,jw:0},cards:{ch:{one:2},sk:{},log:[]},shop:{},eggs:[],v:1,updatedAt:1};
 await env.withSecurityRulesDisabled(async c=>{for(const id of ['alice','bob'])await setDoc(doc(c.firestore(),'users',id),initial);await setDoc(doc(c.firestore(),'posts','fund'),{ownerUid:'alice',post:{fundGoal:500},del:false})});
 const db=id=>env.authenticatedContext(id,{firebase:{sign_in_provider:'password'}}).firestore();const a=db('alice'),b=db('bob'),c=db('mallory');
-const trade={from:'alice',to:'bob',giveMoney:200,giveCard:'ch:one',wantMoney:100,wantCard:'',status:'pending',claimed:false,at:1};
+const trade={from:'alice',to:'bob',giveMoney:200,giveCard:'ch:one',wantMoney:100,wantCard:'',status:'pending',claimed:false,fromAgreed:true,toAgreed:false,at:1};
 await assertFails(setDoc(doc(a,'exchanges','bad'),trade));checks++;
 await assertSucceeds(runTransaction(a,async t=>{const u=doc(a,'users','alice'),s=await t.get(u),d=s.data();d.st.sp-=200;d.cards.ch.one--;d.assetOp='exchanges/ok:create';t.set(u,d);t.set(doc(a,'exchanges','ok'),trade)}));checks++;
 await assertFails(getDoc(doc(c,'exchanges','ok')));checks++;
-await assertFails(updateDoc(doc(b,'exchanges','ok'),{status:'accepted'}));checks++;
-await assertSucceeds(runTransaction(b,async t=>{const u=doc(b,'users','bob'),s=await t.get(u),d=s.data();d.st.sp+=100;d.cards.ch.one++;d.assetOp='exchanges/ok:accept';t.set(u,d);t.update(doc(b,'exchanges','ok'),{status:'accepted'})}));checks++;
+await assertFails(updateDoc(doc(b,'exchanges','ok'),{status:'accepted',toAgreed:true}));checks++;
+await assertSucceeds(runTransaction(b,async t=>{const u=doc(b,'users','bob'),s=await t.get(u),d=s.data();d.st.sp+=100;d.cards.ch.one++;d.assetOp='exchanges/ok:accept';t.set(u,d);t.update(doc(b,'exchanges','ok'),{status:'accepted',toAgreed:true})}));checks++;
 await assertFails(updateDoc(doc(b,'exchanges','ok'),{status:'pending'}));checks++;
 await assertSucceeds(runTransaction(a,async t=>{const u=doc(a,'users','alice'),s=await t.get(u),d=s.data();d.st.sp+=100;d.assetOp='exchanges/ok:claim';t.set(u,d);t.update(doc(a,'exchanges','ok'),{claimed:true})}));checks++;
 await assertFails(updateDoc(doc(a,'exchanges','ok'),{claimed:false}));checks++;
@@ -42,4 +42,11 @@ await assertSucceeds(runTransaction(a,async t=>{const u=doc(a,'users','alice'),q
 await env.withSecurityRulesDisabled(async c=>{await setDoc(doc(c.firestore(),'fundraisers','fund','contributors','tied'),{name:'Tied',total:150,nonce:'old',at:1});await setDoc(doc(c.firestore(),'posts','empty'),{ownerUid:'alice',post:{fundGoal:200},del:false})});
 await assertSucceeds(setDoc(doc(a,'richTitles','tied','funds','fund'),{title:'Богач',amount:150,at:require('firebase/firestore').serverTimestamp()}));checks++;
 await assertSucceeds(setDoc(doc(a,'fundraisers','empty'),{owner:'alice',goal:200,raised:0,paid:0,lastBy:'alice',lastAmount:0,nonce:'empty',closed:true,closedAt:require('firebase/firestore').serverTimestamp(),leaderTotal:0,leaderUid:''}));checks++;
+// Sender may not consent on behalf of the recipient; recipient may not change the terms.
+await assertSucceeds(runTransaction(a,async t=>{const u=doc(a,'users','alice'),q=await t.get(u),d=q.data();d.st.sp-=200;d.cards.ch.one--;d.assetOp='exchanges/decline:create';t.set(u,d);t.set(doc(a,'exchanges','decline'),trade)}));checks++;
+await assertFails(updateDoc(doc(a,'exchanges','decline'),{status:'accepted',toAgreed:true}));checks++;
+await assertFails(updateDoc(doc(b,'exchanges','decline'),{status:'accepted',toAgreed:true,wantMoney:0}));checks++;
+await assertSucceeds(updateDoc(doc(b,'exchanges','decline'),{status:'rejected'}));checks++;
+await assertSucceeds(runTransaction(a,async t=>{const u=doc(a,'users','alice'),q=await t.get(u),d=q.data();d.st.sp+=200;d.cards.ch.one++;d.assetOp='exchanges/decline:refund';t.set(u,d);t.update(doc(a,'exchanges','decline'),{claimed:true})}));checks++;
+await assertFails(updateDoc(doc(a,'exchanges','decline'),{claimed:false}));checks++;
 console.log('Rules checks passed:',checks);await env.cleanup();process.exit(0)})().catch(e=>{console.error(e);process.exit(1)});

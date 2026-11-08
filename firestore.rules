@@ -135,7 +135,7 @@ service cloud.firestore {
     match /exchanges/{exchangeId} {
       allow read: if signedPlayer() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
       allow create: if signedPlayer()
-        && request.resource.data.keys().hasOnly(['from','to','giveMoney','giveCard','wantMoney','wantCard','status','claimed','at'])
+        && request.resource.data.keys().hasOnly(['from','to','giveMoney','giveCard','wantMoney','wantCard','status','claimed','at','fromAgreed','toAgreed'])
         && request.resource.data.from == request.auth.uid && request.resource.data.to != request.auth.uid
         && request.resource.data.to is string && request.resource.data.to.size() <= 128
         && exists(/databases/$(database)/documents/users/$(request.resource.data.to))
@@ -143,17 +143,24 @@ service cloud.firestore {
         && validCard(request.resource.data.giveCard) && validCard(request.resource.data.wantCard)
         && (request.resource.data.giveMoney > 0 || request.resource.data.giveCard != '')
         && request.resource.data.status == 'pending' && request.resource.data.claimed == false
+        && request.resource.data.fromAgreed == true && request.resource.data.toAgreed == false
         && request.resource.data.at is int
         && assetChange(-request.resource.data.giveMoney, request.resource.data.giveCard, '', 'exchanges/' + exchangeId + ':create');
       allow update: if signedPlayer() && (
-        (resource.data.status == 'pending' && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']) && (
-          (resource.data.to == request.auth.uid && request.resource.data.status == 'accepted'
+        (resource.data.status == 'pending' && (
+          (resource.data.to == request.auth.uid && resource.data.get('fromAgreed',false) == true
+            && request.resource.data.status == 'accepted' && request.resource.data.toAgreed == true
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','toAgreed'])
             && assetChange(resource.data.giveMoney-resource.data.wantMoney, resource.data.wantCard, resource.data.giveCard, 'exchanges/' + exchangeId + ':accept'))
           || (resource.data.from == request.auth.uid && request.resource.data.status == 'cancelled'
-            && assetChange(resource.data.giveMoney, '', resource.data.giveCard, 'exchanges/' + exchangeId + ':cancel'))))
-        || (resource.data.from == request.auth.uid && resource.data.status == 'accepted' && resource.data.claimed == false
-          && request.resource.data.claimed == true && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['claimed'])
-          && assetChange(resource.data.wantMoney, '', resource.data.wantCard, 'exchanges/' + exchangeId + ':claim')));
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+            && assetChange(resource.data.giveMoney, '', resource.data.giveCard, 'exchanges/' + exchangeId + ':cancel'))
+          || (resource.data.to == request.auth.uid && request.resource.data.status == 'rejected'
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']))))
+        || (resource.data.from == request.auth.uid && resource.data.claimed == false
+          && request.resource.data.claimed == true && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['claimed']) && (
+            (resource.data.status == 'accepted' && assetChange(resource.data.wantMoney, '', resource.data.wantCard, 'exchanges/' + exchangeId + ':claim'))
+            || (resource.data.status == 'rejected' && assetChange(resource.data.giveMoney, '', resource.data.giveCard, 'exchanges/' + exchangeId + ':refund')))));
       allow delete: if false;
     }
     match /fundraisers/{postId} {
