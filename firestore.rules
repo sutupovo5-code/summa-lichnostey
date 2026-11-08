@@ -51,7 +51,7 @@ service cloud.firestore {
     match /users/{uid} {
       allow read: if request.auth != null && request.auth.uid == uid;
       allow create, update: if request.auth != null && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['profile', 'st', 'shop', 'cards', 'eggs', 'v', 'updatedAt']);
+        && request.resource.data.keys().hasOnly(['profile', 'st', 'shop', 'cards', 'eggs', 'v', 'updatedAt', 'assetOp']);
       allow delete: if false;
     }
     // Сброс пароля (pack40): пароль, зашифрованный кодом восстановления. Без кода прочитать нельзя.
@@ -103,6 +103,90 @@ service cloud.firestore {
         && (!('look' in request.resource.data) || (request.resource.data.look is map && request.resource.data.look.size() <= 4))
         && (!('coll' in request.resource.data) || (request.resource.data.coll is map && request.resource.data.coll.size() <= 4));
     }
+    // Exchanges use escrow: creation reserves assets, acceptance pays the recipient,
+    // cancellation refunds the sender, and claim pays the requested assets once.
+    function signedPlayer() { return request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous'; }
+    function userBefore() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function userAfter() { return getAfter(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function cardKey(c) { return c.replace('^(ch|sk):', ''); }
+    function cardMapChange(kind, outCard, inCard, before, after) {
+      let o = outCard.matches('^' + kind + ':.*') ? cardKey(outCard) : '';
+      let i = inCard.matches('^' + kind + ':.*') ? cardKey(inCard) : '';
+      let old = before.cards[kind];
+      let next = after.cards[kind];
+      let od = (o != '' ? -1 : 0) + (i == o && i != '' ? 1 : 0);
+      let id = (i != '' ? 1 : 0) - (i == o && o != '' ? 1 : 0);
+      return next.diff(old).affectedKeys().hasOnly([o,i])
+        && next.get(o,0) == old.get(o,0) + od && next.get(o,0) >= 0
+        && next.get(i,0) == old.get(i,0) + id && next.get(i,0) >= 0;
+    }
+    function assetChange(money, outCard, inCard, operation) {
+      let before = userBefore();
+      let after = userAfter();
+      return after.assetOp == operation && before.get('assetOp','') != operation
+        && after.st.sp == before.st.sp + money && after.st.sp >= 0
+        && after.st.diff(before.st).affectedKeys().hasOnly(['sp'])
+        && after.diff(before).affectedKeys().hasOnly(['st','cards','updatedAt','assetOp'])
+        && after.cards.diff(before.cards).affectedKeys().hasOnly(['ch','sk'])
+        && cardMapChange('ch', outCard, inCard, before, after) && cardMapChange('sk', outCard, inCard, before, after);
+    }
+    function validMoney(n) { return n is int && n >= 0 && n <= 1000000000; }
+    function validCard(c) { return c is string && (c == '' || c.matches('^(ch|sk):[A-Za-z0-9_-]+(:[A-Za-z0-9_-]+)?$')); }
+    match /exchanges/{exchangeId} {
+      allow read: if signedPlayer() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
+      allow create: if signedPlayer()
+        && request.resource.data.keys().hasOnly(['from','to','giveMoney','giveCard','wantMoney','wantCard','status','claimed','at'])
+        && request.resource.data.from == request.auth.uid && request.resource.data.to != request.auth.uid
+        && request.resource.data.to is string && request.resource.data.to.size() <= 128
+        && exists(/databases/$(database)/documents/users/$(request.resource.data.to))
+        && validMoney(request.resource.data.giveMoney) && validMoney(request.resource.data.wantMoney)
+        && validCard(request.resource.data.giveCard) && validCard(request.resource.data.wantCard)
+        && (request.resource.data.giveMoney > 0 || request.resource.data.giveCard != '')
+        && request.resource.data.status == 'pending' && request.resource.data.claimed == false
+        && request.resource.data.at is int
+        && assetChange(-request.resource.data.giveMoney, request.resource.data.giveCard, '', 'exchanges/' + exchangeId + ':create');
+      allow update: if signedPlayer() && (
+        (resource.data.status == 'pending' && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']) && (
+          (resource.data.to == request.auth.uid && request.resource.data.status == 'accepted'
+            && assetChange(resource.data.giveMoney-resource.data.wantMoney, resource.data.wantCard, resource.data.giveCard, 'exchanges/' + exchangeId + ':accept'))
+          || (resource.data.from == request.auth.uid && request.resource.data.status == 'cancelled'
+            && assetChange(resource.data.giveMoney, '', resource.data.giveCard, 'exchanges/' + exchangeId + ':cancel'))))
+        || (resource.data.from == request.auth.uid && resource.data.status == 'accepted' && resource.data.claimed == false
+          && request.resource.data.claimed == true && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['claimed'])
+          && assetChange(resource.data.wantMoney, '', resource.data.wantCard, 'exchanges/' + exchangeId + ':claim')));
+      allow delete: if false;
+    }
+    match /fundraisers/{postId} {
+      function post() { return get(/databases/$(database)/documents/posts/$(postId)).data; }
+      function validFund() {
+        return request.resource.data.keys().hasOnly(['owner','goal','raised','paid','lastBy','lastAmount','nonce'])
+          && request.resource.data.owner == post().ownerUid && request.resource.data.goal == post().post.fundGoal
+          && request.resource.data.nonce is string && request.resource.data.nonce.size() <= 64
+          && validMoney(request.resource.data.goal) && request.resource.data.goal > 0
+          && validMoney(request.resource.data.raised) && validMoney(request.resource.data.paid)
+          && request.resource.data.paid <= request.resource.data.raised
+          && request.resource.data.raised <= request.resource.data.goal;
+      }
+      allow read: if true;
+      allow create: if signedPlayer() && validFund() && post().del != true
+        && request.auth.uid != request.resource.data.owner && request.resource.data.paid == 0
+        && request.resource.data.lastBy == request.auth.uid
+        && request.resource.data.lastAmount == request.resource.data.raised && request.resource.data.raised > 0
+        && assetChange(-request.resource.data.raised, '', '', 'fundraisers/' + postId + ':' + request.resource.data.nonce);
+      allow update: if signedPlayer() && validFund()
+        && request.resource.data.owner == resource.data.owner && request.resource.data.goal == resource.data.goal
+        && request.resource.data.lastBy == request.auth.uid && (
+          (request.auth.uid != resource.data.owner && post().del != true
+            && request.resource.data.paid == resource.data.paid && request.resource.data.lastAmount > 0
+            && request.resource.data.raised == resource.data.raised + request.resource.data.lastAmount
+            && assetChange(-request.resource.data.lastAmount, '', '', 'fundraisers/' + postId + ':' + request.resource.data.nonce))
+          || (request.auth.uid == resource.data.owner && request.resource.data.raised == resource.data.raised
+            && request.resource.data.paid == resource.data.raised && resource.data.raised > resource.data.paid
+            && request.resource.data.lastAmount == 0
+            && assetChange(resource.data.raised-resource.data.paid, '', '', 'fundraisers/' + postId + ':' + request.resource.data.nonce)));
+      allow delete: if false;
+    }
+
     // Особая карта X: один раз навсегда — первому, кто собрал все 130 карт.
     match /meta/firstX {
       allow read: if true;

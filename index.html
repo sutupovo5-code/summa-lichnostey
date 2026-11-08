@@ -3614,7 +3614,8 @@ const cfg={apiKey:"AIzaSyC9VtdX9pZ1cHmplRNd3dXhYd2ae5vDSGo",authDomain:"summa-li
 const OFF='⚠️ Нет связи с общей лентой — показана сохранённая копия';
 try{
  const [{initializeApp},A,F]=await Promise.all([import(B+'firebase-app.js'),import(B+'firebase-auth.js'),import(B+'firebase-firestore.js')]);
- const app=initializeApp(cfg),auth=A.getAuth(app),db=F.getFirestore(app),ref=id=>F.doc(db,'posts',id);
+ const appleWebKit=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+ const app=initializeApp(cfg),auth=A.getAuth(app),db=F.initializeFirestore(app,{experimentalForceLongPolling:appleWebKit,experimentalLongPollingOptions:{timeoutSeconds:5},useFetchStreams:!appleWebKit}),ref=id=>F.doc(db,'posts',id);
  window.SXF={F,A,db,auth};dispatchEvent(new Event('sxfb'));
  const warn=(e,what)=>{console.warn('[sync]',what,e&&e.code,e&&e.message);toast(e&&e.code==='permission-denied'?'⚠️ База не приняла изменение (правила доступа)':'⚠️ Не удалось сохранить в общей ленте')};
  SXC.fn=async op=>{try{switch(op.t){
@@ -6535,7 +6536,7 @@ async function dkoMove(mv){if(dko.sending||!dko.code)return;dko.sending=true;con
  try{await SXF.F.runTransaction(SXF.db,async tx=>{const r=dkoRef(code),snap=await tx.get(r);if(!snap.exists())throw new Error('Стол не найден');const s=snap.data(),role=dkoRole(s);
   if(!role)throw new Error('Вы не за этим столом');const err=dkoApply(s,role,mv);if(err)throw new Error(err);tx.set(r,s)})}
  catch(e){toast('⚠️ '+(e.code==='permission-denied'?'База не приняла ход — обновите правила Firebase (блок dkr)':e.message||'Ход не прошёл'))}finally{dko.sending=false}}
-function dkoWatch(code){dkoStop();dko.code=code;sxPut('summa_dko_cur',code);dko.unsub=SXF.F.onSnapshot(dkoRef(code),snap=>{if(!snap.exists()){dko.s=null;dkoRender();return}const s=snap.data();s.code=code;dko.s=s;dkoMoney(s);CL.busy=s.st==='play'&&!!dkoRole(s);dkoRender()},e=>{console.warn('[dko]',e.code);toast('⚠️ Нет связи со столом')});
+function dkoWatch(code){dkoStop();dko.code=code;sxPut('summa_dko_cur',code);dko.unsub=SXF.F.onSnapshot(dkoRef(code),{includeMetadataChanges:true},snap=>{if(!snap.exists()){dko.s=null;dkoRender();return}const s=snap.data();s.code=code;dko.s=s;dkoMoney(s);CL.busy=s.st==='play'&&!!dkoRole(s);dkoRender()},e=>{console.warn('[dko]',e.code);toast('⚠️ Нет связи со столом')});
  clearInterval(dko.tick);dko.tick=0}
 function dkoStop(){if(dko.unsub){try{dko.unsub()}catch(e){}}dko.unsub=null;clearInterval(dko.tick);dko.code=null;dko.s=null}
 function dkoLeave(){dkoStop();sxPut('summa_dko_cur',null);CL.busy=false;dkoRender();dkoLobby()}
@@ -6678,7 +6679,7 @@ const dkoStopBase=dkoStop;
 dkoStop=function(){++dkoEpoch;dkoStopBase();dkoConfirmed=null;dko.sending=false;dkoRenderKey=''};
 dkoWatch=function(code){
  dkoStop();const epoch=dkoEpoch;dko.code=code;sxPut('summa_dko_cur',code);
- dko.unsub=SXF.F.onSnapshot(dkoRef(code),snap=>{
+ dko.unsub=SXF.F.onSnapshot(dkoRef(code),{includeMetadataChanges:true},snap=>{
   if(epoch!==dkoEpoch)return;
   if(!snap.exists()){dko.s=null;dkoRender();return}
   // Never pay out from a speculative local write.
@@ -6782,6 +6783,60 @@ let evGtaWasLive=evLive();shApply();
 setInterval(()=>{const live=evLive();if(live!==evGtaWasLive){evGtaWasLive=live;shApply();shRender()}},1000);
 addEventListener('pageshow',()=>shApply());
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)shApply()});
+</script>
+
+<style id="pack47">
+.tx-form{display:grid;gap:10px}.tx-form label{display:grid;gap:5px;font-size:12px}.tx-form input,.tx-form select{width:100%;min-width:0;font-size:16px;padding:10px;background:#14213d;border:1px solid #7086a2;border-radius:10px;color:white}.tx-item{padding:12px;border:1px solid #657294;border-radius:12px;display:grid;gap:8px;overflow-wrap:anywhere}.tx-note{font-size:12px;line-height:1.5;color:#c6dbf3}.tx-fund{padding:12px;margin:10px 0;background:#15294b;border:1px solid #7ca3cc;border-radius:12px;display:grid;gap:8px}.tx-fund progress{width:100%}
+html.tx-playing :is(#gtaSky,#spSnow,#spStars,.sx-spark,.gta-cash){display:none!important}html.tx-playing .hero-tile{animation-play-state:paused!important}
+</style>
+<script id="pack47js">
+/* Transactions serialize account sync and asset operations. No other user's private account is read. */
+let txQueue=Promise.resolve();
+const txClone=x=>JSON.parse(JSON.stringify(x));
+function txEnqueue(fn){const p=txQueue.then(fn);txQueue=p.catch(()=>{});return p}
+const txUID=()=>SXF.auth.currentUser.uid;
+const txRef=(c,id)=>SXF.F.doc(SXF.db,c,id);
+function txAccount(){if(!acIsAcct())throw Error('Войдите в аккаунт с паролем');if(!navigator.onLine)throw Error('Нужен интернет')}
+function txAmount(n){const v=Number(n);if(!Number.isSafeInteger(v)||v<0||v>1e9)throw Error('Сумма должна быть целым числом от 0 до 1 000 000 000');return v}
+function txCard(key){if(!key)return null;const [kind,m,skin]=key.split(':');if(!TEAM_MEMBERS.some(x=>x.id===m)||!['ch','sk'].includes(kind)||(kind==='sk'&&!C2_SKINS.some(x=>x.id===skin)))throw Error('Неизвестная карточка');return {kind,key:kind==='ch'?m:m+':'+skin}}
+function txAssets(d,money,card,sign){d.st=d.st||{};d.cards=d.cards||{ch:{},sk:{},log:[]};d.st.sp=(+d.st.sp||0)+sign*money;if(d.st.sp<0)throw Error('Не хватает Σ');const c=txCard(card);if(c){d.cards[c.kind]=d.cards[c.kind]||{};const n=(+d.cards[c.kind][c.key]||0)+sign;if(n<0)throw Error('Карточки больше нет в коллекции');d.cards[c.kind][c.key]=n}}
+function txDeltaMap(remote,local,base){const out={...remote};for(const k of new Set([...Object.keys(local||{}),...Object.keys(base||{})])){const n=(+remote?.[k]||0)+(+local?.[k]||0)-(+base?.[k]||0);if(n<0)throw Error('Коллекция изменилась на другом устройстве. Перезайдите в аккаунт');out[k]=n}return out}
+function txAdopt(saved,captured){
+ const current=acCollect();state.synergyPoints=(+saved.st.sp||0)+current.st.sp-captured.st.sp;
+ for(const k of ['ch','sk'])c2[k]=txDeltaMap(saved.cards?.[k]||{},current.cards?.[k]||{},captured.cards?.[k]||{});
+ saveState();c2Save();acLast=JSON.stringify(saved);sxPut(AC_SYNC_KEY,saved.updatedAt);updateAllCountersUI();ccSecRender();
+}
+async function txSync(){
+ txAccount();const captured=acCollect(),base=acLast?JSON.parse(acLast):null;let saved;
+ await SXF.F.runTransaction(SXF.db,async t=>{const r=txRef('users',txUID()),s=await t.get(r),remote=s.exists()?s.data():null;
+  if(remote&&!base)throw Error('Аккаунт ещё загружается. Повторите через несколько секунд');
+  saved=txClone(captured);
+  if(remote){for(const k of ['ts','jw'])saved.st[k]=Math.max(0,(+remote.st?.[k]||0)+(+captured.st[k]||0)-(+base.st?.[k]||0));saved.st.sp=(+remote.st?.sp||0)+captured.st.sp-(+base.st?.sp||0);if(saved.st.sp<0)throw Error('Баланс изменился на другом устройстве. Перезайдите');for(const k of ['ch','sk'])saved.cards[k]=txDeltaMap(remote.cards?.[k]||{},captured.cards?.[k]||{},base.cards?.[k]||{})}
+  if(remote?.assetOp)saved.assetOp=remote.assetOp;saved.updatedAt=Date.now();t.set(r,saved);
+ });txAdopt(saved,captured);return true;
+}
+acUpload=function(force){if(!acIsAcct())return Promise.resolve(false);if(!force&&((dko.s?.st==='play')||JSON.stringify(acCollect())===JSON.stringify((({updatedAt,assetOp,...x})=>x)(acLast?JSON.parse(acLast):{}))))return Promise.resolve(true);return txEnqueue(txSync).catch(e=>{console.warn('[account transaction]',e.code||e.message);return false})};
+function txError(e){console.warn('[exchange]',e);toast(e.code==='permission-denied'?'Нужно опубликовать новые правила Firebase для обменов и сборов':e.message||'Не удалось выполнить операцию')}
+function txDo(fn){return txEnqueue(async()=>{await txSync();const captured=acCollect();const result=await fn(captured);if(result?.account)txAdopt(result.account,captured);return result}).catch(e=>{txError(e);throw e})}
+function txCardOptions(){return '<option value="">Без карточки</option>'+TEAM_MEMBERS.map(m=>`<option value="ch:${m.id}">${esc(m.name)} · персонаж (${c2N(c2.ch,m.id)})</option>`+C2_SKINS.map(s=>`<option value="sk:${m.id}:${s.id}">${esc(c2Title(m,s.id))} · ${esc(s.name||s.id)} (${c2N(c2.sk,m.id+':'+s.id)})</option>`).join('')).join('')}
+function txSummary(m,c){const x=txCard(c);if(!x)return shFmt(m)+' Σ';const mbr=TEAM_MEMBERS.find(z=>z.id===(x.kind==='ch'?x.key:x.key.split(':')[0]));return shFmt(m)+' Σ + '+mbr.name+(x.kind==='sk'?' · '+x.key.split(':')[1]:' · персонаж')}
+function txOpen(to=''){
+ if(!acIsAcct())return toast('Войдите в аккаунт с паролем');$('txOv')?.remove();const ov=document.createElement('div');ov.className='sx-ov';ov.id='txOv';
+ ov.innerHTML=`<div class="pe-box"><div class="sx-head"><h3>🤝 Обмены и переводы Σ</h3><button class="sx-x" onclick="sxCloseOv($('txOv'))">✕</button></div><div class="tx-form"><p class="tx-note">Ваш ID: <b>${esc(txUID())}</b><br>Предложения резервируют отправленные Σ и одну карточку. Получатель подтверждает обмен. До принятия можно отменить.</p><label>ID получателя<input id="txTo" value="${esc(to)}" maxlength="128"></label><label>Отправляю Σ<input id="txGive" type="number" min="0" max="1000000000" value="0" inputmode="numeric"></label><label>Отправляю карточку<select id="txGiveCard">${txCardOptions()}</select></label><label>Прошу взамен Σ (0 — подарок)<input id="txWant" type="number" min="0" max="1000000000" value="0" inputmode="numeric"></label><label>Прошу карточку<select id="txWantCard">${txCardOptions()}</select></label><button class="pe-btn main" onclick="txCreate(this)">Создать предложение</button><button class="pe-btn" onclick="txList()">Обновить предложения</button><div id="txList">Загрузка…</div></div></div>`;document.body.appendChild(ov);txList();
+}
+async function txCreate(btn){if(btn.disabled)return;btn.disabled=true;try{const to=$('txTo').value.trim(),giveMoney=txAmount($('txGive').value),wantMoney=txAmount($('txWant').value),giveCard=$('txGiveCard').value,wantCard=$('txWantCard').value;txCard(giveCard);txCard(wantCard);if(!/^[A-Za-z0-9_-]{1,128}$/.test(to)||to===txUID())throw Error('Укажите ID другого игрока');if(!giveMoney&&!giveCard)throw Error('Выберите сумму или карточку');
+ const id=crypto.randomUUID();await txDo(async captured=>{let account;await SXF.F.runTransaction(SXF.db,async t=>{const u=txRef('users',txUID()),snap=await t.get(u);account=snap.data();txAssets(account,giveMoney,giveCard,-1);account.assetOp='exchanges/'+id+':create';account.updatedAt=Date.now();t.set(u,account);t.set(txRef('exchanges',id),{from:txUID(),to,giveMoney,giveCard,wantMoney,wantCard,status:'pending',claimed:false,at:Date.now()})});return {account}});toast('Предложение отправлено');await txList();}catch(e){if(e.code===undefined)toast(e.message)}finally{btn.disabled=false}}
+async function txList(){const el=$('txList');if(!el)return;try{const {F,db}=SXF;const lists=await Promise.all(['from','to'].map(k=>F.getDocs(F.query(F.collection(db,'exchanges'),F.where(k,'==',txUID())))));const rows=[];for(const list of lists)list.forEach(s=>{if(/^[A-Za-z0-9_-]+$/.test(s.id))rows.push({id:s.id,...s.data()})});rows.sort((a,b)=>b.at-a.at);el.innerHTML=rows.map(x=>{const mine=x.from===txUID();return `<div class="tx-item"><b>${mine?'Исходящее':'Входящее'} · ${esc(x.status)}</b><small>${esc(txSummary(x.giveMoney,x.giveCard))} → ${esc(txSummary(x.wantMoney,x.wantCard))}</small>${x.status==='pending'?`<button class="pe-btn" onclick="txAct('${esc(x.id)}','${mine?'cancel':'accept'}',this)">${mine?'Отменить и вернуть':'Принять'}</button>`:mine&&x.status==='accepted'&&!x.claimed?`<button class="pe-btn" onclick="txAct('${esc(x.id)}','claim',this)">Забрать полученное</button>`:''}</div>`}).join('')||'Предложений пока нет'}catch(e){el.textContent=e.code==='permission-denied'?'Обмены включатся после публикации правил Firebase':'Не удалось загрузить предложения'}}
+async function txAct(id,action,btn){btn.disabled=true;try{await txDo(async()=>{let account;await SXF.F.runTransaction(SXF.db,async t=>{const r=txRef('exchanges',id),u=txRef('users',txUID()),[s,a]=await Promise.all([t.get(r),t.get(u)]);if(!s.exists())throw Error('Предложение не найдено');const x=s.data();account=a.data();if(action==='accept'){if(x.to!==txUID()||x.status!=='pending')throw Error('Предложение уже изменилось');txAssets(account,x.wantMoney,x.wantCard,-1);txAssets(account,x.giveMoney,x.giveCard,1);t.update(r,{status:'accepted'})}else if(action==='cancel'){if(x.from!==txUID()||x.status!=='pending')throw Error('Предложение уже принято или отменено');txAssets(account,x.giveMoney,x.giveCard,1);t.update(r,{status:'cancelled'})}else{if(x.from!==txUID()||x.status!=='accepted'||x.claimed)throw Error('Уже получено');txAssets(account,x.wantMoney,x.wantCard,1);t.update(r,{claimed:true})}account.assetOp='exchanges/'+id+':'+action;account.updatedAt=Date.now();t.set(u,account)});return {account}});toast('Готово');await txList()}catch(e){}finally{btn.disabled=false}}
+const txSettings=openSettings;openSettings=function(){txSettings();const box=document.querySelector('#sxOv .pe-box');if(box&&acIsAcct())box.insertAdjacentHTML('beforeend','<div class="pe-sec"><b>🤝 ОБМЕНЫ И ПЕРЕВОДЫ</b><button class="pe-btn main" onclick="txOpen()">Карточки и Σ другим игрокам</button></div>')};
+const txProfile=spOpenProfile;spOpenProfile=async function(w){await txProfile(w);if(w?.k==='u'&&w.id!==SXC.uid){const box=document.querySelector('#spPfOv .pe-box');if(box){const b=document.createElement('button');b.className='pe-btn main';b.textContent='🤝 Обмен / перевод Σ';b.onclick=()=>txOpen(w.id);box.appendChild(b)}}};
+/* Fundraisers are separate, persistent documents linked to a post. */
+const txComposer=openComposerModal;openComposerModal=function(){txComposer();const form=$('createPostForm');if(form&&!$('txGoal'))form.insertAdjacentHTML('beforeend','<label class="tx-form">💰 Сбор Σ (цель, 0 — без сбора)<input id="txGoal" type="number" min="0" max="1000000000" value="0" inputmode="numeric"></label>')};
+const txCloud=sxCloudDo;sxCloudDo=function(op){if(op?.t==='create'&&op.post){const goal=Number($('txGoal')?.value||0);if(Number.isSafeInteger(goal)&&goal>0&&goal<=1e9&&acIsAcct())op.post.fundGoal=goal}return txCloud(op)};
+const txFull=renderFullPostModalContent;renderFullPostModalContent=function(p){txFull(p);if(p?.fundGoal>0)txFundMount(p)};
+async function txFundMount(p){const body=$('fullPostScrollBody');if(!body)return;$('txFund')?.remove();const box=document.createElement('div');box.id='txFund';box.className='tx-fund';box.textContent='Загрузка сбора…';body.appendChild(box);try{const r=txRef('fundraisers',p.id),s=await SXF.F.getDoc(r),x=s.exists()?s.data():{raised:0,paid:0},owner=spOwnerOf(p)===SXC.uid;box.innerHTML=`<b>💰 Сбор: ${shFmt(x.raised)} / ${shFmt(p.fundGoal)} Σ</b><progress max="${Number(p.fundGoal)}" value="${Math.min(x.raised,p.fundGoal)}"></progress><input id="txDonateAmount" type="number" value="100" min="1" max="1000000000" inputmode="numeric" aria-label="Взнос Σ"><button class="pe-btn main" id="txDonateBtn">Внести Σ</button>${owner?'<button class="pe-btn" id="txCollectBtn">Забрать собранные Σ</button>':''}`;$('txDonateBtn').onclick=()=>txFundAction(p,false);if(owner)$('txCollectBtn').onclick=()=>txFundAction(p,true)}catch(e){box.textContent='Сбор станет доступен после обновления правил Firebase'}}
+async function txFundAction(p,claim){const buttons=document.querySelectorAll('#txFund button');buttons.forEach(b=>b.disabled=true);try{const amount=claim?0:txAmount($('txDonateAmount').value);if(!claim&&!amount)throw Error('Введите сумму больше нуля');await txDo(async()=>{let account;await SXF.F.runTransaction(SXF.db,async t=>{const f=txRef('fundraisers',p.id),u=txRef('users',txUID()),post=txRef('posts',p.id);const [fs,us,ps]=await Promise.all([t.get(f),t.get(u),t.get(post)]);if(!ps.exists()||(!claim&&ps.data().del))throw Error('Пост удалён');const owner=ps.data().ownerUid,goal=ps.data().post.fundGoal;if(!Number.isSafeInteger(goal)||goal<=0)throw Error('В посте нет сбора');let fund=fs.exists()?fs.data():{owner,goal,raised:0,paid:0,lastBy:'',lastAmount:0};account=us.data();if(claim){if(owner!==txUID())throw Error('Только автор может забрать сбор');const money=fund.raised-fund.paid;if(money<=0)throw Error('Пока нечего забирать');txAssets(account,money,'',1);fund.paid=fund.raised;fund.lastBy=txUID();fund.lastAmount=0}else{if(owner===txUID())throw Error('Нельзя внести Σ в собственный сбор');if(fund.raised+amount>goal)throw Error('До цели осталось '+shFmt(goal-fund.raised)+' Σ');txAssets(account,amount,'',-1);fund.raised+=amount;fund.lastBy=txUID();fund.lastAmount=amount}fund.nonce=crypto.randomUUID();account.assetOp='fundraisers/'+p.id+':'+fund.nonce;account.updatedAt=Date.now();t.set(u,account);t.set(f,fund)});return {account}});toast('Готово');await txFundMount(p)}catch(e){if(!e.code)toast(e.message)}finally{buttons.forEach(b=>b.disabled=false)}}
+const txClubOpen=clOpen;clOpen=function(g){txClubOpen(g);document.documentElement.classList.add('tx-playing')};const txClubClose=clClose;clClose=function(){txClubClose();document.documentElement.classList.remove('tx-playing')};
 </script>
 
 </body>
