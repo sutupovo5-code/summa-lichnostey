@@ -36,8 +36,8 @@ import java.io.OutputStream;
  */
 public class MainActivity extends Activity {
 
-    static final String SITE = "https://sutupovo5-code.github.io/summa-lichnostey/";
-    static final String HOST = "sutupovo5-code.github.io";
+    static final String SITE = "https://tolstikovn739-dotcom.github.io/summa-lichnostey/";
+    static final String HOST = "tolstikovn739-dotcom.github.io";
     static final int REQ_FILE = 41;
 
     private WebView web;
