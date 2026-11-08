@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Номер сборки берётся из GitHub Actions (github.run_number), чтобы каждое новое приложение ставилось поверх старого.
+def buildNo = (System.getenv('VERSION_CODE') ?: '1') as int
+
+android {
+    namespace 'ru.summa.lichnostey'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'ru.summa.lichnostey'
+        minSdk 24
+        targetSdk 34
+        versionCode buildNo
+        versionName "1.0.${buildNo}"
+    }
+
+    signingConfigs {
+        release {
+            // Ключ подписи приходит из workflow (секрет ANDROID_KEYSTORE_B64 или временный ключ).
+            storeFile file(System.getenv('KS_FILE') ?: 'missing.p12')
+            storePassword System.getenv('KS_PASS') ?: ''
+            keyAlias System.getenv('KS_ALIAS') ?: 'summa'
+            keyPassword System.getenv('KS_PASS') ?: ''
+            storeType 'pkcs12'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

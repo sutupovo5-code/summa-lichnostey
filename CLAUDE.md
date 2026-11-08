@@ -135,3 +135,14 @@
 - Онлайн-дурак: `dkr/{КОД}` (5 символов). Ходы — `runTransaction` + проверка правил в `dkoApply`. Ставку каждый списывает себе сам
   при начале игры, выигрыш — при окончании (`summa_dko_paid`). Нет хода 2 минуты — соперник может забрать победу. Выход из клуба = «Сдаться».
   Карты соперника скрыты только на экране: в документе базы они есть (без сервера по-другому нельзя).
+
+## Android-приложение (папка android/)
+- WebView-оболочка над живым сайтом `https://sutupovo5-code.github.io/summa-lichnostey/` (Java, без androidx), пакет `ru.summa.lichnostey`.
+  Правки сайта видны в приложении сразу, пересобирать APK нужно только при изменении самой оболочки.
+- Умеет: выбор фото/видео для постов (onShowFileChooser), сохранение data:/blob: файлов в «Загрузки/Сумма», «назад» = history.back,
+  офлайн — последняя кэшированная версия, внешние ссылки — в браузере. Сайт видит приложение по `navigator.userAgent` ~ `SummaApp/`
+  и мост `window.SummaApp` (save, toast, version).
+- Сборка: GitHub Actions `.github/workflows/android.yml` (запуск при изменениях в android/ или вручную) → Release `apk-N`
+  + ветка `apk-build`. Ссылка на последнюю: `/releases/latest/download/Summa-Lichnostey.apk`.
+- Подпись: секреты `ANDROID_KEYSTORE_B64` / `ANDROID_KEYSTORE_PASS` (алиас `summa`); без них — временный ключ на каждую сборку.
+- Иконки: сгенерированы Pillow (Σ на солнце в полоску), адаптивная иконка в `mipmap-anydpi-v26`.
