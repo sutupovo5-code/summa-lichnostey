@@ -253,6 +253,34 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // A paid victory can be counted once, using its immutable score receipt.
+    match /riftScores/{uid} {
+      allow read: if true;
+      function ownScore() { return signedPlayer() && request.auth.uid == uid; }
+      function validScore() {
+        let id = request.resource.data.lastRunId;
+        let proof = /databases/$(database)/documents/riftScores/$(uid)/wins/$(id);
+        return request.resource.data.keys().hasOnly(['name','wins','lastRunId','updatedAt'])
+          && request.resource.data.name is string && request.resource.data.name.size() <= 60
+          && request.resource.data.name == get(/databases/$(database)/documents/users/$(uid)).data.profile.name
+          && request.resource.data.wins is int && request.resource.data.wins > 0
+          && id is string && id.size() <= 64 && request.resource.data.updatedAt == request.time
+          && !exists(proof) && getAfter(proof).data.at == request.time
+          && get(/databases/$(database)/documents/users/$(uid)).data.shop.riftLedger[id].status == 'won';
+      }
+      allow create: if ownScore() && validScore() && request.resource.data.wins == 1;
+      allow update: if ownScore() && validScore() && request.resource.data.wins == resource.data.wins + 1;
+      allow delete: if false;
+      match /wins/{runId} {
+        allow read: if signedPlayer() && request.auth.uid == uid;
+        allow create: if signedPlayer() && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['at']) && request.resource.data.at == request.time
+          && get(/databases/$(database)/documents/users/$(uid)).data.shop.riftLedger[runId].status == 'won'
+          && getAfter(/databases/$(database)/documents/riftScores/$(uid)).data.lastRunId == runId;
+        allow update, delete: if false;
+      }
+    }
+
     // Особая карта X: один раз навсегда — первому, кто собрал все 130 карт.
     match /meta/firstX {
       allow read: if true;

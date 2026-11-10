@@ -2,7 +2,8 @@
   "name": "summa-lichnostey",
   "private": true,
   "scripts": {
-    "test:rules": "firebase emulators:exec --only firestore --project demo-summa \"node tests/rules.cjs\""
+    "test:rules": "firebase emulators:exec --only firestore --project demo-summa \"node tests/rules.cjs\"",
+    "test:ranking": "firebase emulators:exec --only firestore --project demo-rift-ranking \"node tests/rift-ranking.cjs\""
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "4.0.1",

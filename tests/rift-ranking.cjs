@@ -1,0 +1,22 @@
+const {initializeTestEnvironment,assertSucceeds,assertFails}=require('@firebase/rules-unit-testing');
+const {doc,setDoc,getDoc,runTransaction,deleteDoc,serverTimestamp,getDocs,collection,query,orderBy}=require('firebase/firestore');
+const fs=require('fs'),path=require('path');
+(async()=>{const env=await initializeTestEnvironment({projectId:'demo-rift-ranking',firestore:{host:'127.0.0.1',port:8085,rules:fs.readFileSync(path.join(__dirname,'../firestore.rules'),'utf8')}});await env.clearFirestore();let checks=0;
+await env.withSecurityRulesDisabled(async c=>setDoc(doc(c.firestore(),'users','alice'),{profile:{name:'Alice'},shop:{riftLedger:{one:{status:'won'},two:{status:'won'},lost:{status:'lost'}}},st:{sp:100000},cards:{ch:{},sk:{},log:[]},eggs:[],v:1,updatedAt:1}));
+const a=env.authenticatedContext('alice',{firebase:{sign_in_provider:'password'}}).firestore(),b=env.authenticatedContext('bob',{firebase:{sign_in_provider:'password'}}).firestore();
+async function report(db,uid,id,wins,name='Alice'){return runTransaction(db,async t=>{t.set(doc(db,'riftScores',uid,'wins',id),{at:serverTimestamp()});t.set(doc(db,'riftScores',uid),{name,wins,lastRunId:id,updatedAt:serverTimestamp()})})}
+await assertFails(setDoc(doc(a,'riftScores','alice'),{name:'Alice',wins:1,lastRunId:'one',updatedAt:serverTimestamp()}));checks++;
+await assertFails(report(b,'alice','one',1));checks++;
+await assertFails(report(a,'alice','lost',1));checks++;
+await assertFails(report(a,'alice','practice',1));checks++;
+await assertFails(report(a,'alice','one',1,'Another player'));checks++;
+await assertSucceeds(report(a,'alice','one',1));checks++;
+await assertFails(report(a,'alice','one',2));checks++;
+await assertFails(setDoc(doc(a,'riftScores','alice','wins','two'),{at:serverTimestamp()}));checks++;
+await assertFails(report(a,'alice','two',99));checks++;
+await assertSucceeds(report(a,'alice','two',2));checks++;
+await assertFails(deleteDoc(doc(a,'riftScores','alice','wins','one')));checks++;
+await assertFails(deleteDoc(doc(a,'riftScores','alice')));checks++;
+await assertFails(getDoc(doc(b,'riftScores','alice','wins','one')));checks++;
+const publicDb=env.unauthenticatedContext().firestore();const top=await assertSucceeds(getDocs(query(collection(publicDb,'riftScores'),orderBy('wins','desc'))));if(top.docs[0].data().wins!==2)throw Error('Wrong counter');checks++;
+console.log('Ranking rule checks passed:',checks);await env.cleanup();process.exit(0)})().catch(e=>{console.error(e);process.exit(1)});

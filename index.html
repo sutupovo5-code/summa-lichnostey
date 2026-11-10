@@ -7098,12 +7098,12 @@ function rbSpawn(){const r=RB,pattern=(r.turn-1)%4,speed=74+Math.min(38,r.turn*5
 }
 function rbStep(dt){const r=RB;if(!r||r.phase==='paused')return;r.time+=dt;if(r.phase==='attack'){r.cursor=.5+.5*Math.sin(r.time*3);return}if(r.phase!=='defend')return;r.inv=Math.max(0,r.inv-dt);
  let dx=(r.keys.has('arrowright')||r.keys.has('d')?1:0)-(r.keys.has('arrowleft')||r.keys.has('a')?1:0),dy=(r.keys.has('arrowdown')||r.keys.has('s')?1:0)-(r.keys.has('arrowup')||r.keys.has('w')?1:0);if(r.target){dx=r.target.x-r.x;dy=r.target.y-r.y}const len=Math.hypot(dx,dy);if(len){const distance=Math.min(r.target?len:Infinity,180*dt);r.x+=dx/len*distance;r.y+=dy/len*distance}r.x=Math.max(10,Math.min(390,r.x));r.y=Math.max(10,Math.min(270,r.y));
- const period=typeof RB_TIERS!=='undefined'&&r.tier!==undefined?((r.tier>0&&r.turn%2===0)?.8:r.tier===2?.38:.36):((r.turn-1)%4===3?.85:.27);if(r.time>=r.spawn*period){r.spawn++;rbSpawn()}
+ const period=typeof rbSpawnPeriod58==='function'?rbSpawnPeriod58():typeof RB_TIERS!=='undefined'&&r.tier!==undefined?((r.tier>0&&r.turn%2===0)?.8:r.tier===2?.38:.36):((r.turn-1)%4===3?.85:.27);if(r.time>=r.spawn*period){r.spawn++;rbSpawn()}
  for(const b of r.bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;if(r.inv<=0&&Math.hypot(b.x-r.x,b.y-r.y)<b.r+6){r.hp=Math.max(0,r.hp-(typeof RB_TIERS!=='undefined'&&r.tier!==undefined?RB_TIERS[r.tier].hit:3));r.inv=.85;rbHud();if(r.hp<=0)return rbFinish(false)}}r.bullets=r.bullets.filter(b=>b.x>-300&&b.x<700&&b.y>-250&&b.y<550);if(r.time>=(typeof RB_TIERS!=='undefined'&&r.tier!==undefined?RB_TIERS[r.tier].seconds:6.5))rbAttackPhase()
 }
 function rbDraw(){if(!RB)return;const r=RB,c=$('rbCanvas').getContext('2d');r.lastDrawPhase=r.phase;c.setTransform(2,0,0,2,0,0);c.fillStyle='#080b12';c.fillRect(0,0,RB_W,RB_H);c.strokeStyle='#ffffff08';c.lineWidth=1;for(let x=20;x<400;x+=20){c.beginPath();c.moveTo(x,0);c.lineTo(x,280);c.stroke()}for(let y=20;y<280;y+=20){c.beginPath();c.moveTo(0,y);c.lineTo(400,y);c.stroke()}
  if(r.phase==='attack'){c.textAlign='center';c.fillStyle='#cfc4ae';c.font='12px monospace';c.fillText('ПОЙМАЙ СЕРЕДИНУ',200,78);c.fillStyle='#202530';c.fillRect(30,120,340,30);c.fillStyle='#b58a44';c.fillRect(180,120,40,30);c.fillStyle='#fff1c9';c.fillRect(30+r.cursor*336,112,4,46);c.fillStyle='#8995a8';c.font='11px monospace';c.fillText('Нажми «УДАР» в нужный момент',200,191)}
- else if(['defend','paused'].includes(r.phase)){for(const b of r.bullets){c.fillStyle=b.kind?'#d7e1ed':'#e5c47e';if(b.kind)c.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);else{c.beginPath();c.arc(b.x,b.y,b.r,0,Math.PI*2);c.fill()}}if(r.inv<=0||Math.floor(r.inv*12)%2===0){c.save();c.translate(r.x,r.y);c.fillStyle='#f383b1';c.beginPath();c.moveTo(0,7);c.bezierCurveTo(-14,-1,-8,-13,0,-6);c.bezierCurveTo(8,-13,14,-1,0,7);c.fill();c.restore()}c.fillStyle='#e2d5bb';c.fillRect(0,276,400*Math.max(0,1-r.time/(typeof RB_TIERS!=='undefined'&&r.tier!==undefined?RB_TIERS[r.tier].seconds:6.5)),4)}
+ else if(['defend','paused'].includes(r.phase)){for(const b of r.bullets){c.fillStyle=b.kind?'#d7e1ed':'#e5c47e';if(b.kind)c.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2);else{c.beginPath();c.arc(b.x,b.y,b.r,0,Math.PI*2);c.fill()}}if(r.inv<=0||sxStill()||Math.floor(r.inv*12)%2===0){c.save();c.translate(r.x,r.y);c.fillStyle='#f383b1';c.beginPath();c.moveTo(0,7);c.bezierCurveTo(-14,-1,-8,-13,0,-6);c.bezierCurveTo(8,-13,14,-1,0,7);c.fill();c.restore()}c.fillStyle='#e2d5bb';c.fillRect(0,276,400*Math.max(0,1-r.time/(typeof RB_TIERS!=='undefined'&&r.tier!==undefined?RB_TIERS[r.tier].seconds:6.5)),4)}
  else{c.textAlign='center';c.fillStyle='#e3c688';c.font='bold 28px monospace';c.fillText(r.phase==='win'?'КОНТРАКТ РАЗОРВАН':r.phase==='lose'?'ЕЩЁ ОДНА ПОПЫТКА':r.phase==='settling'?'РАСЧЁТ Σ':'Σ / РАЗЛОМ',200,125);c.fillStyle='#bcb8c6';c.font='12px monospace';c.fillText(r.phase==='intro'?'За рамкой сайта свои правила.':'Дон Сигма ждёт вашего решения.',200,156)}
  if(r.phase==='paused'){c.fillStyle='#080b12cc';c.fillRect(0,0,400,280);c.fillStyle='#f3dcaa';c.font='bold 24px monospace';c.textAlign='center';c.fillText('ПАУЗА',200,145)}
 }
@@ -7204,6 +7204,110 @@ addEventListener('pagehide',()=>{if(RB?.paid&&!RB.completed&&RB.runId)rbPendingS
 function rbRecoveryReady57(){if(!window.SXF)return;SXF.A.onAuthStateChanged(SXF.auth,u=>{if(u&&!u.isAnonymous)setTimeout(()=>{if(acIsAcct())rbRecover57().catch(()=>{})},2500)})}
 if(window.SXF)rbRecoveryReady57();else addEventListener('sxfb',rbRecoveryReady57,{once:true});
 addEventListener('online',()=>{if(acIsAcct())rbRecover57().catch(()=>{})});
+</script>
+
+<style id="pack58">
+.rb-don-head{transform-box:fill-box;transform-origin:50% 100%;animation:rbDonBreathe 3.2s ease-in-out infinite}.rb-don-hat{transform-box:fill-box;transform-origin:60% 90%}.rb-don-eyes{transform-box:fill-box;transform-origin:center;animation:rbDonBlink 5.4s ease-in-out infinite}.rb-don-hand{transform-box:fill-box;transform-origin:10% 80%;opacity:.9;animation:rbDonHand 4s ease-in-out infinite}
+#riftBattle .rb-boss{position:relative}.rb-don-hit .rb-don-head{animation:rbDonHit .35s ease-out}.rb-don-hit .rb-don-hat{animation:rbDonHat .45s ease-out}.rb-don-cast .rb-don-head{animation:rbDonCast .5s ease-out}.rb-don-cast .rb-don-hand{animation:rbDonGesture .5s ease-out}.rb-tier-flare .rb-portrait{animation:rbDonArrive .8s ease-out}.rb-damage-number{position:absolute;left:50px;top:8px;font:bold 17px/1 monospace;color:#ffe3aa;text-shadow:0 2px 4px #000;pointer-events:none;animation:rbDonDamage .7s ease-out forwards;z-index:3}.rb-player-hit .rb-hud strong{color:#fff;animation:rbHudHit .35s ease-out}.rb-pause :is(.rb-don-head,.rb-don-eyes,.rb-don-hand){animation-play-state:paused!important}
+#riftBattle[data-tier="2"] .rb-don-head{animation-duration:2s}.rb-attack-tag{font-size:10px;color:#efcc8b}#riftBattle.rb-don-cast .rb-don-head{animation:rbDonCast .5s ease-out}#riftBattle.rb-don-hit .rb-don-head{animation:rbDonHit .35s ease-out}
+@keyframes rbDonBreathe{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-2px) rotate(1deg)}}
+@keyframes rbDonBlink{0%,43%,47%,100%{transform:scaleY(1)}45%{transform:scaleY(.15)}}
+@keyframes rbDonHand{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@keyframes rbDonHit{0%{transform:translateX(0)}25%{transform:translateX(4px) rotate(7deg)}60%{transform:translateX(-2px) rotate(-3deg)}100%{transform:translateX(0)}}
+@keyframes rbDonHat{35%{transform:translate(2px,-5px) rotate(10deg)}100%{transform:translate(0,0)}}
+@keyframes rbDonCast{35%{transform:translateY(2px) rotate(-5deg)}100%{transform:translateY(0)}}
+@keyframes rbDonGesture{40%{transform:translate(-2px,-4px) rotate(-18deg)}100%{transform:translate(0,0)}}
+@keyframes rbDonArrive{0%{opacity:.2;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes rbDonDamage{0%{opacity:1;transform:translateY(3px)}100%{opacity:0;transform:translateY(-22px)}}
+@keyframes rbHudHit{0%,100%{opacity:1}50%{opacity:.55}}
+@media(prefers-reduced-motion:reduce){#riftBattle :is(.rb-don-head,.rb-don-eyes,.rb-don-hand,.rb-don-hat,.rb-portrait,.rb-damage-number,.rb-hud strong){animation:none!important}}
+html.sx-still #riftBattle :is(.rb-don-head,.rb-don-eyes,.rb-don-hand,.rb-don-hat,.rb-portrait,.rb-damage-number,.rb-hud strong){animation:none!important}
+</style>
+<script id="pack58js">
+const RB_MOVES=[
+ [{id:'fan',name:'Веер монет',hint:'Следите за линией прицеливания и уходите в сторону.',period:.9,delay:.6},{id:'sweep',name:'Карточный залп',hint:'Карты пройдут по отмеченной полосе.',period:1.1,delay:.65},{id:'rain',name:'Золотой дождь',hint:'Монеты падают волнами — меняйте позицию.',period:.42,delay:.45}],
+ [{id:'crossfire',name:'Перекрёстный огонь',hint:'Залпы из углов. Уходите с линий прицеливания.',period:.95,delay:.65},{id:'gates',name:'Движущиеся ворота',hint:'Найдите широкий проход в падающей стене.',period:.85,delay:.55},{id:'return',name:'Возвратные карты',hint:'Карты разворачиваются! Не спешите за ними.',period:.65,delay:.5}],
+ [{id:'spiral',name:'Спираль контракта',hint:'Поток закручивается — оставляйте путь к краю.',period:.42,delay:.55},{id:'lasers',name:'Печать Дона',hint:'Отойдите от пунктирных линий до срабатывания.',period:1.4,delay:.95},{id:'cage',name:'Сжатие семьи',hint:'Боковые стены сходятся. Ищите просвет.',period:1.3,delay:.7}]
+];
+function rbFxClass58(el,cls,ms=420){if(!el||sxStill())return;el.classList.remove(cls);void el.getBoundingClientRect();el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),ms)}
+function rbRig58(){if(!RB)return;const svg=RB.ov.querySelector('.rb-portrait');if(!svg||svg.querySelector('.rb-don-head'))return;const paths=[...svg.querySelectorAll(':scope>path')],ns='http://www.w3.org/2000/svg',head=document.createElementNS(ns,'g'),hat=document.createElementNS(ns,'g'),eyes=document.createElementNS(ns,'g');head.classList.add('rb-don-head');hat.classList.add('rb-don-hat');eyes.classList.add('rb-don-eyes');for(let i=3;i<paths.length;i++){if(i>=9)hat.appendChild(paths[i]);else if(i===6)eyes.appendChild(paths[i]);else head.appendChild(paths[i])}head.append(eyes,hat);svg.appendChild(head);const hand=document.createElementNS(ns,'path');hand.classList.add('rb-don-hand');hand.setAttribute('d','M93 114l-5-14 3-4 3 7-1-18 4-2 3 19 4-10 4 2-5 22z');hand.setAttribute('fill','#c6aa8e');hand.setAttribute('stroke','#65584f');hand.setAttribute('stroke-width','1.5');svg.appendChild(hand)}
+function rbDamageNumber58(n){if(!RB)return;const el=document.createElement('span');el.className='rb-damage-number';el.textContent='−'+n;RB.ov.querySelector('.rb-boss').appendChild(el);setTimeout(()=>el.remove(),750)}
+function rbParticles58(x,y,color,n=8){if(!RB||sxStill())return;RB.fx58=RB.fx58||[];for(let i=0;i<n&&RB.fx58.length<36;i++){const a=Math.PI*2*i/n;RB.fx58.push({x,y,vx:Math.cos(a)*40,vy:Math.sin(a)*40,life:.4,color})}}
+const rbOpen58=rbOpen;rbOpen=function(){rbOpen58();rbRig58()};
+const rbStart58=rbStart;rbStart=async function(...args){const result=await rbStart58(...args);if(RB){RB.fx58=[];RB.warnings58=[];RB.beams58=[]}return result};
+const rbAttack58=rbAttackPhase;rbAttackPhase=function(){rbAttack58();if(!RB)return;RB.warnings58=[];RB.beams58=[];RB.move58=null};
+const rbDefend58=rbDefend;rbDefend=function(text){rbDefend58(text);if(!RB)return;RB.move58=RB_MOVES[RB.tier||0][(RB.turn-1)%3];RB.warnings58=[];RB.beams58=[];RB.returned58=false;$('rbTurn').textContent='Фаза '+(RB.tier+1)+'/3 · '+RB.move58.name;$('rbAnnounce').textContent=RB.move58.hint;rbFxClass58(RB.ov,'rb-don-cast',550)};
+const rbStrike58=rbStrike;rbStrike=function(){if(RB?.phase!=='attack')return;const r=RB,hp=r.boss,tier=r.tier;rbStrike58();if(RB===r){const dealt=tier===r.tier?hp-r.boss:hp;if(dealt>0){rbFxClass58(r.ov,'rb-don-hit',460);rbDamageNumber58(dealt)}}};
+const rbNext58=rbNextTier;rbNextTier=function(){rbNext58();if(RB)rbFxClass58(RB.ov,'rb-tier-flare',850)};
+function rbSpawnPeriod58(){return RB?.move58?.period||.7}
+function rbBullet58(r,x,y,vx,vy,size=6,kind=0,returning=false){if(r.bullets.length>=100)return;r.bullets.push({x,y,vx,vy,r:size,kind,returning,age58:0,turned58:false})}
+function rbShotFan58(r,x,y,tx,ty,count,spread,speed){const a=Math.atan2(ty-y,tx-x);for(let k=0;k<count;k++){const angle=a+(k-(count-1)/2)*spread;rbBullet58(r,x,y,Math.cos(angle)*speed,Math.sin(angle)*speed,5,0)}}
+rbSpawn=function(){const r=RB;if(!r?.move58)return;const key=r.move58.id,t=r.time,w={id:key,at:t+r.move58.delay,x:r.x,y:r.y,seq:r.spawn};
+ if(key==='fan'){w.sx=200;w.sy=-8}
+ if(key==='sweep'||key==='return'){w.side=r.spawn%2;w.axis='y'}
+ if(key==='rain')w.x=20+Math.random()*360;
+ if(key==='crossfire'){w.sx=r.spawn%2?8:392;w.sy=8}
+ if(key==='gates')w.gap=72+(Math.sin(t)*.5+.5)*256;
+ if(key==='spiral'){w.sx=200;w.sy=0}
+ if(key==='lasers'){w.axis=r.spawn%2?'x':'y';w.pos=w.axis==='x'?r.x:r.y}
+ if(key==='cage')w.gap=Math.max(65,Math.min(215,r.y+(r.spawn%2?35:-35)));
+ r.warnings58=r.warnings58||[];if(r.warnings58.length<12)r.warnings58.push(w);rbFxClass58(r.ov,'rb-don-cast',420)
+};
+function rbFire58(r,w){const speed=78+(r.tier||0)*14;
+ if(w.id==='fan')rbShotFan58(r,200,-8,w.x,w.y,5,.2,speed);
+ else if(w.id==='sweep'){for(let k=-1;k<=1;k++)rbBullet58(r,w.side?-12:412,Math.max(15,Math.min(265,w.y+k*27)),w.side?speed:-speed,0,6,1)}
+ else if(w.id==='return'){rbBullet58(r,w.side?-12:412,w.y,w.side?speed+15:-speed-15,0,7,1,true)}
+ else if(w.id==='rain'){for(let k=-1;k<=1;k++)rbBullet58(r,Math.max(8,Math.min(392,w.x+k*28)),-10,k*7,speed,5,0)}
+ else if(w.id==='crossfire')rbShotFan58(r,w.sx,w.sy,w.x,w.y,3,.18,speed);
+ else if(w.id==='gates'){for(let x=10;x<400;x+=25)if(Math.abs(x-w.gap)>62)rbBullet58(r,x,-10,0,speed*.8,5,1)}
+ else if(w.id==='spiral'){const a=Math.PI/2+Math.sin(w.seq*.55)*.85;for(let k=-1;k<=1;k++)rbBullet58(r,200,-10,Math.cos(a+k*.2)*speed,Math.sin(a+k*.2)*speed,5,0)}
+ else if(w.id==='lasers'){r.beams58=r.beams58||[];r.beams58.push({axis:w.axis,pos:w.pos,until:r.time+.28})}
+ else if(w.id==='cage'){for(let y=12;y<280;y+=24)if(Math.abs(y-w.gap)>57){rbBullet58(r,-8,y,speed*.72,0,5,1);rbBullet58(r,408,y,-speed*.72,0,5,1)}}
+ rbParticles58(w.sx||w.x,Math.max(8,w.sy||10),'#e9c47b',4)
+}
+const rbStep58=rbStep;rbStep=function(dt){if(!RB)return;const r=RB,hp=r.hp,active=r.phase!=='paused';rbStep58(dt);if(RB!==r)return;if(r.ov.dataset.action!==r.phase)r.ov.dataset.action=r.phase;
+ if(!active)return;for(const p of r.fx58||[]){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt}r.fx58=(r.fx58||[]).filter(p=>p.life>0);
+ if(r.phase==='defend'){
+  const pending=[];for(const w of r.warnings58||[]){if(w.at<=r.time)rbFire58(r,w);else pending.push(w)}r.warnings58=pending;
+  for(const b of r.bullets){b.age58=(b.age58||0)+dt;if(b.returning&&!b.turned58&&b.age58>1.45){b.vx*=-1;b.turned58=true;rbParticles58(b.x,b.y,'#b2ddeb',5)}}
+  r.bullets=r.bullets.filter(b=>!b.returning||b.age58<3.8);r.beams58=(r.beams58||[]).filter(b=>b.until>r.time);
+  if(r.inv<=0&&r.beams58.some(b=>Math.abs((b.axis==='x'?r.x:r.y)-b.pos)<10)){r.hp=Math.max(0,r.hp-RB_TIERS[r.tier].hit);r.inv=.85;rbHud();if(!r.hp)rbFinish(false)}
+ }
+ if(r.hp<hp){rbFxClass58(r.ov,'rb-player-hit',400);rbParticles58(r.x,r.y,'#ef91b4',10)}
+};
+const rbDraw58=rbDraw;rbDraw=function(){rbDraw58();if(!RB)return;const r=RB,c=$('rbCanvas').getContext('2d');c.save();
+ if(r.phase==='defend'){
+  c.lineWidth=1;c.setLineDash([5,6]);
+  for(const w of r.warnings58||[]){c.strokeStyle=w.id==='lasers'?'#f1a6cb':'#d4bc85';c.fillStyle='#dfbe7620';
+   c.beginPath();if(w.id==='lasers'){if(w.axis==='x'){c.rect(w.pos-8,0,16,280);c.moveTo(w.pos,0);c.lineTo(w.pos,280)}else{c.rect(0,w.pos-8,400,16);c.moveTo(0,w.pos);c.lineTo(400,w.pos)}}
+   else if(w.sx!==undefined){c.moveTo(w.sx,Math.max(0,w.sy));c.lineTo(w.id==='spiral'?200:w.x,w.id==='spiral'?95:w.y)}
+   else if(w.id==='gates'){c.moveTo(0,8);c.lineTo(w.gap-62,8);c.moveTo(w.gap+62,8);c.lineTo(400,8)}
+   else if(w.id==='cage'){c.rect(0,0,7,w.gap-57);c.rect(393,w.gap+57,7,280-w.gap-57)}
+   else if(w.axis==='y'){c.moveTo(0,w.y);c.lineTo(400,w.y)}else{c.moveTo(w.x,0);c.lineTo(w.x,55)}c.stroke();if(w.id==='lasers')c.fill()
+  }
+  c.setLineDash([]);for(const beam of r.beams58||[]){c.strokeStyle='#f3c2df';c.lineWidth=7;c.beginPath();if(beam.axis==='x'){c.moveTo(beam.pos,0);c.lineTo(beam.pos,280)}else{c.moveTo(0,beam.pos);c.lineTo(400,beam.pos)}c.stroke();c.strokeStyle='#fff1e5';c.lineWidth=2;c.stroke()}
+  for(const b of r.bullets){if(b.returning){c.save();c.translate(b.x,b.y);c.rotate((b.age58||0)*2);c.strokeStyle=b.turned58?'#edb1d3':'#b8dbea';c.lineWidth=1;c.strokeRect(-b.r-1,-b.r-1,(b.r+1)*2,(b.r+1)*2);c.restore()}}
+ }
+ for(const p of r.fx58||[]){c.globalAlpha=Math.max(0,p.life/.4);c.fillStyle=p.color;c.fillRect(p.x-1,p.y-1,2,2)}c.restore()
+};
+</script>
+
+<style id="pack59">
+.rb-rank-overlay{position:absolute;inset:0;z-index:15;display:flex;flex-direction:column;padding:calc(12px + env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:#0b0e1af7;overflow:hidden}.rb-rank-header{display:flex;align-items:center;gap:10px;flex-shrink:0}.rb-rank-header h3{flex:1;font:800 17px/1.3 monospace;color:#ffe0a0}.rb-rank-header button,.rb-rank-refresh{min-height:44px;padding:8px 12px;border:1px solid #ac9874;border-radius:7px;color:#f1d3a4;background:#24202f;font:700 12px monospace}.rb-rank-note{font:500 11px/1.5 monospace;color:#bdc5d5;margin:10px 0}.rb-rank-list{min-height:0;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:5px 0}.rb-rank-row{display:grid;grid-template-columns:34px minmax(0,1fr) 60px;gap:8px;align-items:center;padding:11px 8px;border-bottom:1px solid #ffffff16;font:500 12px/1.5 monospace}.rb-rank-row>span:nth-child(2){overflow-wrap:anywhere}.rb-rank-row b{text-align:right;color:#edc780}.rb-rank-row.me{background:#d5ac6814;border-radius:8px}.rb-rank-mine{padding:9px 0;color:#f0d7a7;font:600 12px monospace}.rb-rank-empty{padding:20px 8px;text-align:center;color:#b9c7d8;font:500 12px/1.6 monospace}
+</style>
+<script id="pack59js">
+SX_CODES['6767']=()=>{if(RB)return 'Дон Сигма уже ждёт на арене';if($('sxOv'))closeSettings();setTimeout(()=>rbOpen(),320);return '◈ Код принят. Открываем бой с Доном Сигмой'};
+function rbRankQueue59(){return acIsAcct()?sxGet('summa_rift_rank_'+txUID(),{}):{}}
+function rbRankRemember59(id){const q=rbRankQueue59();q[id]=true;sxPut('summa_rift_rank_'+txUID(),q)}
+function rbRankForget59(id){const q=rbRankQueue59();delete q[id];sxPut('summa_rift_rank_'+txUID(),q);const doneKey='summa_rift_rank_done_'+txUID(),done=sxGet(doneKey,{});done[id]=true;const keys=Object.keys(done);while(keys.length>100)delete done[keys.shift()];sxPut(doneKey,done)}
+let rbRankJobs59=new Map();
+async function rbRankPublish59(id){if(!acIsAcct())return;if(rbRankJobs59.has(id))return rbRankJobs59.get(id);if(sxGet('summa_rift_rank_done_'+txUID(),{})[id])return;rbRankRemember59(id);const uid=txUID();const job=(async()=>{const {F,db}=SXF;await F.runTransaction(db,async t=>{const row=F.doc(db,'riftScores',uid),proof=F.doc(db,'riftScores',uid,'wins',id),user=F.doc(db,'users',uid);const b=await t.get(proof);if(b.exists())return;const [a,u]=await Promise.all([t.get(row),t.get(user)]);const run=u.exists()?u.data().shop?.riftLedger?.[id]:null;if(!run||run.status!=='won')throw Error('Победа ещё не подтверждена');t.set(proof,{at:F.serverTimestamp()});t.set(row,{name:String(u.data().profile?.name||'Игрок').slice(0,60),wins:(a.exists()?a.data().wins:0)+1,lastRunId:id,updatedAt:F.serverTimestamp()})});if(acIsAcct()&&txUID()===uid)rbRankForget59(id)})();rbRankJobs59.set(id,job);try{await job}catch(e){console.warn('[rift ranking]',e.code||e.message)}finally{rbRankJobs59.delete(id)}}
+async function rbRankFlush59(){if(!acIsAcct())return;const q=rbRankQueue59();const done=sxGet('summa_rift_rank_done_'+txUID(),{});for(const [id,run]of Object.entries(sh.riftLedger||{}))if(run.status==='won'&&!done[id])q[id]=true;for(const id of Object.keys(q))await rbRankPublish59(id)}
+const rbReceipt59=rbReceipt;rbReceipt=async function(id,won){const status=await rbReceipt59(id,won);if(status==='won')rbRankPublish59(id);return status};
+async function rbRankLoad59(){const box=$('rbRank');if(!box||!window.SXF)return;const list=box.querySelector('.rb-rank-list');list.textContent='Загружаем победы…';try{const {F,db}=SXF;const [top,mine]=await Promise.all([F.getDocs(F.query(F.collection(db,'riftScores'),F.orderBy('wins','desc'),F.limit(50))),acIsAcct()?F.getDoc(F.doc(db,'riftScores',txUID())):Promise.resolve(null)]);if(!box.isConnected)return;list.replaceChildren();let i=0;top.forEach(s=>{const x=s.data();if(!Number.isInteger(x.wins)||x.wins<1)return;const row=document.createElement('div');row.className='rb-rank-row'+(s.id===SXC.uid?' me':'');const place=document.createElement('span'),name=document.createElement('span'),wins=document.createElement('b');place.textContent=['🥇','🥈','🥉'][i]||String(i+1);name.textContent=String(x.name||'Игрок').slice(0,60);wins.textContent=String(x.wins);row.append(place,name,wins);list.appendChild(row);i++});if(!i)list.innerHTML='<div class="rb-rank-empty">Пока нет подтверждённых побед.<br>Дон Сигма ждёт первого победителя.</div>';box.querySelector('.rb-rank-mine').textContent=mine?.exists()?'Ваши победы: '+mine.data().wins:'Ваши победы: 0'}catch(e){if(box.isConnected)list.innerHTML='<div class="rb-rank-empty">'+(e.code==='permission-denied'?'Для рейтинга нужно опубликовать новые правила Firebase.':'Нет связи с рейтингом. Нажмите «Обновить».')+'</div>'}}
+function rbRankOpen59(){if(!RB||$('rbRank'))return;if(RB.economyBusy||RB.phase==='settling')return toast('Дождитесь завершения расчёта Σ');const r=RB,paused=r.phase==='paused';rbPause(true);const box=document.createElement('section');box.id='rbRank';box.className='rb-rank-overlay';box.setAttribute('role','dialog');box.setAttribute('aria-label','Рейтинг побед над Доном Сигмой');box.innerHTML='<div class="rb-rank-header"><h3>🏆 Победители Дона</h3><button aria-label="Закрыть рейтинг">✕</button></div><p class="rb-rank-note">Подтверждённые победы в боях за Σ. Тренировки не учитываются. Показаны первые 50 игроков.</p><div class="rb-rank-list"></div><div class="rb-rank-mine"></div><button class="rb-rank-refresh">Обновить</button>';r.ov.appendChild(box);box.querySelector('.rb-rank-header button').onclick=()=>{box.remove();if(RB===r&&!paused&&r.phase==='paused')rbPause();$('rbRankButton')?.focus()};box.querySelector('.rb-rank-refresh').onclick=async e=>{e.currentTarget.disabled=true;try{await rbRankFlush59();await rbRankLoad59()}finally{box.querySelector('.rb-rank-refresh').disabled=false}};box.querySelector('button').focus();rbRankLoad59();rbRankFlush59().then(()=>{if(box.isConnected)rbRankLoad59()})}
+const rbOpen59=rbOpen;rbOpen=function(){rbOpen59();if(!RB||$('rbRankButton'))return;const b=document.createElement('button');b.id='rbRankButton';b.textContent='🏆';b.setAttribute('aria-label','Рейтинг побед над Доном Сигмой');b.onclick=rbRankOpen59;$('rbPause').before(b)};
+addEventListener('online',()=>rbRankFlush59());
 </script>
 
 </body>
